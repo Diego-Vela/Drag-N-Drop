@@ -1,15 +1,61 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { View } from 'react-native';
+import { View, Dimensions } from 'react-native';
+import { useTheme } from '../contexts/ThemeContext';
+import { Header } from './Header';
+import { Canvas, Rect, interpolateColors } from '@shopify/react-native-skia';
+import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
 
-export const Container = ({ children }: { children: React.ReactNode }) => {
+export const Container = ({ 
+  children, 
+  headerTitle,
+  showHeader = true 
+}: { 
+  children: React.ReactNode;
+  headerTitle?: string;
+  showHeader?: boolean;
+}) => {
+  const { isDark } = useTheme();
+  const { width, height } = Dimensions.get('window');
+  
+  // Animation progress value
+  const progress = useSharedValue(isDark ? 1 : 0);
+  
+  // Animate when theme changes
+  useEffect(() => {
+    progress.value = withTiming(isDark ? 1 : 0, { duration: 200 });
+  }, [isDark]);
+  
+  // Interpolate background color
+  const animatedBackgroundColor = useDerivedValue(() => {
+    return interpolateColors(
+      progress.value,
+      [0, 1],
+      ['#e2e8f0', '#111827'] // slightly darker blue-gray background to dark-background
+    );
+  });
+  
   return (
     <SafeAreaView 
-      className="flex-1 bg-light-background dark:bg-dark-background"
+      className="flex-1"
       edges={['top', 'left', 'right', 'bottom']}
+      style={{ position: 'relative' }}
     >
-      <View className="flex-1 mx-6">
-        {children}
+      <Canvas style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
+        <Rect
+          x={0}
+          y={0}
+          width={width}
+          height={height}
+          color={animatedBackgroundColor}
+        />
+      </Canvas>
+      
+      <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+        {showHeader && <Header title={headerTitle} />}
+        <View className="flex-1 mx-6">
+          {children}
+        </View>
       </View>
     </SafeAreaView>
   );

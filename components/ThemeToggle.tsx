@@ -18,18 +18,18 @@ export const ThemeToggle = () => {
     progress.value = withTiming(isDark ? 1 : 0, { duration: 10 });
   }, [isDark]);
 
-  // Sun slides down when going dark
+  // Sun slides up when going dark (reversed)
   const sunStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: withTiming(progress.value * 50) }],
+    transform: [{ translateY: withTiming(progress.value * -50) }],
     opacity: withTiming(1 - progress.value),
     position: "absolute",
     top: 0,
     left: 0,
   }));
 
-  // Moon slides up when going dark
+  // Moon slides down when going dark (reversed)
   const moonStyle = useAnimatedStyle(() => ({
-    transform: [{ translateY: withTiming(-50 + progress.value * 50) }],
+    transform: [{ translateY: withTiming(50 - progress.value * 50) }],
     opacity: withTiming(progress.value),
     position: "absolute",
     top: 0,
@@ -53,10 +53,10 @@ export const ThemeToggle = () => {
     >
       <View style={{ position: "relative", width: 32, height: 32, justifyContent: "center", alignItems: "center" }}>
         <Animated.View style={[sunStyle, { justifyContent: "center", alignItems: "center", width: 32, height: 32 }]}>
-          <Ionicons name="sunny" size={32} color="#fbbf24" />
+          <Ionicons name="sunny" size={32} color ='white'/>
         </Animated.View>
         <Animated.View style={[moonStyle, { justifyContent: "center", alignItems: "center", width: 32, height: 32 }]}>
-          <Ionicons name="moon" size={32} color="#60a5fa" />
+          <Ionicons name="moon" size={32} color ='white'/>
         </Animated.View>
       </View>
     </TouchableOpacity>

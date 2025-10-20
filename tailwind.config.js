@@ -6,30 +6,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Light Theme Colors
-        light: {
-          primary: '#1f2937',      // Dark gray for primary elements
-          secondary: '#6b7280',    // Medium gray for secondary text
-          background: '#ffffff',   // Pure white background
-          surface: '#f9fafb',      // Light gray for cards/surfaces
-          border: '#e5e7eb',       // Light border color
-          accent: '#3b82f6',       // Professional blue accent
-          success: '#10b981',      // Green for success states
-          warning: '#f59e0b',      // Amber for warnings
-          error: '#ef4444',        // Red for errors
-        },
-        // Dark Theme Colors
-        dark: {
-          primary: '#f9fafb',      // Light gray for primary text
-          secondary: '#9ca3af',    // Medium gray for secondary text
-          background: '#111827',   // Very dark background
-          surface: '#1f2937',      // Dark gray for cards/surfaces
-          border: '#374151',       // Dark border color
-          accent: '#60a5fa',       // Lighter blue accent for dark mode
-          success: '#34d399',      // Lighter green for dark mode
-          warning: '#fbbf24',      // Lighter amber for dark mode
-          error: '#f87171',        // Lighter red for dark mode
-        },
+        // Light Theme Colors (flat structure for easier usage)
+        'light-primary': '#000000',         // Black for primary text (high contrast)
+        'light-secondary': '#374151',       // Dark gray for secondary text
+        'light-background': '#e2e8f0',      // Slightly darker blue-gray to complement navy
+        'light-surface': '#1e3a8a',         // Sophisticated navy blue (much calmer)
+        'light-border': '#1e40af',          // Slightly lighter navy border
+        'light-accent': '#1d4ed8',          // Deep blue accent for highlights
+        'light-success': '#059669',         // Green for success states
+        'light-warning': '#d97706',         // Amber for warnings
+        'light-error': '#dc2626',           // Red for errors
+        
+        // Dark Theme Colors (flat structure for easier usage)
+        'dark-primary': '#f9fafb',       // Light gray for primary text
+        'dark-secondary': '#9ca3af',     // Medium gray for secondary text
+        'dark-background': '#111827',    // Very dark background
+        'dark-surface': '#1f2937',       // Dark gray for cards/surfaces
+        'dark-border': '#374151',        // Dark border color
+        'dark-accent': '#60a5fa',        // Lighter blue accent for dark mode
+        'dark-success': '#34d399',       // Lighter green for dark mode
+        'dark-warning': '#fbbf24',       // Lighter amber for dark mode
+        'dark-error': '#f87171',         // Lighter red for dark mode
         // Neutral grays (work in both themes)
         neutral: {
           50: '#f9fafb',

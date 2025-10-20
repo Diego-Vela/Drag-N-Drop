@@ -28,7 +28,7 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
 
   // Update NativeWind's color scheme
   useEffect(() => {
-    vars({ colorScheme });
+    vars({ colorScheme: colorScheme });
   }, [colorScheme]);
 
   const loadTheme = async () => {
