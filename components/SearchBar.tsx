@@ -15,6 +15,7 @@ import { SearchResult, SearchBarProps } from '../utils/types';
 export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll, onClearQuery, placeholder = "Search units, locations, or customers..." }: SearchBarProps) {
   const { isDark } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isAnimating, setIsAnimating] = useState(false);
   const { slideAnimation, showDropdown: animateShowDropdown, hideDropdown: animateHideDropdown } = useDropdownAnimation();
   
   const searchLogic = useSearchLogicComposed({
@@ -28,18 +29,26 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
   useEffect(() => {
     if (searchLogic.shouldShowDropdown && searchLogic.searchResults.length > 0) {
       setShowDropdown(true);
+      setIsAnimating(false); // Reset animation state when showing
       animateShowDropdown(searchLogic.searchResults.length);
-    } else {
+    } else if (showDropdown && !isAnimating) {
+      // Only start hide animation if dropdown is visible and not already animating
+      setIsAnimating(true);
       animateHideDropdown(250, () => {
         setShowDropdown(false);
+        setIsAnimating(false);
       });
     }
-  }, [searchLogic.searchResults, searchLogic.shouldShowDropdown, animateShowDropdown, animateHideDropdown]);
+  }, [searchLogic.searchResults, searchLogic.shouldShowDropdown, animateShowDropdown, animateHideDropdown, showDropdown, isAnimating]);
 
   const closeDropdown = () => {
-    animateHideDropdown(250, () => {
-      setShowDropdown(false);
-    });
+    if (!isAnimating) {
+      setIsAnimating(true);
+      animateHideDropdown(250, () => {
+        setShowDropdown(false);
+        setIsAnimating(false);
+      });
+    }
   };
 
   const handleSelectResult = (result: SearchResult) => {
