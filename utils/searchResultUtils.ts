@@ -10,7 +10,7 @@ export const getSearchResultIcon = (type: string): string => {
 export const getSearchResultTypeColor = (type: string, isDark: boolean) => {
   const colors: Record<string, { bg: string; text: string }> = {
     unit: {
-      bg: isDark ? '#FCD34D20' : '#FEF3C720',
+      bg: isDark ? '#FCD34D20' : '#fef3c7',
       text: isDark ? '#F59E0B' : '#D97706'
     },
     location: {

@@ -9,18 +9,17 @@
   ],
   "units":
   [
-    "Unit A longer unit name", "Unit B", "Unit C", "Unit D", "Unit E", "Unit F", "Unit G", "Unit H", "Unit I", "Unit J", "Unit K", "Unit L", "Unit M", "Unit N", "Unit O", "Unit P", "Unit Q", "Unit R", "Unit S", "Unit T", "Unit U", "Unit V", "Unit W", "Unit X", "Unit Y", "Unit Z", "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+    "Unit A", "Unit B", "Unit C", "Unit D", "Unit E", "Unit F", "Unit G", "Unit H", "Unit I", "Unit J", "Unit K", "Unit L", "Unit M", "Unit N", "Unit O", "Unit P", "Unit Q", "Unit R", "Unit S", "Unit T", "Unit U", "Unit V", "Unit W", "Unit X", "Unit Y", "Unit Z"
   ],
   "assignments":
   [
-    ["Unit A longer unit name", "ID1"],
+    ["Unit A", "ID1"],
     ["Unit B", "ID4"],
     ["Unit C", "ID2"],
     ["Unit D", "ID1"],
     ["Unit E", "ID1"],
     ["Unit F", "ID1"],
     ["Unit G", "ID1"],
-    ["Unit H", "ID1"],
-    ["aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa", "ID1"]
+    ["Unit H", "ID1"]
   ]
 }

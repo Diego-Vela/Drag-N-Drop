@@ -53,7 +53,7 @@ export const Container = ({
       
       <View style={{ flex: 1, backgroundColor: 'transparent', overflow: 'visible' }}>
         {showHeader && <Header title={headerTitle} />}
-        <View className="flex-1 mx-6" style={{ overflow: 'visible' }}>
+        <View className="flex-1 mx-0" style={{ overflow: 'visible' }}>
           {children}
         </View>
       </View>

@@ -37,10 +37,10 @@ export function HomeScreen() {
         <ScrollView 
           style={{ flex: 1, backgroundColor: 'transparent' }} 
           className="px-4 pt-4"
-          keyboardShouldPersistTaps="handled"
-          nestedScrollEnabled={false}
+          keyboardShouldPersistTaps="never"
+          nestedScrollEnabled={true}
           contentContainerStyle={{ 
-            paddingBottom: 20, // Extra bottom padding
+            paddingBottom: 60, // Extra bottom padding
             overflow: 'visible' // Allow content to overflow
           }}
           showsVerticalScrollIndicator={false}
