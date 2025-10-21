@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./App.{js,ts,tsx}', './components/**/*.{js,ts,tsx}'],
+  content: ['./App.{js,ts,tsx}', './components/**/*.{js,ts,tsx}', './screens/**/*.{js,ts,tsx}'],
   presets: [require('nativewind/preset')],
   darkMode: 'class',
   theme: {
@@ -16,6 +16,9 @@ module.exports = {
         'light-success': '#059669',         // Green for success states
         'light-warning': '#d97706',         // Amber for warnings
         'light-error': '#dc2626',           // Red for errors
+        'light-highlight': '#fef3c7',       // Light warm yellow background for units
+        'light-highlight-text': '#92400e',  // Dark amber text for good contrast
+        'light-highlight-accent': '#fcd34d', // Golden yellow accent/border
         
         // Dark Theme Colors (flat structure for easier usage)
         'dark-primary': '#f9fafb',       // Light gray for primary text
@@ -27,6 +30,9 @@ module.exports = {
         'dark-success': '#34d399',       // Lighter green for dark mode
         'dark-warning': '#fbbf24',       // Lighter amber for dark mode
         'dark-error': '#f87171',         // Lighter red for dark mode
+        'dark-highlight': '#fbbf24/20',  // Light amber background for units (with opacity)
+        'dark-highlight-text': '#fbbf24', // Bright amber text for good contrast
+        'dark-highlight-accent': '#fbbf24', // Amber accent/border
         // Neutral grays (work in both themes)
         neutral: {
           50: '#f9fafb',

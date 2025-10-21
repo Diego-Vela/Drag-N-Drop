@@ -29,7 +29,7 @@ function TabNavigator() {
           borderTopWidth: 1,
           borderTopColor: isDark ? '#374151' : '#1e40af', // dark-border : navy border
           elevation: 10,
-          height: 60,
+          height: 70,
           paddingTop: 8, 
           shadowColor: '#000',
           shadowOffset: { width: 0, height: -2 },
