@@ -38,6 +38,7 @@ export function HomeScreen() {
           style={{ flex: 1, backgroundColor: 'transparent' }} 
           className="px-4 pt-4"
           keyboardShouldPersistTaps="never"
+          keyboardDismissMode="on-drag"
           nestedScrollEnabled={true}
           contentContainerStyle={{ 
             paddingBottom: 60, // Extra bottom padding

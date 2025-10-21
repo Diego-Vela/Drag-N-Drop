@@ -23,6 +23,8 @@ export function SearchDropDown({
         height: slideAnimation,
         overflow: searchResults.length > 0 ? 'visible' : 'hidden',
         marginBottom: 0,
+        zIndex: 1000,
+        elevation: 10,
       }}
     >
       <View className={`mt-1 rounded-lg border ${
@@ -35,7 +37,8 @@ export function SearchDropDown({
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.15,
         shadowRadius: 4,
-        elevation: 5,
+        elevation: 10,
+        zIndex: 1000,
         paddingTop: 0,
         paddingBottom: 4, 
         overflow: 'hidden', 
@@ -44,6 +47,8 @@ export function SearchDropDown({
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
+          nestedScrollEnabled={true}
+          scrollEventThrottle={16}
           contentContainerStyle={{ flexGrow: 1}}
         >
           {searchResults.map((result,index) => {
