@@ -1,12 +1,14 @@
-// components/ThemeToggle.tsx
+// Base Imports
 import React, { useEffect } from "react";
 import { TouchableOpacity, View } from "react-native";
+// Third-party Imports
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withTiming,
 } from "react-native-reanimated";
 import { Ionicons } from "@expo/vector-icons";
+// Context Imports
 import { useTheme } from "../contexts/ThemeContext";
 
 export const ThemeToggle = () => {

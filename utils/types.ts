@@ -1,3 +1,4 @@
+// Base Imports
 import { Animated } from 'react-native';
 
 export interface SearchResult {

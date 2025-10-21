@@ -1,5 +1,7 @@
+// Base Imports
 import React from 'react';
 import { View, Text } from 'react-native';
+// Context Imports
 import { useTheme } from '../../contexts/ThemeContext';
 
 interface AssignmentContainerProps {

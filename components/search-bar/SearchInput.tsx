@@ -1,5 +1,7 @@
-import { SearchInputProps } from '../../utils/types';
+// Base Imports
 import { Text, TextInput, View, TouchableOpacity } from 'react-native';
+// Utility Imports
+import { SearchInputProps } from '../../utils/types';
 
 export function SearchInput({ 
   value,

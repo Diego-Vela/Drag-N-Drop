@@ -1,7 +1,9 @@
+// Base Imports
+import React from 'react';
 import { View, ScrollView, TouchableOpacity, Text, Animated } from 'react-native';
+// Utility Imports
 import { getSearchResultIcon, getSearchResultTypeColor } from '../../utils/searchResultUtils';
 import { SearchDropDownProps } from '../../utils/types';
-import React from 'react';
 
 export function SearchDropDown({
   searchResults,

@@ -1,6 +1,8 @@
+// Hook Imports
 import { useSearchState } from './useSearchState';
 import { useSearchBarActivity } from './useSearchBarActivity';
 import { useSearchActions } from './useSearchActions';
+// Utility Imports
 import { UseSearchLogicProps } from '../../utils/types';
 
 /**

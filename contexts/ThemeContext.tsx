@@ -1,6 +1,8 @@
+// Base Imports
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
+// Third-party Imports
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import { vars } from 'nativewind';
 
 type Theme = 'light' | 'dark' | 'system';

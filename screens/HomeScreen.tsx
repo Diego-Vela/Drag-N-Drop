@@ -1,10 +1,14 @@
+// Base Imports
 import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
+// Component Imports
 import { Container } from '../components/Container';
 import { ScreenContent } from '../components/ScreenContent';
 import { AssignmentContainer } from '../components/home-screen/AssignmentContainer';
 import { SearchBar } from '../components/SearchBar';
+// Hook Imports
 import { useSearch } from '../hooks/useSearch';
+// Other
 import testData from '../test-files/test-data.json';
 
 export function HomeScreen() {

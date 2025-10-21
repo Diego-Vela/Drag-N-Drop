@@ -1,5 +1,7 @@
+// Base Imports
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { Keyboard } from 'react-native';
+// Utility Imports
 import { SearchResult, UseSearchLogicProps } from '../utils/types';
 
 export function useSearchLogic({onSearch, onShowAll, onSearchResults, onClearQuery}: UseSearchLogicProps ) 

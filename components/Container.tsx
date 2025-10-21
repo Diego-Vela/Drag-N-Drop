@@ -1,10 +1,14 @@
+// Base Imports
 import React, { useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Dimensions } from 'react-native';
-import { useTheme } from '../contexts/ThemeContext';
-import { Header } from './Header';
+// Third-party Imports
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Canvas, Rect, interpolateColors } from '@shopify/react-native-skia';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+// Component Imports
+import { Header } from './Header';
+// Context Imports
+import { useTheme } from '../contexts/ThemeContext';
 
 export const Container = ({ 
   children, 

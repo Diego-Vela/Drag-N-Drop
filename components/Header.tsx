@@ -1,8 +1,12 @@
+// Base Imports
 import React from 'react';
 import { View, Text, Dimensions } from 'react-native';
-import { useTheme } from '../contexts/ThemeContext';
-import { ThemeToggle } from './ThemeToggle';
+// Third-party Imports
 import { Canvas, Rect } from '@shopify/react-native-skia';
+// Component Imports
+import { ThemeToggle } from './ThemeToggle';
+// Context Imports
+import { useTheme } from '../contexts/ThemeContext';
 
 export const Header = ({ title = "Organization Name" }: { title?: string }) => {
   const { isDark } = useTheme();

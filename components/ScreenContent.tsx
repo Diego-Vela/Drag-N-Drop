@@ -1,5 +1,5 @@
+// Base Imports
 import React from 'react';
-
 
 type ScreenContentProps = {
   title: string;

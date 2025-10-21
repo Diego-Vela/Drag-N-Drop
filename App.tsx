@@ -1,13 +1,18 @@
+// Base Imports
 import React from 'react';
+// Third-party Imports
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
-import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+// Screen Imports
 import { HomeScreen } from './screens/HomeScreen';
 import { CustomersScreen } from './screens/CustomersScreen';
 import { UnitsScreen } from './screens/UnitsScreen';
 import { AssignmentsScreen } from './screens/AssignmentsScreen';
 import { SettingsScreen } from './screens/SettingsScreen';
+// Context Imports
+import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+// Styles
 import './global.css';
 
 const Tab = createBottomTabNavigator();

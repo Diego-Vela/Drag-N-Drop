@@ -1,5 +1,7 @@
+// Base Imports
 import { useRef, useEffect, useCallback } from 'react';
 import { Keyboard } from 'react-native';
+// Utility Imports
 import { SearchResult } from '../../utils/types';
 
 /**
