@@ -13,6 +13,7 @@ import { useSearchLogic } from '../hooks/useSearchLogic';
 export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll, onClearQuery, placeholder = "Search units, locations, or customers..." }: SearchBarProps) {
   const { isDark } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
+  const [isSearchBarActive, setIsSearchBarActive] = useState(false);
   const { slideAnimation, showDropdown: animateShowDropdown, hideDropdown: animateHideDropdown } = useDropdownAnimation();
   
   const searchLogic = useSearchLogic({
@@ -22,9 +23,9 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
     onClearQuery
   });
 
-  // Animation coordination - responds to search results changes
+  // Animation coordination - responds to search results changes and SearchBar activity
   useEffect(() => {
-    if (searchLogic.shouldShowDropdown && searchLogic.searchResults.length > 0) {
+    if (isSearchBarActive && searchLogic.shouldShowDropdown && searchLogic.searchResults.length > 0) {
       setShowDropdown(true);
       animateShowDropdown(searchLogic.searchResults.length);
     } else {
@@ -32,7 +33,7 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
         setShowDropdown(false);
       });
     }
-  }, [searchLogic.searchResults, searchLogic.shouldShowDropdown, animateShowDropdown, animateHideDropdown]);
+  }, [searchLogic.searchResults, searchLogic.shouldShowDropdown, isSearchBarActive, animateShowDropdown, animateHideDropdown]);
 
   const closeDropdown = () => {
     animateHideDropdown(250, () => {
@@ -43,6 +44,7 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
   const handleSelectResult = (result: SearchResult) => {
     searchLogic.setSearchText(result.primary);
     searchLogic.setUserIsSearching(false); // User has selected, no longer actively searching
+    setIsSearchBarActive(false); // Hide dropdown after selection
     closeDropdown();
     
     // Dismiss the keyboard when a result is selected
@@ -52,12 +54,19 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
   };
 
   return (
-    <View className="mb-4">
+    <View className="mb-0 mt-2 mx-2">
       {/* Search Input */}
       <SearchInput
         value={searchLogic.searchText}
         onChangeText={searchLogic.handleTextChange}
-        onFocus={searchLogic.handleFocus}
+        onFocus={() => {
+          setIsSearchBarActive(true);
+          searchLogic.handleFocus();
+        }}
+        onBlur={() => {
+          // Small delay before hiding to allow for dropdown interactions
+          setTimeout(() => setIsSearchBarActive(false), 5);
+        }}
         onClear={searchLogic.clearSearch}
         placeholder={placeholder}
         isDark={isDark}

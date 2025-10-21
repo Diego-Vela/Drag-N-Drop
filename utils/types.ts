@@ -29,6 +29,7 @@ export interface SearchInputProps {
   value: string;
   onChangeText: (text: string) => void;
   onFocus: () => void;
+  onBlur?: () => void;
   onClear: () => void;
   placeholder: string;
   isDark: boolean;

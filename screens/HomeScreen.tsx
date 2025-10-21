@@ -34,6 +34,27 @@ export function HomeScreen() {
   return (
     <Container headerTitle="{Organization Name}">
       <ScreenContent title="Dashboard" path="screens/HomeScreen.tsx">
+        {/* Search Bar */}
+        <SearchBar
+          onSearchResults={(results) => {
+            // Handle search results if needed for additional functionality
+          }}
+          onSelectResult={(result) => {
+            // Handle selection - could scroll to item, highlight, etc.
+            setCurrentSearchQuery(result.primary);
+          }}
+          onSearch={(query) => {
+            setCurrentSearchQuery(query);
+            return performSearch(query);
+          }}
+          onShowAll={() => {
+            return getAllItems();
+          }}
+          onClearQuery={() => {
+            // Reset to master view when search is cleared
+            setCurrentSearchQuery('');
+          }}
+        />
         <ScrollView 
           style={{ flex: 1, backgroundColor: 'transparent' }} 
           className="px-4 pt-4"
@@ -47,27 +68,7 @@ export function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           
-          {/* Search Bar */}
-          <SearchBar
-            onSearchResults={(results) => {
-              // Handle search results if needed for additional functionality
-            }}
-            onSelectResult={(result) => {
-              // Handle selection - could scroll to item, highlight, etc.
-              setCurrentSearchQuery(result.primary);
-            }}
-            onSearch={(query) => {
-              setCurrentSearchQuery(query);
-              return performSearch(query);
-            }}
-            onShowAll={() => {
-              return getAllItems();
-            }}
-            onClearQuery={() => {
-              // Reset to master view when search is cleared
-              setCurrentSearchQuery('');
-            }}
-          />
+
           
           {/* Customer-location pairs - only show those with assigned units */}
           {filteredPairs

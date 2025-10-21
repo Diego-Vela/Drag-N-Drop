@@ -5,6 +5,7 @@ export function SearchInput({
   value,
   onChangeText,
   onFocus,
+  onBlur,
   onClear,
   placeholder = "Search units, locations, or customers...",
   isDark,
@@ -20,6 +21,7 @@ export function SearchInput({
         value={value}
         onChangeText={onChangeText}
         onFocus={onFocus}
+        onBlur={onBlur}
         placeholder={placeholder}
         placeholderTextColor={isDark ? '#9CA3AF' : '#6B7280'}
         className={`flex-1 text-base ${
