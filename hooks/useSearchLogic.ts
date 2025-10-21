@@ -7,6 +7,7 @@ export function useSearchLogic({onSearch, onShowAll, onSearchResults, onClearQue
   const [searchText, setSearchText] = useState('');
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [userIsSearching, setUserIsSearching] = useState(false); // Track user intent
+  const [isSearchBarActive, setIsSearchBarActive] = useState(false); // Track if search bar is active
   const searchTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const performSearch = (query: string): SearchResult[] => {
@@ -26,7 +27,7 @@ export function useSearchLogic({onSearch, onShowAll, onSearchResults, onClearQue
       clearTimeout(searchTimeoutRef.current);
     }
 
-    if (userIsSearching) {
+    if (userIsSearching && isSearchBarActive) {
       if (searchText.trim() && searchText.length >= 2) {
         // User is searching with valid query
         searchTimeoutRef.current = setTimeout(() => {
@@ -54,7 +55,7 @@ export function useSearchLogic({onSearch, onShowAll, onSearchResults, onClearQue
         clearTimeout(searchTimeoutRef.current);
       }
     };
-  }, [searchText, userIsSearching, onSearchResults, onSearch, onShowAll]);
+  }, [searchText, userIsSearching, isSearchBarActive, onSearchResults, onSearch, onShowAll]);
 
   const clearSearch = useCallback(() => {
     setSearchText('');
@@ -84,6 +85,23 @@ export function useSearchLogic({onSearch, onShowAll, onSearchResults, onClearQue
 
   const handleFocus = useCallback(() => {
     setUserIsSearching(true);
+    setIsSearchBarActive(true);
+  }, []);
+
+  const handleBlur = useCallback(() => {
+    // Small delay before deactivating to allow for dropdown interactions
+    setTimeout(() => setIsSearchBarActive(false), 5);
+  }, []);
+
+  const handleSelectResult = useCallback((result: SearchResult, onSelectCallback?: (result: SearchResult) => void) => {
+    setSearchText(result.primary);
+    setUserIsSearching(false); // User has selected, no longer actively searching
+    setIsSearchBarActive(false); // Hide dropdown after selection
+    
+    // Call the parent's onSelect callback if provided
+    if (onSelectCallback) {
+      onSelectCallback(result);
+    }
   }, []);
 
   return {
@@ -93,9 +111,13 @@ export function useSearchLogic({onSearch, onShowAll, onSearchResults, onClearQue
     setSearchResults,
     userIsSearching,
     setUserIsSearching,
+    isSearchBarActive,
+    setIsSearchBarActive,
     clearSearch,
-    shouldShowDropdown: searchResults.length > 0,
+    shouldShowDropdown: searchResults.length > 0 && isSearchBarActive,
     handleTextChange,
-    handleFocus
+    handleFocus,
+    handleBlur,
+    handleSelectResult
   };
 }

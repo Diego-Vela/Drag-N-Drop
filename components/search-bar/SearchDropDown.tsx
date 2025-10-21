@@ -47,8 +47,6 @@ export function SearchDropDown({
         <ScrollView
           showsVerticalScrollIndicator={false}
           keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          nestedScrollEnabled={true}
           scrollEventThrottle={16}
           contentContainerStyle={{ flexGrow: 1}}
         >

@@ -1,22 +1,23 @@
+// Base Imports
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Keyboard
-} from 'react-native';
-import { useTheme } from '../contexts/ThemeContext';
-import { useDropdownAnimation } from '../hooks/useDropdownAnimation';
-import { SearchResult, SearchBarProps } from '../utils/types';
+import { View, Keyboard } from 'react-native';
+// Component Imports
 import { SearchDropDown } from './search-bar/SearchDropDown';
 import { SearchInput } from './search-bar/SearchInput';
-import { useSearchLogic } from '../hooks/useSearchLogic';
+// Context Imports
+import { useTheme } from '../contexts/ThemeContext';
+// Hook Imports
+import { useDropdownAnimation } from '../hooks/useDropdownAnimation';
+import { useSearchLogicComposed } from '../hooks/search-bar-hooks/useSearchLogicComposed';
+// Other
+import { SearchResult, SearchBarProps } from '../utils/types';
 
 export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll, onClearQuery, placeholder = "Search units, locations, or customers..." }: SearchBarProps) {
   const { isDark } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
-  const [isSearchBarActive, setIsSearchBarActive] = useState(false);
   const { slideAnimation, showDropdown: animateShowDropdown, hideDropdown: animateHideDropdown } = useDropdownAnimation();
   
-  const searchLogic = useSearchLogic({
+  const searchLogic = useSearchLogicComposed({
     onSearch,
     onShowAll,
     onSearchResults,
@@ -25,7 +26,7 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
 
   // Animation coordination - responds to search results changes and SearchBar activity
   useEffect(() => {
-    if (isSearchBarActive && searchLogic.shouldShowDropdown && searchLogic.searchResults.length > 0) {
+    if (searchLogic.shouldShowDropdown && searchLogic.searchResults.length > 0) {
       setShowDropdown(true);
       animateShowDropdown(searchLogic.searchResults.length);
     } else {
@@ -33,7 +34,7 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
         setShowDropdown(false);
       });
     }
-  }, [searchLogic.searchResults, searchLogic.shouldShowDropdown, isSearchBarActive, animateShowDropdown, animateHideDropdown]);
+  }, [searchLogic.searchResults, searchLogic.shouldShowDropdown, animateShowDropdown, animateHideDropdown]);
 
   const closeDropdown = () => {
     animateHideDropdown(250, () => {
@@ -42,15 +43,12 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
   };
 
   const handleSelectResult = (result: SearchResult) => {
-    searchLogic.setSearchText(result.primary);
-    searchLogic.setUserIsSearching(false); // User has selected, no longer actively searching
-    setIsSearchBarActive(false); // Hide dropdown after selection
+    // Use the hook's handler for state management
+    searchLogic.handleSelectResult(result, onSelectResult);
+    
+    // Handle UI-specific actions (animation and keyboard)
     closeDropdown();
-    
-    // Dismiss the keyboard when a result is selected
     Keyboard.dismiss();
-    
-    onSelectResult(result);
   };
 
   return (
@@ -59,14 +57,8 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
       <SearchInput
         value={searchLogic.searchText}
         onChangeText={searchLogic.handleTextChange}
-        onFocus={() => {
-          setIsSearchBarActive(true);
-          searchLogic.handleFocus();
-        }}
-        onBlur={() => {
-          // Small delay before hiding to allow for dropdown interactions
-          setTimeout(() => setIsSearchBarActive(false), 5);
-        }}
+        onFocus={searchLogic.handleFocus}
+        onBlur={searchLogic.handleBlur}
         onClear={searchLogic.clearSearch}
         placeholder={placeholder}
         isDark={isDark}

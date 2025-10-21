@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ScrollView } from 'react-native';
 import { Container } from '../components/Container';
 import { ScreenContent } from '../components/ScreenContent';
-import { AssignmentContainer } from '../components/AssignmentContainer';
+import { AssignmentContainer } from '../components/home-screen/AssignmentContainer';
 import { SearchBar } from '../components/SearchBar';
 import { useSearch } from '../hooks/useSearch';
 import testData from '../test-files/test-data.json';
@@ -58,7 +58,7 @@ export function HomeScreen() {
         <ScrollView 
           style={{ flex: 1, backgroundColor: 'transparent' }} 
           className="px-4 pt-4"
-          keyboardShouldPersistTaps="never"
+          keyboardShouldPersistTaps="handled"
           keyboardDismissMode="on-drag"
           nestedScrollEnabled={true}
           contentContainerStyle={{ 
