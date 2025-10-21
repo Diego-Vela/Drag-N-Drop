@@ -1,4 +1,4 @@
-// Type definitions and interfaces used across utils
+import { Animated } from 'react-native';
 
 export interface SearchResult {
   id: string;
@@ -8,33 +8,35 @@ export interface SearchResult {
   unit?: string;
 }
 
-export interface AssignmentData {
-  pairs: [string, string, string][];
-  units: string[];
-  assignments: [string, string][];
+export interface SearchBarProps {
+  onSearchResults: (results: SearchResult[]) => void;
+  onSelectResult: (result: SearchResult) => void;
+  onSearch?: (query: string) => SearchResult[];
+  onShowAll?: () => SearchResult[]; // New prop to get all items
+  onClearQuery?: () => void; // New prop to reset query state
+  placeholder?: string;
 }
 
-export interface SearchState {
-  query: string;
-  results: SearchResult[];
-  isSearching: boolean;
-  isLoading: boolean;
+export interface SearchDropDownProps {
+  searchResults: SearchResult[];
+  showDropdown: boolean;
+  slideAnimation: Animated.Value;
+  onSelectResult: (result: SearchResult) => void;
+  isDark: boolean;
 }
 
-export interface DropdownState {
-  isVisible: boolean;
-  height: number;
-  items: SearchResult[];
+export interface SearchInputProps {
+  value: string;
+  onChangeText: (text: string) => void;
+  onFocus: () => void;
+  onClear: () => void;
+  placeholder: string;
+  isDark: boolean;
 }
 
-export type SearchResultType = 'unit' | 'location' | 'customer';
-
-export interface ThemeColors {
-  bg: string;
-  text: string;
-}
-
-export interface ValidationResult {
-  isValid: boolean;
-  errors: string[];
+export interface UseSearchLogicProps {
+  onSearch?: (query: string) => SearchResult[];
+  onShowAll?: () => SearchResult[];
+  onSearchResults: (results: SearchResult[]) => void;
+  onClearQuery?: () => void;
 }
