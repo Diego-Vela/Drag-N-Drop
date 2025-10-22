@@ -24,6 +24,18 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
     onSearchResults,
     onClearQuery
   });
+  /*
+  const { performSearch, getFilteredAssignments, getAllItems } = useSearch ({
+    pairs,
+    units,
+    assignments
+  });
+
+  conset 
+
+  
+  */
+
 
   // Animation coordination - responds to search results changes and SearchBar activity
   useEffect(() => {

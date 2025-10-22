@@ -72,8 +72,6 @@ export function HomeScreen() {
           showsVerticalScrollIndicator={false}
         >
           
-
-          
           {/* Customer-location pairs - only show those with assigned units */}
           {filteredPairs
             .filter((pair) => {
