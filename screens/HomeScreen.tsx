@@ -12,7 +12,6 @@ export function HomeScreen() {
   const unassigned = getUnassignedUnits();
   const { isDark } = useTheme();
 
-  // Prepare data for FlatList: all grouped assignments + unassigned as last item
   const flatListData = [
     ...groupedAssignments.map(({ customerName, locationName, units }) => ({
       key: `${customerName}__${locationName}`,
