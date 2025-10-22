@@ -1,5 +1,5 @@
 // Base Imports
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { View, Keyboard } from 'react-native';
 // Component Imports
 import { SearchDropDown, SearchInput } from './search-bar';
@@ -8,20 +8,66 @@ import { useTheme } from '../contexts/ThemeContext';
 // Hook Imports
 import { useSearchLogicComposed, useDropdownAnimation, useSearch } from '../hooks/search-bar-hooks';
 // Types
-import { SearchResult, SearchBarProps } from '../hooks/search-bar-hooks';
+import { SearchResult } from '../hooks/search-bar-hooks';
 
-export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll, onClearQuery, placeholder = "Search units, locations, or customers..." }: SearchBarProps) {
+interface SearchBarProps {
+  pairs: any[];
+  units: string[];
+  assignments: any[];
+  onFilteredDataChange: (data: { filteredPairs: any[]; filteredUnits: string[] }) => void;
+  placeholder?: string;
+}
+
+export function SearchBar({ pairs, units, assignments, onFilteredDataChange, placeholder = "Search units, locations, or customers..." }: SearchBarProps) {
   const { isDark } = useTheme();
   const [showDropdown, setShowDropdown] = useState(false);
   const [isAnimating, setIsAnimating] = useState(false);
   const { slideAnimation, showDropdown: animateShowDropdown, hideDropdown: animateHideDropdown } = useDropdownAnimation();
   
+  // Use search hook internally
+  const {
+    performSearch,
+    getFilteredAssignments,
+    getAllItems
+  } = useSearch({ pairs, units, assignments });
+
+  // Stable callback to handle filtered data changes
+  const handleFilteredDataChange = useCallback((query: string) => {
+    const { filteredPairs, filteredUnits } = getFilteredAssignments(query);
+    onFilteredDataChange({ filteredPairs, filteredUnits });
+  }, [getFilteredAssignments, onFilteredDataChange]);
+
+  // Create search handler functions
+  const onSearch = useCallback((query: string) => {
+    handleFilteredDataChange(query);
+    return performSearch(query);
+  }, [performSearch, handleFilteredDataChange]);
+
+  const onShowAll = useCallback(() => {
+    return getAllItems();
+  }, [getAllItems]);
+
+  const onSearchResults = useCallback((results: SearchResult[]) => {
+    // Handle search results for dropdown display
+  }, []);
+
+  const onClearQuery = useCallback(() => {
+    handleFilteredDataChange('');
+  }, [handleFilteredDataChange]);
+
   const searchLogic = useSearchLogicComposed({
     onSearch,
     onShowAll,
     onSearchResults,
     onClearQuery
   });
+
+  // Initialize filtered data when component mounts or data changes
+  useEffect(() => {
+    if (pairs.length > 0 && units.length > 0) {
+      handleFilteredDataChange('');
+    }
+  }, [pairs.length, units.length, assignments.length, handleFilteredDataChange]);
 
 
   // Animation coordination - responds to search results changes and SearchBar activity
@@ -51,7 +97,7 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
   };
   const handleSelectResult = (result: SearchResult) => {
     // Use the hook's handler for state management
-    searchLogic.handleSelectResult(result, onSelectResult);
+    searchLogic.handleSelectResult(result, () => {});
     
     // Handle UI-specific actions (animation and keyboard)
     closeDropdown();
