@@ -1,8 +1,10 @@
 import React from 'react';
-import { ScrollView } from 'react-native';
+import { FlatList } from 'react-native';
 import { Container, ScreenContent } from '../components/base';
 import { AssignmentContainer } from '../components/home-screen';
 import { useTheme, useData } from '../contexts';
+
+const GroupName = 'Sugma'
 
 export function HomeScreen() {
   const { getUnassignedUnits, getGroupedAssignments } = useData();
@@ -10,42 +12,49 @@ export function HomeScreen() {
   const unassigned = getUnassignedUnits();
   const { isDark } = useTheme();
 
+  // Prepare data for FlatList: all grouped assignments + unassigned as last item
+  const flatListData = [
+    ...groupedAssignments.map(({ customerName, locationName, units }) => ({
+      key: `${customerName}__${locationName}`,
+      customerName,
+      locationName,
+      units,
+      isUnassigned: false,
+    })),
+    {
+      key: 'unassigned',
+      customerName: 'Unassigned',
+      locationName: 'Available Units',
+      units: unassigned,
+      isUnassigned: true,
+    },
+  ];
+
   return (
-    <Container headerTitle="Group Name">
+    <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/HomeScreen.tsx">
-        <ScrollView
+        <FlatList
+          data={flatListData}
+          renderItem={({ item }) => (
+            <AssignmentContainer
+              key={item.key}
+              title={item.customerName}
+              subtitle={item.locationName}
+              units={item.units}
+              isDark={isDark}
+              isUnassigned={item.isUnassigned}
+            />
+          )}
           style={{ flex: 1, backgroundColor: 'transparent' }}
-          className="px-4 pt-4"
-          keyboardShouldPersistTaps="handled"
-          keyboardDismissMode="on-drag"
-          nestedScrollEnabled={true}
           contentContainerStyle={{
             paddingBottom: 60,
             overflow: 'visible',
+            paddingLeft: 16,
+            paddingRight: 16,
+            paddingTop: 16,
           }}
           showsVerticalScrollIndicator={false}
-        >
-          {/* Assigned units grouped by customer/location */}
-          {groupedAssignments.map(({ customerName, locationName, units }) => (
-            <AssignmentContainer
-              key={`${customerName}__${locationName}`}
-              title={customerName}
-              subtitle={locationName}
-              units={units}
-              isDark={isDark}
-            />
-          ))}
-
-          {/* Unassigned units */}
-          <AssignmentContainer
-            title="Unassigned"
-            subtitle="Available Units"
-            units={unassigned}
-            isDark={isDark}
-            isUnassigned={true}
-          />
-
-        </ScrollView>
+        />
       </ScreenContent>
     </Container>
   );
