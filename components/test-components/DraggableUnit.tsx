@@ -1,8 +1,9 @@
-import React from 'react';
+import React, { useRef } from 'react';
 import { LayoutChangeEvent, Text } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
+  withSpring
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
@@ -11,6 +12,7 @@ interface DraggableUnitProps {
   onMeasure: (id: string, layout: { x: number; y: number; width: number; height: number }) => void;
   size?: number;
   color?: string;
+  isInDropZone?: boolean;
 }
 
 /**
@@ -23,14 +25,15 @@ export function DraggableUnit({
   onMeasure,
   size = 120,
   color = '#8cc9ff',
+  isInDropZone = false,
 }: DraggableUnitProps) {
   // Persistent offset (where the unit should be at rest)
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
-
-  // Temporary translation while dragging
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+
+  const myRef = useRef(null);
 
   // Apply both offset + live translation
   const animatedStyle = useAnimatedStyle(() => ({
@@ -54,9 +57,12 @@ export function DraggableUnit({
       translateY.value = e.translationY;
     })
     .onEnd(() => {
-      // Commit final position (no animation)
       offsetX.value += translateX.value;
       offsetY.value += translateY.value;
+      if (!isInDropZone) {
+        offsetX.value = withSpring(offsetX.value - translateX.value);
+        offsetY.value = withSpring(offsetY.value - translateY.value);
+      }
       translateX.value = 0;
       translateY.value = 0;
     });
