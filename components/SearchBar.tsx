@@ -24,24 +24,17 @@ export function SearchBar({ pairs, units, assignments, onFilteredDataChange, pla
   const [isAnimating, setIsAnimating] = useState(false);
   const { slideAnimation, showDropdown: animateShowDropdown, hideDropdown: animateHideDropdown } = useDropdownAnimation();
   
-  // Use search hook internally
+  // Use search hook internally - it now handles filtered data changes
   const {
-    performSearch,
-    getFilteredAssignments,
-    getAllItems
-  } = useSearch({ pairs, units, assignments });
+    performSearch,  // This now includes filtered data updates
+    getAllItems,
+    clearSearch
+  } = useSearch({ pairs, units, assignments, onFilteredDataChange });
 
-  // Stable callback to handle filtered data changes
-  const handleFilteredDataChange = useCallback((query: string) => {
-    const { filteredPairs, filteredUnits } = getFilteredAssignments(query);
-    onFilteredDataChange({ filteredPairs, filteredUnits });
-  }, [getFilteredAssignments, onFilteredDataChange]);
-
-  // Create search handler functions
+  // Simple search handlers - no complex logic needed
   const onSearch = useCallback((query: string) => {
-    handleFilteredDataChange(query);
-    return performSearch(query);
-  }, [performSearch, handleFilteredDataChange]);
+    return performSearch(query);  // performSearch now handles filtered data internally
+  }, [performSearch]);
 
   const onShowAll = useCallback(() => {
     return getAllItems();
@@ -52,8 +45,8 @@ export function SearchBar({ pairs, units, assignments, onFilteredDataChange, pla
   }, []);
 
   const onClearQuery = useCallback(() => {
-    handleFilteredDataChange('');
-  }, [handleFilteredDataChange]);
+    clearSearch();  // clearSearch now handles filtered data internally
+  }, [clearSearch]);
 
   const searchLogic = useSearchLogicComposed({
     onSearch,
@@ -61,13 +54,6 @@ export function SearchBar({ pairs, units, assignments, onFilteredDataChange, pla
     onSearchResults,
     onClearQuery
   });
-
-  // Initialize filtered data when component mounts or data changes
-  useEffect(() => {
-    if (pairs.length > 0 && units.length > 0) {
-      handleFilteredDataChange('');
-    }
-  }, [pairs.length, units.length, assignments.length, handleFilteredDataChange]);
 
 
   // Animation coordination - responds to search results changes and SearchBar activity

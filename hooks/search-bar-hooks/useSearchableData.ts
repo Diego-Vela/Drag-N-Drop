@@ -1,15 +1,21 @@
 // Base Imports
 import { useMemo } from 'react';
-import { SearchResult, UseSearchableDataProps } from './types';
+import { SearchResult } from './types';
 
-export function useSearchableData({ pairs, units, getAssignedUnits, getUnitAssignment }: UseSearchableDataProps) {
+interface UseSearchableDataProps {
+  pairs: any[];
+  units: string[];
+  assignmentMaps: { unitToAssignment: Map<string, any>, pairToUnits: Map<string, string[]> };
+}
+
+export function useSearchableData({ pairs, units, assignmentMaps }: UseSearchableDataProps) {
   // Create searchable data structure
   const searchableData = useMemo(() => {
     const results: SearchResult[] = [];
 
     // Add all units
     units.forEach(unit => {
-      const assignment = getUnitAssignment(unit);
+      const assignment = assignmentMaps.unitToAssignment.get(unit);
       results.push({
         id: `unit-${unit}`,
         type: 'unit',
@@ -22,7 +28,7 @@ export function useSearchableData({ pairs, units, getAssignedUnits, getUnitAssig
 
     // Add all customer-location pairs
     pairs.forEach(([customer, location, id]) => {
-      const assignedUnits = getAssignedUnits(id);
+      const assignedUnits = assignmentMaps.pairToUnits.get(id) || [];
       results.push({
         id: `location-${id}`,
         type: 'location',
@@ -41,7 +47,7 @@ export function useSearchableData({ pairs, units, getAssignedUnits, getUnitAssig
     });
 
     return results;
-  }, [pairs, units, getAssignedUnits, getUnitAssignment]);
+  }, [pairs, units, assignmentMaps]);
 
   return {
     searchableData

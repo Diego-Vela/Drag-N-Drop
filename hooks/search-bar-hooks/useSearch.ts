@@ -1,5 +1,5 @@
 // Base Imports
-import { useState } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 // Hook Imports
 import { useAssignmentMaps } from '../useAssignmentMaps';
 import { useSearchableData } from './useSearchableData';
@@ -12,9 +12,10 @@ interface UseSearchProps {
   pairs: any[];
   units: string[];
   assignments: any[];
+  onFilteredDataChange?: (data: { filteredPairs: any[]; filteredUnits: string[] }) => void;
 }
 
-export function useSearch({ pairs, units, assignments }: UseSearchProps) {
+export function useSearch({ pairs, units, assignments, onFilteredDataChange }: UseSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [filteredResults, setFilteredResults] = useState<SearchResult[]>([]);
 
@@ -28,8 +29,7 @@ export function useSearch({ pairs, units, assignments }: UseSearchProps) {
   const { searchableData } = useSearchableData({ 
     pairs, 
     units, 
-    getAssignedUnits, 
-    getUnitAssignment 
+    assignmentMaps
   });
 
   // Get search functionality
@@ -41,9 +41,34 @@ export function useSearch({ pairs, units, assignments }: UseSearchProps) {
   const { getFilteredAssignments } = useFiltering({ 
     pairs, 
     units, 
-    getAssignedUnits, 
-    getUnitAssignment 
+    assignmentMaps
   });
+
+  // Handle filtered data changes internally
+  const handleFilteredDataChange = useCallback((query: string) => {
+    const { filteredPairs, filteredUnits } = getFilteredAssignments(query);
+    if (onFilteredDataChange) {
+      onFilteredDataChange({ filteredPairs, filteredUnits });
+    }
+  }, [getFilteredAssignments, onFilteredDataChange]);
+
+  // Enhanced search function that also updates filtered data
+  const performSearchWithFilter = useCallback((query: string) => {
+    handleFilteredDataChange(query);
+    return performSearch(query);
+  }, [performSearch, handleFilteredDataChange]);
+
+  // Clear function that resets filtered data
+  const clearSearch = useCallback(() => {
+    handleFilteredDataChange('');
+  }, [handleFilteredDataChange]);
+
+  // Initialize filtered data when component mounts or data changes
+  useEffect(() => {
+    if (pairs.length > 0 && units.length > 0 && onFilteredDataChange) {
+      handleFilteredDataChange('');
+    }
+  }, [pairs.length, units.length, assignments.length, handleFilteredDataChange]);
 
   return {
     // State
@@ -56,10 +81,10 @@ export function useSearch({ pairs, units, assignments }: UseSearchProps) {
     getAssignedUnits,
     getUnitAssignment,
     
-    // Search functionality
-    performSearch,
+    // Search functionality (simplified for SearchBar)
+    performSearch: performSearchWithFilter,  // This includes filtered data updates
     getAllItems,
-    getFilteredAssignments,
+    clearSearch,
     
     // Internal data
     searchableData,
