@@ -1,25 +1,53 @@
 {
-  "customer-location-pairs":
-  [
-    ["Customer 1", "Location 1", "ID1"],
-    ["Customer 2", "Location 2", "ID2"],
-    ["Customer 3", "Location 3", "ID3"],
-    ["Customer 1", "Location 4", "ID4"],
-    ["Customer 4", "Location 5", "ID5"]
+  "customers": [
+    { "id": 1, "name": "Customer 1" },
+    { "id": 2, "name": "Customer 2" },
+    { "id": 3, "name": "Customer 3" },
+    { "id": 4, "name": "Customer 4" }
   ],
-  "units":
-  [
-    "Unit A", "Unit B", "Unit C", "Unit D", "Unit E", "Unit F", "Unit G", "Unit H", "Unit I", "Unit J", "Unit K", "Unit L", "Unit M", "Unit N", "Unit O", "Unit P", "Unit Q", "Unit R", "Unit S", "Unit T", "Unit U", "Unit V", "Unit W", "Unit X", "Unit Y", "Unit Z"
+  "locations": [
+    { "id": "ID1", "customerId": 1, "name": "Location 1" },
+    { "id": "ID2", "customerId": 2, "name": "Location 2" },
+    { "id": "ID3", "customerId": 3, "name": "Location 3" },
+    { "id": "ID4", "customerId": 1, "name": "Location 4" },
+    { "id": "ID5", "customerId": 4, "name": "Location 5" }
   ],
-  "assignments":
-  [
-    ["Unit A", "ID1"],
-    ["Unit B", "ID4"],
-    ["Unit C", "ID2"],
-    ["Unit D", "ID1"],
-    ["Unit E", "ID1"],
-    ["Unit F", "ID1"],
-    ["Unit G", "ID1"],
-    ["Unit H", "ID1"]
+  "units": [
+    { "id": "A", "name": "Unit A" },
+    { "id": "B", "name": "Unit B" },
+    { "id": "C", "name": "Unit C" },
+    { "id": "D", "name": "Unit D" },
+    { "id": "E", "name": "Unit E" },
+    { "id": "F", "name": "Unit F" },
+    { "id": "G", "name": "Unit G" },
+    { "id": "H", "name": "Unit H" },
+    { "id": "I", "name": "Unit I" },
+    { "id": "J", "name": "Unit J" },
+    { "id": "K", "name": "Unit K" },
+    { "id": "L", "name": "Unit L" },
+    { "id": "M", "name": "Unit M" },
+    { "id": "N", "name": "Unit N" },
+    { "id": "O", "name": "Unit O" },
+    { "id": "P", "name": "Unit P" },
+    { "id": "Q", "name": "Unit Q" },
+    { "id": "R", "name": "Unit R" },
+    { "id": "S", "name": "Unit S" },
+    { "id": "T", "name": "Unit T" },
+    { "id": "U", "name": "Unit U" },
+    { "id": "V", "name": "Unit V" },
+    { "id": "W", "name": "Unit W" },
+    { "id": "X", "name": "Unit X" },
+    { "id": "Y", "name": "Unit Y" },
+    { "id": "Z", "name": "Unit Z" }
+  ],
+  "assignments": [
+    { "unitId": "A", "locationId": "ID1", "customerId": 1 },
+    { "unitId": "B", "locationId": "ID4", "customerId": 1 },
+    { "unitId": "C", "locationId": "ID2", "customerId": 2 },
+    { "unitId": "D", "locationId": "ID1", "customerId": 1 },
+    { "unitId": "E", "locationId": "ID1", "customerId": 1 },
+    { "unitId": "F", "locationId": "ID1", "customerId": 1 },
+    { "unitId": "G", "locationId": "ID1", "customerId": 1 },
+    { "unitId": "H", "locationId": "ID1", "customerId": 1 }
   ]
 }

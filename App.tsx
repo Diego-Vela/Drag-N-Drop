@@ -5,19 +5,13 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 // Screen Imports
-import { HomeScreen } from './screens/HomeScreen';
-import { CustomersScreen } from './screens/CustomersScreen';
-import { UnitsScreen } from './screens/UnitsScreen';
-import { AssignmentsScreen } from './screens/AssignmentsScreen';
-import { SettingsScreen } from './screens/SettingsScreen';
+import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen } from './screens';
 // Context Imports
-import { ThemeProvider, useTheme } from './contexts/ThemeContext';
+import { ThemeProvider, useTheme, DataProvider } from './contexts';
 // Styles
 import './global.css';
 
 const Tab = createBottomTabNavigator();
-
-
 
 function TabNavigator() {
   const { isDark } = useTheme();
@@ -26,7 +20,7 @@ function TabNavigator() {
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
-        tabBarShowLabel: false,
+        tabBarShowLabel: true,
         tabBarActiveTintColor: isDark ? '#60a5fa' : '#ffffff', // dark-accent : white for navy background
         tabBarInactiveTintColor: isDark ? '#9ca3af' : '#93c5fd', // dark-secondary : light blue for navy
         tabBarStyle: {
@@ -80,9 +74,11 @@ function TabNavigator() {
 export default function App() {
   return (
     <ThemeProvider>
-      <NavigationContainer>
-        <TabNavigator />
-      </NavigationContainer>
+      <DataProvider>
+        <NavigationContainer>
+          <TabNavigator />
+        </NavigationContainer>
+      </DataProvider>
     </ThemeProvider>
   )
 }
