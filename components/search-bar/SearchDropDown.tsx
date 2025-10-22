@@ -3,7 +3,7 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity, Text, Animated } from 'react-native';
 // Utility Imports
 import { getSearchResultIcon, getSearchResultTypeColor } from '../../utils/searchResultUtils';
-import { SearchDropDownProps } from '../../utils/types';
+import { SearchDropDownProps } from '../../hooks/search-bar-hooks/types';
 
 export function SearchDropDown({
   searchResults,

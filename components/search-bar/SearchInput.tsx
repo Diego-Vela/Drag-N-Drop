@@ -1,7 +1,7 @@
 // Base Imports
 import { Text, TextInput, View, TouchableOpacity } from 'react-native';
 // Utility Imports
-import { SearchInputProps } from '../../utils/types';
+import { SearchInputProps } from '../../hooks/search-bar-hooks';
 
 export function SearchInput({ 
   value,

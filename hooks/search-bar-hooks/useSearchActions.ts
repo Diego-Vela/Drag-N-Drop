@@ -2,7 +2,7 @@
 import { useRef, useEffect, useCallback } from 'react';
 import { Keyboard } from 'react-native';
 // Utility Imports
-import { SearchResult } from '../../utils/types';
+import { SearchResult } from './types';
 
 /**
  * Search actions and effects hook

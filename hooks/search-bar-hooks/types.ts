@@ -42,3 +42,29 @@ export interface UseSearchLogicProps {
   onSearchResults: (results: SearchResult[]) => void;
   onClearQuery?: () => void;
 }
+
+export interface UseFilteringProps {
+  pairs: any[];
+  units: string[];
+  getAssignedUnits: (pairId: string) => string[];
+  getUnitAssignment: (unitName: string) => { customer: string; location: string; pairId: string } | null;
+}
+
+export interface SearchResult {
+  id: string;
+  type: 'unit' | 'location' | 'customer';
+  primary: string;
+  secondary?: string;
+  unit?: string;
+}
+
+export interface UseSearchableDataProps {
+  pairs: any[];
+  units: string[];
+  getAssignedUnits: (pairId: string) => string[];
+  getUnitAssignment: (unitName: string) => { customer: string; location: string; pairId: string } | null;
+}
+
+export interface UseSearchFunctionalityProps {
+  searchableData: SearchResult[];
+}

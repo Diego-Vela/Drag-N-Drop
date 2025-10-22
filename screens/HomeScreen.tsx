@@ -7,7 +7,7 @@ import { ScreenContent } from '../components/ScreenContent';
 import { AssignmentContainer } from '../components/home-screen/AssignmentContainer';
 import { SearchBar } from '../components/SearchBar';
 // Hook Imports
-import { useSearch } from '../hooks/useSearch';
+import { useSearch } from '../hooks/search-bar-hooks';
 // Other
 import testData from '../test-files/test-data.json';
 

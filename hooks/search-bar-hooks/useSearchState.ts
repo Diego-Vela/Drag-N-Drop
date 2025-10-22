@@ -1,7 +1,7 @@
 // Base Imports
 import { useState, useCallback } from 'react';
 // Utility Imports
-import { SearchResult } from '../../utils/types';
+import { SearchResult } from './types';
 
 /**
  * Pure search state management hook

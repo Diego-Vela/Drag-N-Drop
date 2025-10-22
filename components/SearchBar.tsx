@@ -2,15 +2,13 @@
 import React, { useState, useEffect } from 'react';
 import { View, Keyboard } from 'react-native';
 // Component Imports
-import { SearchDropDown } from './search-bar/SearchDropDown';
-import { SearchInput } from './search-bar/SearchInput';
+import { SearchDropDown, SearchInput } from './search-bar';
 // Context Imports
 import { useTheme } from '../contexts/ThemeContext';
 // Hook Imports
-import { useDropdownAnimation } from '../hooks/useDropdownAnimation';
-import { useSearchLogicComposed } from '../hooks/search-bar-hooks/useSearchLogicComposed';
-// Other
-import { SearchResult, SearchBarProps } from '../utils/types';
+import { useSearchLogicComposed, useDropdownAnimation, useSearch } from '../hooks/search-bar-hooks';
+// Types
+import { SearchResult, SearchBarProps } from '../hooks/search-bar-hooks';
 
 export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll, onClearQuery, placeholder = "Search units, locations, or customers..." }: SearchBarProps) {
   const { isDark } = useTheme();
@@ -24,17 +22,6 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
     onSearchResults,
     onClearQuery
   });
-  /*
-  const { performSearch, getFilteredAssignments, getAllItems } = useSearch ({
-    pairs,
-    units,
-    assignments
-  });
-
-  conset 
-
-  
-  */
 
 
   // Animation coordination - responds to search results changes and SearchBar activity
@@ -62,7 +49,6 @@ export function SearchBar({ onSearchResults, onSelectResult, onSearch, onShowAll
       });
     }
   };
-
   const handleSelectResult = (result: SearchResult) => {
     // Use the hook's handler for state management
     searchLogic.handleSelectResult(result, onSelectResult);
