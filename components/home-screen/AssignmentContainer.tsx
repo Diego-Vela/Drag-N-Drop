@@ -41,7 +41,7 @@ export function AssignmentContainer({ title, subtitle, units, isDark, isUnassign
 
       {/* Right Column: Units Flex Container - Single Column Centered */}
       <View className="ml-4 flex-1 items-center justify-center">
-        <View className="flex-1 flex-col gap-6 mb-4 w-full">
+        <View className="flex-1 flex-col gap-6 mb-2 w-full">
           {units.map((unit) => (
             <View
               key={unit.name}

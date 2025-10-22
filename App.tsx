@@ -4,8 +4,9 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Screen Imports
-import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen } from './screens';
+import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen, TestScreen, EditScreen } from './screens';
 // Context Imports
 import { ThemeProvider, useTheme, DataProvider } from './contexts';
 // Styles
@@ -63,22 +64,25 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Customers" component={CustomersScreen} />
+      <Tab.Screen name="Edit" component={EditScreen} />
       <Tab.Screen name="Units" component={UnitsScreen} />
       <Tab.Screen name="Assignments" component={AssignmentsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Test" component={TestScreen} />
     </Tab.Navigator>
   );
 }
 
 export default function App() {
   return (
-    <ThemeProvider>
-      <DataProvider>
-        <NavigationContainer>
-          <TabNavigator />
-        </NavigationContainer>
-      </DataProvider>
-    </ThemeProvider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <ThemeProvider>
+        <DataProvider>
+          <NavigationContainer>
+            <TabNavigator />
+          </NavigationContainer>
+        </DataProvider>
+      </ThemeProvider>
+    </GestureHandlerRootView>
   )
 }
