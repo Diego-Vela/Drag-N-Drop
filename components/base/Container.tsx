@@ -1,10 +1,14 @@
+// Base Imports
 import React, { useEffect } from 'react';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { View, Dimensions } from 'react-native';
-import { useTheme } from '../contexts/ThemeContext';
-import { Header } from './Header';
+// Third-party Imports
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { Canvas, Rect, interpolateColors } from '@shopify/react-native-skia';
 import { useDerivedValue, useSharedValue, withTiming } from 'react-native-reanimated';
+// Component Imports
+import { Header } from './Header';
+// Context Imports
+import { useTheme } from '../../contexts/ThemeContext';
 
 export const Container = ({ 
   children, 
@@ -38,7 +42,7 @@ export const Container = ({
   return (
     <SafeAreaView 
       className="flex-1"
-      edges={['top', 'left', 'right', 'bottom']}
+      edges={['top', 'left', 'right']}
       style={{ position: 'relative' }}
     >
       <Canvas style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
@@ -51,9 +55,9 @@ export const Container = ({
         />
       </Canvas>
       
-      <View style={{ flex: 1, backgroundColor: 'transparent' }}>
+      <View style={{ flex: 1, backgroundColor: 'transparent', overflow: 'visible' }}>
         {showHeader && <Header title={headerTitle} />}
-        <View className="flex-1 mx-6">
+        <View className="flex-1 mx-0" style={{ overflow: 'visible' }}>
           {children}
         </View>
       </View>

@@ -1,7 +1,6 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Container } from '../components/Container';
-import { ScreenContent } from '../components/ScreenContent';
+import { Container, ScreenContent } from '../components/base';
 
 export function SettingsScreen() {
   return (

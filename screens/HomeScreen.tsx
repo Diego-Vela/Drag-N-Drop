@@ -1,11 +1,10 @@
 import React from 'react';
 import { View } from 'react-native';
-import { Container } from '../components/Container';
-import { ScreenContent } from '../components/ScreenContent';
+import { Container, ScreenContent } from '../components/base';
 
 export function HomeScreen() {
   return (
-    <Container headerTitle="{Organization Name}">
+    <Container headerTitle="Group Name">
       <ScreenContent 
         title="Dashboard" 
         path="screens/HomeScreen.tsx"

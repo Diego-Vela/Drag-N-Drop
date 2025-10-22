@@ -1,114 +1,25 @@
 {
-  "customers": [
-    {
-      "id": "customer-1",
-      "name": "Acme Corporation",
-      "locations": [
-        {
-          "id": "location-1",
-          "name": "Main Warehouse",
-          "address": "123 Industrial Blvd, City, State",
-          "assignedUnits": ["unit-3"]
-        },
-        {
-          "id": "location-2", 
-          "name": "Distribution Center",
-          "address": "456 Commerce St, City, State",
-          "assignedUnits": []
-        }
-      ]
-    },
-    {
-      "id": "customer-2",
-      "name": "Global Logistics Inc",
-      "locations": [
-        {
-          "id": "location-3",
-          "name": "Port Terminal",
-          "address": "789 Harbor Way, Port City, State",
-          "assignedUnits": ["unit-1", "unit-5"]
-        },
-        {
-          "id": "location-4",
-          "name": "Rail Depot",
-          "address": "321 Railway Ave, Rail City, State",
-          "assignedUnits": []
-        }
-      ]
-    },
-    {
-      "id": "customer-3",
-      "name": "Metro Supply Chain",
-      "locations": [
-        {
-          "id": "location-5",
-          "name": "North Facility",
-          "address": "555 North Rd, Metro, State",
-          "assignedUnits": ["unit-2"]
-        },
-        {
-          "id": "location-6",
-          "name": "South Facility", 
-          "address": "777 South Ave, Metro, State",
-          "assignedUnits": []
-        }
-      ]
-    }
+  "customer-location-pairs":
+  [
+    ["Customer 1", "Location 1", "ID1"],
+    ["Customer 2", "Location 2", "ID2"],
+    ["Customer 3", "Location 3", "ID3"],
+    ["Customer 1", "Location 4", "ID4"],
+    ["Customer 4", "Location 5", "ID5"]
   ],
-  "units": [
-    {
-      "id": "unit-1",
-      "name": "Truck Alpha",
-      "type": "Semi-Trailer",
-      "status": "assigned",
-      "assignedTo": {
-        "customerId": "customer-2",
-        "locationId": "location-3"
-      }
-    },
-    {
-      "id": "unit-2", 
-      "name": "Truck Beta",
-      "type": "Box Truck",
-      "status": "assigned",
-      "assignedTo": {
-        "customerId": "customer-3",
-        "locationId": "location-5"
-      }
-    },
-    {
-      "id": "unit-3",
-      "name": "Truck Gamma",
-      "type": "Semi-Trailer", 
-      "status": "assigned",
-      "assignedTo": {
-        "customerId": "customer-1",
-        "locationId": "location-1"
-      }
-    },
-    {
-      "id": "unit-4",
-      "name": "Truck Delta",
-      "type": "Flatbed",
-      "status": "available",
-      "assignedTo": null
-    },
-    {
-      "id": "unit-5",
-      "name": "Truck Echo",
-      "type": "Box Truck",
-      "status": "assigned", 
-      "assignedTo": {
-        "customerId": "customer-2",
-        "locationId": "location-3"
-      }
-    },
-    {
-      "id": "unit-6",
-      "name": "Truck Foxtrot",
-      "type": "Semi-Trailer",
-      "status": "available",
-      "assignedTo": null
-    }
+  "units":
+  [
+    "Unit A", "Unit B", "Unit C", "Unit D", "Unit E", "Unit F", "Unit G", "Unit H", "Unit I", "Unit J", "Unit K", "Unit L", "Unit M", "Unit N", "Unit O", "Unit P", "Unit Q", "Unit R", "Unit S", "Unit T", "Unit U", "Unit V", "Unit W", "Unit X", "Unit Y", "Unit Z"
+  ],
+  "assignments":
+  [
+    ["Unit A", "ID1"],
+    ["Unit B", "ID4"],
+    ["Unit C", "ID2"],
+    ["Unit D", "ID1"],
+    ["Unit E", "ID1"],
+    ["Unit F", "ID1"],
+    ["Unit G", "ID1"],
+    ["Unit H", "ID1"]
   ]
 }
