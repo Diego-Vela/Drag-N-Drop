@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ['./App.{js,ts,tsx}', './components/**/*.{js,ts,tsx}', './screens/**/*.{js,ts,tsx}'],
+  content: ['./App.{js,ts,tsx}', './components/**/*.{js,ts,tsx}', './screens/**/*.{js,ts,tsx}', './components/test-components/**/*.{js,ts,tsx}'],
   presets: [require('nativewind/preset')],
   darkMode: 'class',
   theme: {
@@ -61,6 +61,7 @@ module.exports = {
         '3xl': '30px',
       },
       spacing: {
+        8 : 32,
         '18': '4.5rem',
         '88': '22rem',
       },

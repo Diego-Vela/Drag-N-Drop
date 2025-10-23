@@ -14,7 +14,7 @@ interface DraggableUnitProps {
   onMeasure: (id: string, layout: { x: number; y: number; width: number; height: number }) => void;
   onDragEnd?: (id: string, position: { x: number; y: number }) => void; // NEW
   size?: number;
-  color?: string;
+  isDark?: boolean;
   isInDropZone?: boolean;
   isInDropZoneShared?: SharedValue<boolean>;
 }
@@ -28,8 +28,8 @@ export function DraggableUnit({
   label = 'Drag me',
   onMeasure,
   onDragEnd,
-  size = 120,
-  color = '#8cc9ff',
+  size = 60,
+  isDark = false,
   isInDropZone = false,
   isInDropZoneShared,
 }: DraggableUnitProps) {
@@ -47,8 +47,8 @@ export function DraggableUnit({
         (x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
           const middleX = pageX + width / 2;
           const middleY = pageY + height / 2;
-          //console.log('Middle Point X:', middleX);
-          //console.log('Middle Point Y:', middleY);
+          console.log('Middle Point X:', middleX);
+          console.log('Middle Point Y:', middleY);
 
           // Send to DragManager
           if (onDragEnd) {
@@ -99,18 +99,23 @@ export function DraggableUnit({
     <GestureDetector gesture={pan}>
       <Animated.View
         ref={unitRef}
-        className="rounded-2xl justify-center items-center shadow-business-lg"
+        className={`px-4 py-6 rounded-lg border-2 ${
+                isDark 
+                  ? 'bg-dark-warning/20 border-dark-highlight-accent' 
+                  : 'bg-light-highlight border-light-highlight-accent'
+              }`}
         onLayout={handleLayout}
         style={[
           animatedStyle,
           {
             width: size,
-            height: size,
-            backgroundColor: color,
+            height: size
           },
         ]}
       >
-        <Text className="text-white font-bold">{label}</Text>
+        <Text className={`font-semibold text-sm text-left ${ isDark ? 'text-dark-highlight-text' : 'text-light-highlight-text'}`}>
+          {'Unit A'}
+        </Text>
         <TouchableOpacity className='bg-white h-5 w-12 mt-4' onPress={getMiddlePoint}/>
       </Animated.View>
     </GestureDetector>

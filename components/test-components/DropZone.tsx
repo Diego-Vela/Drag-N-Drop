@@ -1,11 +1,11 @@
 import React, { ReactNode, useRef } from 'react';
-import { View, LayoutChangeEvent, Text, TouchableOpacity } from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 
 interface DropZoneProps {
   id: string;
   onMeasure: (id: string, layout: { left: number; right: number; top: number; bottom: number }) => void;
-  color?: string;
   label?: string;
+  isDark?: boolean;
   children?: ReactNode;
 }
 
@@ -19,8 +19,8 @@ interface DropZoneProps {
 export function DropZone({
   id,
   onMeasure,
-  color = '#e0e0e0',
   label = 'Drop Zone',
+  isDark = false,
   children,
 }: DropZoneProps) {
 
@@ -50,18 +50,41 @@ export function DropZone({
 
   return (
     <View
-      className="w-[200px] h-[200px] rounded-2xl border-2 border-neutral-400 items-center justify-center m-3"
+      className={`flex-row mb-4 p-3 rounded-lg ${isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'}`}
       ref={zoneRef}
-      style={{ backgroundColor: color }}
       onLayout={handleLayout}
     >
-      <Text className="font-bold text-neutral-800 dark:text-neutral-100">{label}</Text>
-      {children && (
-        <View className="flex-row items-center justify-center mt-2 w-full">
-          {children}
+        {/* Left Column: Title/Subtitle Pair */}
+        <View className="items-center">
+          <View className={`p-4 rounded-lg shadow-sm border w-40 ${
+            isDark 
+              ? 'bg-dark-surface border-dark-border' 
+              : 'bg-white border-light-border/20'
+          }`}>
+            <Text className={`font-bold text-sm ${
+              isDark ? 'text-dark-primary' : 'text-light-primary'
+            }`}>
+              {'Customer'}
+            </Text>
+            <Text className={`text-xs mt-1 ${
+              isDark ? 'text-dark-secondary' : 'text-light-secondary'
+            }`}>
+              {'Location'}
+            </Text>
+
+          </View>
         </View>
-      )}
-      <TouchableOpacity className='bg-white h-5 w-12 mt-4' onPress={getBounds}/>
+        
+        {/* Right Column: Units */}
+        <View className="ml-4 flex-1 items-center justify-center">
+          {children && (
+            <View className="flex-row items-center justify-center mt-2 w-full">
+              {children}
+            </View>
+          )}
+          <TouchableOpacity className='bg-white h-5 w-12 mt-4' onPress={getBounds}/>
+        </View>
+      
     </View>
   );
 }

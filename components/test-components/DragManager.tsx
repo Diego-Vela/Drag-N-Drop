@@ -38,6 +38,8 @@ export function DragManager() {
         position.x <= right &&
         position.y >= top &&
         position.y <= bottom;
+      console.log(position);
+      console.log(zone);
 
       console.log(inside ? `✅ ${id} is inside Drop Zone` : `❌ ${id} is outside Drop Zone`);
 
@@ -48,19 +50,19 @@ export function DragManager() {
   );
 
   return (
-    <View style={styles.container}>
+    <View className='py-[16] px-[16]'>
       <DropZone
         id="zone1"
         onMeasure={handleZoneMeasure}
-        color={isDark ? '#444' : '#e0e0e0'}
         label="Drop Zone"
+        isDark={isDark}
       />
       <DraggableUnit
-        label="Drag1"
+        label="Unit A"
         onMeasure={handleUnitMeasure}
         onDragEnd={handleUnitDrop} // NEW
-        color={isDark ? '#2196F3' : '#8cc9ff'}
-        size={120}
+        isDark={isDark}
+        size={80}
         isInDropZone={unitInDropZone}
         isInDropZoneShared={unitInDropZoneShared}
       />
@@ -70,7 +72,7 @@ export function DragManager() {
 
 const styles = StyleSheet.create({
   container: {
-    flex: 2,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
   },

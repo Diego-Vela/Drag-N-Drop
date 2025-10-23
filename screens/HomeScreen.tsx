@@ -38,6 +38,7 @@ export function HomeScreen() {
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/HomeScreen.tsx">
+        {/* Vertical List */ }
         <FlatList
           data={flatListData}
           renderItem={({ item }) => (
@@ -61,6 +62,7 @@ export function HomeScreen() {
           showsVerticalScrollIndicator={false}
         />
       </ScreenContent>
+      {/* Unassigned List: Horizontal */}
       {isEditing && <UnitScroller allUnits={allUnits} />}
     </Container>
   );
