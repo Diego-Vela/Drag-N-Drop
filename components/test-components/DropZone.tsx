@@ -1,9 +1,9 @@
-import React, { ReactNode } from 'react';
-import { View, LayoutChangeEvent, Text } from 'react-native';
+import React, { ReactNode, useRef } from 'react';
+import { View, LayoutChangeEvent, Text, TouchableOpacity } from 'react-native';
 
 interface DropZoneProps {
   id: string;
-  onMeasure: (id: string, layout: { x: number; y: number; width: number; height: number }) => void;
+  onMeasure: (id: string, layout: { left: number; right: number; top: number; bottom: number }) => void;
   color?: string;
   label?: string;
   children?: ReactNode;
@@ -23,15 +23,35 @@ export function DropZone({
   label = 'Drop Zone',
   children,
 }: DropZoneProps) {
-  // Report layout to parent
-  const handleLayout = (event: LayoutChangeEvent) => {
-    const { x, y, width, height } = event.nativeEvent.layout;
-    onMeasure(id, { x, y, width, height });
+
+  const zoneRef = useRef<View>(null);
+
+  const getBounds = () => {
+    if (zoneRef.current) {
+      zoneRef.current.measure((x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
+
+        console.log(`left: ${pageX}, right: ${pageX+width}, top: ${pageY}, bottom: ${pageY+height}`);
+      })
+    }
+  }
+
+  // Report layout to parent with left, right, top, bottom
+  const handleLayout = () => {
+    if (zoneRef.current) {
+      zoneRef.current.measure((x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
+        const left = pageX;
+        const right = pageX + width;
+        const top = pageY;
+        const bottom = pageY + height;
+        onMeasure(id, { left, right, top, bottom });
+      });
+    }
   };
 
   return (
     <View
       className="w-[200px] h-[200px] rounded-2xl border-2 border-neutral-400 items-center justify-center m-3"
+      ref={zoneRef}
       style={{ backgroundColor: color }}
       onLayout={handleLayout}
     >
@@ -41,6 +61,7 @@ export function DropZone({
           {children}
         </View>
       )}
+      <TouchableOpacity className='bg-white h-5 w-12 mt-4' onPress={getBounds}/>
     </View>
   );
 }

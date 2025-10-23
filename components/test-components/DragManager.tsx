@@ -1,7 +1,9 @@
 import React, { useState, useCallback, useEffect } from 'react';
 import { View, StyleSheet } from 'react-native';
+import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '../../contexts';
-import { DraggableUnit, DropZone } from './';
+import { DraggableUnit}  from './DraggableUnit';
+import { DropZone } from './DropZone';
 
 
 export function DragManager() {
@@ -9,6 +11,7 @@ export function DragManager() {
   const [zoneInfo, setZoneInfo] = useState<Record<string, any>>({});
   const [unitInfo, setUnitInfo] = useState<Record<string, any>>({});
   const [unitInDropZone, setUnitInDropZone] = useState(false);
+  const unitInDropZoneShared = useSharedValue(false);
 
   const handleZoneMeasure = useCallback((id: string, layout: any) => {
     setZoneInfo((prev) => {
@@ -24,6 +27,26 @@ export function DragManager() {
     });
   }, []);
 
+  const handleUnitDrop = useCallback(
+    (id: string, position: { x: number; y: number }) => {
+      const zone = zoneInfo['zone1'];
+      if (!zone) return;
+
+      const { left, right, top, bottom } = zone;
+      const inside =
+        position.x >= left &&
+        position.x <= right &&
+        position.y >= top &&
+        position.y <= bottom;
+
+      console.log(inside ? `✅ ${id} is inside Drop Zone` : `❌ ${id} is outside Drop Zone`);
+
+      setUnitInDropZone(inside);
+      unitInDropZoneShared.value = inside;
+    },
+    [zoneInfo]
+  );
+
   return (
     <View style={styles.container}>
       <DropZone
@@ -35,9 +58,11 @@ export function DragManager() {
       <DraggableUnit
         label="Drag1"
         onMeasure={handleUnitMeasure}
+        onDragEnd={handleUnitDrop} // NEW
         color={isDark ? '#2196F3' : '#8cc9ff'}
         size={120}
         isInDropZone={unitInDropZone}
+        isInDropZoneShared={unitInDropZoneShared}
       />
     </View>
   );
