@@ -14,9 +14,10 @@ export interface DropZoneData {
 interface DragManagerProps {
   isDark?: boolean;
   data: DropZoneData[];
+  deadZoneMembers?: DropZoneData | null;
 }
 
-export function DragManager({ isDark = false, data }: DragManagerProps) {
+export function DragManager({ isDark = false, data, deadZoneMembers = null }: DragManagerProps) {
 
   const {
     zones,
@@ -65,20 +66,17 @@ export function DragManager({ isDark = false, data }: DragManagerProps) {
         onMeasure={handleZoneMeasure}
         isDark={isDark}
       >
-              <DraggableUnit
-                key={'A'}
-                ref={(el) => { unitRefs.current['A'] = el; }}
-                label={'A'}
-                onDragEnd={handleUnitDrop}
-                isDark={isDark}
-              />
-                            <DraggableUnit
-                key={'B'}
-                ref={(el) => { unitRefs.current['B'] = el; }}
-                label={'B'}
-                onDragEnd={handleUnitDrop}
-                isDark={isDark}
-              />
+        {deadZoneMembers &&
+          deadZoneMembers.units.map((letter) => (
+            <DraggableUnit
+              key={letter}
+              ref={(el) => { unitRefs.current[letter] = el; }}
+              label={letter}
+              onDragEnd={handleUnitDrop}
+              isDark={isDark}
+            />
+          ))
+        }
       </DropZone>
     </View>
   );

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Screen Imports
-import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen, TestScreen, EditScreen } from './screens';
+import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen, EditScreen } from './screens';
 // Context Imports
 import { ThemeProvider, useTheme, DataProvider } from './contexts';
 // Styles
@@ -64,11 +64,11 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Edit" component={EditScreen} />
+      <Tab.Screen name="Customers" component={CustomersScreen} />
       <Tab.Screen name="Units" component={UnitsScreen} />
       <Tab.Screen name="Assignments" component={AssignmentsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Test" component={TestScreen} />
+      <Tab.Screen name="Edit" component={EditScreen} />
     </Tab.Navigator>
   );
 }

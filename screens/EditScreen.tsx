@@ -7,7 +7,7 @@ const GroupName = 'Edit Dashboard';
 
 export function EditScreen() {
   const { isDark } = useTheme();
-  const { getGroupedAssignments, getUnassignedCustomerLocations } = useData();
+  const { getGroupedAssignments, getUnassignedCustomerLocations, getUnassignedUnits } = useData();
 
   const grouped = getGroupedAssignments();
   const emptyGrouped = getUnassignedCustomerLocations();
@@ -28,12 +28,19 @@ export function EditScreen() {
 
   const combinedData: DropZoneData[] = [...assignmentData, ...emptyZoneData];
 
+  const unassignedUnits: DropZoneData = {
+    id: 'Unassigned',
+    label: 'Unassigned',
+    sublabel: 'Unassigned',
+    units: getUnassignedUnits().map(u=>u.name),
+  }
+
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/EditScreen.tsx">
         {/* Search Bar Component Here */}
         {/* Decide whether to place flat list here or inside drag manager */}
-        <DragManager isDark={isDark} data={combinedData}/>
+        <DragManager isDark={isDark} data={combinedData} /*deadZoneMembers={unassignedUnits}*//>
       </ScreenContent>
     </Container>
   );
