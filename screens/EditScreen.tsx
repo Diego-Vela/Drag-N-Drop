@@ -35,12 +35,19 @@ export function EditScreen() {
     units: getUnassignedUnits().map(u=>u.name),
   }
 
+  const testUnassigned: DropZoneData = {
+    id: 'Unassigned',
+    label: 'Unassigned1',
+    sublabel: 'Unassigned1',
+    units: ['Unit AA', 'Unit AB'],
+  }
+
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/EditScreen.tsx">
         {/* Search Bar Component Here */}
         {/* Decide whether to place flat list here or inside drag manager */}
-        <DragManager isDark={isDark} data={combinedData} /*deadZoneMembers={unassignedUnits}*//>
+        <DragManager isDark={isDark} data={combinedData}  deadZoneMembers={testUnassigned}/*deadZoneMembers={unassignedUnits}*//>
       </ScreenContent>
     </Container>
   );

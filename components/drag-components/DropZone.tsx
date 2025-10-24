@@ -2,7 +2,7 @@ import React, { forwardRef } from 'react';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { DropZoneRef, DropZoneProps } from '../../types';
 import { DropZoneLabelCard } from './DropZoneLabelCard';
-import { useDropZoneMeasurement } from '../../hooks';
+import { useDropZone } from '../../hooks';
 
 export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
   (
@@ -18,7 +18,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
     ref
   ) => {
     // ✨ Extracted measurement logic
-    const { zoneRef, measureNow } = useDropZoneMeasurement(id, onMeasure, ref);
+    const { zoneRef, measureNow } = useDropZone(id, onMeasure, ref);
 
     function MeasureNowButton() {
       return (
@@ -30,7 +30,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
       <View
         ref={zoneRef}
         onLayout={measureNow}
-        className={`flex-row mb-4 p-3 rounded-lg ${
+        className={`flex-row ${isDeadZone ? '' : 'mb-4'} p-3 rounded-lg ${
           isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'
         }`}
       >
@@ -54,10 +54,9 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
             >
               {label || 'Unassigned Units'}
             </Text>
-
-            <View className="flex-row gap-3 justify-center items-center flex-wrap w-full">
-              {children}
-            </View>
+              <View className="flex-row gap-3 justify-center items-center w-[60%]">
+                {children}
+              </View>
 
             <Text
               className={`text-[10px] mt-2 italic ${
@@ -68,6 +67,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
             </Text>
           </View>
         ) : (
+          
           <>
             <DropZoneLabelCard title={label} subtitle={sublabel} isDark={isDark} />
             <View className="ml-4 flex-1 gap-6 items-center justify-center">

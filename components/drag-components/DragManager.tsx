@@ -57,27 +57,28 @@ export function DragManager({ isDark = false, data, deadZoneMembers = null }: Dr
         )}
       />
       </View>
-      <DropZone
-        ref={(el) => { zoneRefs.current['DeadZone'] = el; }}
-        id={'DeadZone'}
-        label={'DeadZone'}
-        sublabel={'DeadZone'}
-        isDeadZone={true}
-        onMeasure={handleZoneMeasure}
-        isDark={isDark}
-      >
-        {deadZoneMembers &&
-          deadZoneMembers.units.map((letter) => (
-            <DraggableUnit
-              key={letter}
-              ref={(el) => { unitRefs.current[letter] = el; }}
-              label={letter}
-              onDragEnd={handleUnitDrop}
-              isDark={isDark}
-            />
-          ))
-        }
-      </DropZone>
+<View className="absolute bottom-0 left-0 right-0 px-[16] pb-[20]">
+    <DropZone
+      ref={(el) => { zoneRefs.current['DeadZone'] = el; }}
+      id={'DeadZone'}
+      label={'Unassigned Units'}
+      sublabel={'Drop here to unassign'}
+      isDeadZone
+      onMeasure={handleZoneMeasure}
+      isDark={isDark}
+    >
+      {deadZoneMembers &&
+        deadZoneMembers.units.map((letter) => (
+          <DraggableUnit
+            key={letter}
+            ref={(el) => { unitRefs.current[letter] = el; }}
+            label={letter}
+            onDragEnd={handleUnitDrop}
+            isDark={isDark}
+          />
+        ))}
+    </DropZone>
+  </View>
     </View>
   );
 }
