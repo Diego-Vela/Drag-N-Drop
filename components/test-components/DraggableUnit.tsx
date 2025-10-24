@@ -1,22 +1,26 @@
-import React, { useRef } from 'react';
+import React, { useImperativeHandle, useRef, forwardRef } from 'react';
 import { LayoutChangeEvent, Text, TouchableOpacity } from 'react-native';
 import Animated, {
   useSharedValue,
   useAnimatedStyle,
   withSpring,
   runOnJS,
-  SharedValue
+  SharedValue,
+  useDerivedValue
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
 interface DraggableUnitProps {
   label?: string;
-  onMeasure: (id: string, layout: { x: number; y: number; width: number; height: number }) => void;
   onDragEnd?: (id: string, position: { x: number; y: number }) => void; // NEW
-  size?: number;
   isDark?: boolean;
   isInDropZone?: boolean;
   isInDropZoneShared?: SharedValue<boolean>;
+}
+
+export interface UnitRef {
+  shouldReset: SharedValue<boolean>;
+  resetPosition: () => void;
 }
 
 /**
@@ -24,20 +28,16 @@ interface DraggableUnitProps {
  * - Uses Reanimated shared values for smooth, native movement.
  * - Stays where you drop it.
  */
-export function DraggableUnit({
-  label = 'Drag me',
-  onMeasure,
-  onDragEnd,
-  size = 60,
-  isDark = false,
-  isInDropZone = false,
-  isInDropZoneShared,
-}: DraggableUnitProps) {
+
+export const DraggableUnit = forwardRef<UnitRef, DraggableUnitProps>(
+  ({ label = 'Drag me', onDragEnd, isDark = false, isInDropZoneShared}: DraggableUnitProps, ref) => {
   // Persistent offset (where the unit should be at rest)
   const offsetX = useSharedValue(0);
   const offsetY = useSharedValue(0);
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
+  // Should reset
+  const shouldReset = useSharedValue(false);
 
   const unitRef = useRef<Animated.View>(null);
 
@@ -47,8 +47,8 @@ export function DraggableUnit({
         (x: number, y: number, width: number, height: number, pageX: number, pageY: number) => {
           const middleX = pageX + width / 2;
           const middleY = pageY + height / 2;
-          console.log('Middle Point X:', middleX);
-          console.log('Middle Point Y:', middleY);
+          //console.log('Middle Point X:', middleX);
+          //console.log('Middle Point Y:', middleY);
 
           // Send to DragManager
           if (onDragEnd) {
@@ -59,6 +59,14 @@ export function DraggableUnit({
     }
   };
 
+  useDerivedValue(() => {
+    if (shouldReset.value) {
+      offsetX.value = withSpring(0);
+      offsetY.value = withSpring(0);
+      shouldReset.value = false;
+    }
+  });
+
   // Apply both offset + live translation
   const animatedStyle = useAnimatedStyle(() => ({
     transform: [
@@ -66,12 +74,6 @@ export function DraggableUnit({
       { translateY: offsetY.value + translateY.value },
     ],
   }));
-
-    // Report layout to parent
-    const handleLayout = (event: LayoutChangeEvent) => {
-      const { x, y, width, height } = event.nativeEvent.layout;
-      onMeasure(label, { x, y, width, height });
-    };
   
 
   // Define gesture using new Gesture API
@@ -85,15 +87,17 @@ export function DraggableUnit({
       offsetY.value += translateY.value;
       //console.log(`Dropped at: ${offsetX.value}, ${offsetY.value}`);
       runOnJS(getMiddlePoint)();
-      /*if (!isInDropZoneShared?.value) {
-        offsetX.value = withSpring(offsetX.value - translateX.value);
-        offsetY.value = withSpring(offsetY.value - translateY.value);
-      }*/
       translateX.value = 0;
       translateY.value = 0;
     }
-  
   );
+
+  useImperativeHandle(ref, () => ({
+    shouldReset,
+    resetPosition: () => {
+      shouldReset.value = true;
+    },
+  }));
 
   return (
     <GestureDetector gesture={pan}>
@@ -104,22 +108,20 @@ export function DraggableUnit({
                   ? 'bg-dark-warning/20 border-dark-highlight-accent' 
                   : 'bg-light-highlight border-light-highlight-accent'
               }`}
-        onLayout={handleLayout}
         style={[
           animatedStyle,
           {
-            width: size,
-            height: size
+            width: '100%'
           },
         ]}
       >
         <Text className={`font-semibold text-sm text-left ${ isDark ? 'text-dark-highlight-text' : 'text-light-highlight-text'}`}>
-          {'Unit A'}
+          {label}
         </Text>
-        <TouchableOpacity className='bg-white h-5 w-12 mt-4' onPress={getMiddlePoint}/>
+        {/*<TouchableOpacity className='bg-white h-5 w-12 mt-4' onPress={getMiddlePoint}/>*/}
       </Animated.View>
     </GestureDetector>
   );
-}
+});
 
 
