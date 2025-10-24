@@ -23,7 +23,6 @@ export interface Assignment {
   customerId: number;
 }
 
-
 export interface DataContextType {
   customers: Customer[];
   locations: Location[];
@@ -36,6 +35,7 @@ export interface DataContextType {
   getUnitsForLocation: (locationId: string) => Unit[];
   getUnassignedUnits: () => Unit[];
   getGroupedAssignments: () => { customerName: string; locationName: string; units: Unit[] }[];
+  getUnassignedCustomerLocations: () => { customerName: string; locationName: string }[];
 }
 
 const DataContext = createContext<DataContextType | null>(null);
@@ -86,10 +86,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     return testData.units.filter((u: Unit) => !assignedIds.has(u.id));
   };
 
-  // Temporary Test Function
   // Group all units into unique customer/location pairs
   const getGroupedAssignments = () => {
-    // Map: key = customerName__locationName, value = { customerName, locationName, units: Unit[] }
     const grouped: Record<string, { customerName: string; locationName: string; units: Unit[] }> = {};
     testData.assignments.forEach((a: Assignment) => {
       const location = locationsById[a.locationId];
@@ -107,6 +105,22 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     return Object.values(grouped);
   };
 
+  // Helper: Get customer/location pairs with no assignments
+  const getUnassignedCustomerLocations = () => {
+    // Get all location IDs that have assignments
+    const assignedLocationIds = new Set(testData.assignments.map((a: Assignment) => a.locationId));
+    // Filter locations with no assignments
+    return testData.locations
+      .filter((loc: Location) => !assignedLocationIds.has(loc.id))
+      .map((loc: Location) => {
+        const customer = customersById[loc.customerId];
+        return {
+          customerName: customer ? customer.name : '',
+          locationName: loc.name,
+        };
+      });
+  };
+
   const value: DataContextType = {
     customers: testData.customers,
     locations: testData.locations,
@@ -119,6 +133,7 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
     getUnitsForLocation,
     getUnassignedUnits,
     getGroupedAssignments,
+    getUnassignedCustomerLocations,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
