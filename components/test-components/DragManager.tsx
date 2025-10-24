@@ -11,6 +11,7 @@ export function DragManager() {
   // Zone
   const zoneRef = useRef<DropZoneRef>(null);
   const [zoneInfo, setZoneInfo] = useState<Record<string, any>>({});
+  const [zoneNotReady, setZoneNotReady] = useState<boolean>(true);
   // Units
   const unitRefs = useRef<Record<string, UnitRef | null>>({});
   const [unitInDropZone, setUnitInDropZone] = useState(false);
@@ -20,9 +21,23 @@ export function DragManager() {
     setZoneInfo(prev => ({ ...prev, [id]: layout }));
   }, []);
 
+  useEffect(() => {
+    let frame1: number;
+    let frame2: number;
+    frame1 = requestAnimationFrame(() => {
+      frame2 = requestAnimationFrame(() => {
+        zoneRef.current?.measureNow();
+      });
+    });
+    return () => {
+      cancelAnimationFrame(frame1);
+      cancelAnimationFrame(frame2);
+    };
+  }, []);
+
   const handleUnitDrop = useCallback((id: string, position: { x: number; y: number }) => {
     zoneRef.current?.measureNow();
-    console.log(zoneInfo['zone1']);
+    //console.log(zoneInfo['zone1']);
 
     const zone = zoneInfo['zone1'];
     if (!zone) {
@@ -62,14 +77,23 @@ export function DragManager() {
         label="Drop Zone"
         isDark={isDark}
       >
+        {['A', 'B', 'C', 'D', 'E'].map((letter) => (
+          <DraggableUnit
+            key={letter}
+            ref={(el) => { unitRefs.current[`Unit ${letter}`] = el; }}
+            label={`Unit ${letter}`}
+            onDragEnd={handleUnitDrop}
+            isDark={isDark}
+          />
+        ))}
+      </DropZone>
         <DraggableUnit
-          ref={(el) => { unitRefs.current['Unit A'] = el; }} 
-          label="Unit A"
+          key={'F'}
+          ref={(el) => { unitRefs.current[`Unit ${'F'}`] = el; }}
+          label={`Unit ${'F'}`}
           onDragEnd={handleUnitDrop}
           isDark={isDark}
-          isInDropZoneShared={unitInDropZoneShared}
         />
-      </DropZone>
     </View>
   );
 }

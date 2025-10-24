@@ -60,6 +60,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
   return (
     <View
       ref={zoneRef}
+      onLayout={measureNow}
       className={`flex-row mb-4 p-3 rounded-lg ${isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'}`}
     >
       {/* Left Column: Title/Subtitle Pair */}
