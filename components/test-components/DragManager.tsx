@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react';
-import { View, StyleSheet, LayoutAnimation } from 'react-native';
+import { View, StyleSheet, LayoutAnimation, FlatList } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import { useTheme } from '../../contexts';
 import { DraggableUnit, UnitRef } from './DraggableUnit';
@@ -10,9 +10,9 @@ export function DragManager() {
 
   // --- State model: zones each own an array of unit IDs ---
   const [zones, setZones] = useState([
-    { id: 'zone1', units: ['A', 'B', 'C', 'D', 'E'] },
-    { id: 'zone2', units: ['F'] },
-    { id: 'zone3', units: [] },
+    { id: 'zone1', label: 'Zone 1', sublabel: 'Container', units: ['A', 'B', 'C', 'D', 'E'] },
+    { id: 'zone2', label: 'Zone 2', sublabel: 'Container',units: ['F'] },
+    { id: 'zone3', label: 'Zone 3', sublabel: 'Container',units: [] },
   ]);
 
   // --- Refs for measuring and controlling units/zones ---
@@ -47,7 +47,7 @@ export function DragManager() {
       Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
 
       if (Object.keys(zoneInfo).length === 0) {
-        console.warn('⏳ Zones not ready yet, springing back.');
+        // console.warn('⏳ Zones not ready yet, springing back.');
         unitRefs.current[id]?.resetPosition?.();
         return;
       }
@@ -92,10 +92,10 @@ export function DragManager() {
           })
         );
 
-        console.log(`✅ ${id} moved from ${fromZoneId} → ${targetZoneId}`);
+        // console.log(`✅ ${id} moved from ${fromZoneId} → ${targetZoneId}`);
         unitInDropZoneShared.value = true;
       } else {
-        console.log(`❌ ${id} not inside any zone`);
+        // console.log(`❌ ${id} not inside any zone`);
         unitInDropZoneShared.value = false;
         unitRefs.current[id]?.resetPosition?.();
       }
@@ -106,30 +106,31 @@ export function DragManager() {
   // --- Render zones with their current units ---
   return (
     <View className="py-[16] px-[16]">
-      {zones.map((zone) => (
-        <DropZone
-          key={zone.id}
-          ref={(el) => {
-            zoneRefs.current[zone.id] = el;
-          }}
-          id={zone.id}
-          onMeasure={handleZoneMeasure}
-          isDark={isDark}
-        >
-          {zone.units.map((letter) => (
-            <DraggableUnit
-              key={letter}
-              ref={(el) => {
-                unitRefs.current[`${letter}`] = el;
-              }}
-              label={`${letter}`}
-              onDragEnd={handleUnitDrop}
-              isDark={isDark}
-              isInDropZoneShared={unitInDropZoneShared}
-            />
-          ))}
-        </DropZone>
-      ))}
+      <FlatList
+        data={zones}
+        keyExtractor={(z) => z.id}
+        renderItem={({ item: zone }) => (
+          <DropZone
+            ref={(el) => { zoneRefs.current[zone.id] = el; }}
+            id={zone.id}
+            label={zone.label}
+            sublabel={zone.sublabel}
+            onMeasure={handleZoneMeasure}
+            isDark={isDark}
+          >
+            {zone.units.map((letter) => (
+              <DraggableUnit
+                key={letter}
+                ref={(el) => { unitRefs.current[letter] = el; }}
+                label={letter}
+                onDragEnd={handleUnitDrop}
+                isDark={isDark}
+                isInDropZoneShared={unitInDropZoneShared}
+              />
+            ))}
+          </DropZone>
+        )}
+      />
     </View>
   );
 }

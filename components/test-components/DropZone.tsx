@@ -9,13 +9,14 @@ interface DropZoneProps {
   id: string;
   onMeasure: (id: string, layout: { left: number; right: number; top: number; bottom: number }) => void;
   label?: string;
+  sublabel?: string;
   isDark?: boolean;
   isDeadZone?: boolean;
   children?: React.ReactNode;
 }
 
 export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
-({ id, onMeasure, label = 'Drop Zone', isDark = false, isDeadZone = false, children }, ref) => {
+({ id, onMeasure, label = 'Drop Zone', sublabel = 'Drop Here', isDark = false, isDeadZone = false, children }, ref) => {
   const zoneRef = useRef<View>(null);
 
   const measureNow = () => {
@@ -64,7 +65,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
       className={`flex-row mb-4 p-3 rounded-lg ${isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'}`}
     >
       {/* Left Column: Title/Subtitle Pair */}
-      <DropZoneLabelCard title={'Customer 1'} subtitle={'Location 1'}/>
+      <DropZoneLabelCard title={label} subtitle={sublabel}/>
       {/* Right Column: Units Flex Container - Single Column Centered */}
       <View className="ml-4 flex-1 gap-6 items-center justify-center">
         {children}
