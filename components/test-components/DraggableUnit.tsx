@@ -41,6 +41,8 @@ export const DraggableUnit = forwardRef<UnitRef, DraggableUnitProps>(
 
   const unitRef = useRef<Animated.View>(null);
 
+  const isDragging = useSharedValue(false);
+
   const getMiddlePoint = () => {
     if (unitRef.current) {
       unitRef.current.measure(
@@ -73,11 +75,19 @@ export const DraggableUnit = forwardRef<UnitRef, DraggableUnitProps>(
       { translateX: offsetX.value + translateX.value },
       { translateY: offsetY.value + translateY.value },
     ],
+    zIndex: isDragging.value ? 10 : 1,
+    elevation: isDragging.value ? 10 : 0, // Android needs this
   }));
   
 
   // Define gesture using new Gesture API
   const pan = Gesture.Pan()
+    .onBegin(() => {
+      isDragging.value = true;
+    })
+    .onFinalize(() => {
+      isDragging.value = false;
+    })
     .onUpdate((e) => {
       translateX.value = e.translationX;
       translateY.value = e.translationY;

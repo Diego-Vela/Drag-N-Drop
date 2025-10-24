@@ -9,9 +9,8 @@ export function DragManager() {
   // Context
   const { isDark } = useTheme();
   // Zone
-  const zoneRef = useRef<DropZoneRef>(null);
+  const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
   const [zoneInfo, setZoneInfo] = useState<Record<string, any>>({});
-  const [zoneNotReady, setZoneNotReady] = useState<boolean>(true);
   // Units
   const unitRefs = useRef<Record<string, UnitRef | null>>({});
   const [unitInDropZone, setUnitInDropZone] = useState(false);
@@ -21,60 +20,62 @@ export function DragManager() {
     setZoneInfo(prev => ({ ...prev, [id]: layout }));
   }, []);
 
+  // Use Effect to get laid out values after 2 frames
   useEffect(() => {
-    let frame1: number;
-    let frame2: number;
-    frame1 = requestAnimationFrame(() => {
-      frame2 = requestAnimationFrame(() => {
-        zoneRef.current?.measureNow();
+    let f1: number, f2: number;
+    f1 = requestAnimationFrame(() => {
+      f2 = requestAnimationFrame(() => {
+        Object.values(zoneRefs.current).forEach(ref => ref?.measureNow?.());
       });
     });
     return () => {
-      cancelAnimationFrame(frame1);
-      cancelAnimationFrame(frame2);
+      cancelAnimationFrame(f1);
+      cancelAnimationFrame(f2);
     };
   }, []);
 
   const handleUnitDrop = useCallback((id: string, position: { x: number; y: number }) => {
-    zoneRef.current?.measureNow();
-    //console.log(zoneInfo['zone1']);
+    // Refresh all zone measurements before check
+    Object.values(zoneRefs.current).forEach(ref => ref?.measureNow?.());
 
-    const zone = zoneInfo['zone1'];
-    if (!zone) {
-      console.warn('⏳ Zone info not ready yet, ignoring first drop.');
-      // Spring back immediately so the unit never sticks
+    if (Object.keys(zoneInfo).length === 0) {
+      console.warn('⏳ Zones not ready yet, springing back.');
       unitRefs.current[id]?.resetPosition?.();
       return;
-}
+    }
 
-    const { left, right, top, bottom } = zone;
-    const inside =
-      position.x >= left && position.x <= right &&
-      position.y >= top && position.y <= bottom;
+    let insideZoneId: string | null = null;
 
-    //console.log('Received drop event from', id, position);
-    console.log(inside ? `✅ ${id} is inside Drop Zone` : `❌ ${id} is outside Drop Zone`);
+    for (const [zoneId, { left, right, top, bottom }] of Object.entries(zoneInfo)) {
+      const inside =
+        position.x >= left &&
+        position.x <= right &&
+        position.y >= top &&
+        position.y <= bottom;
 
-    //NEW: Functionalities for Spring
-    if (inside) {
+      if (inside) {
+        insideZoneId = zoneId;
+        break;
+      }
+    }
+
+    if (insideZoneId) {
+      console.log(`✅ ${id} dropped inside ${insideZoneId}`);
       unitInDropZoneShared.value = true;
+      // Later you can update which zone owns which unit here
     } else {
+      console.log(`❌ ${id} not inside any zone`);
       unitInDropZoneShared.value = false;
-      // reset the unit that failed
       unitRefs.current[id]?.resetPosition?.();
-}
-
-    setUnitInDropZone(inside);
-    unitInDropZoneShared.value = inside;
+    }
   }, [zoneInfo]);
 
   return (
     <View className='py-[16] px-[16]'>
       <DropZone
-        ref={zoneRef}
+        ref={el => {zoneRefs.current['zone1'] = el;}}
         id="zone1"
         onMeasure={handleZoneMeasure}
-        label="Drop Zone"
         isDark={isDark}
       >
         {['A', 'B', 'C', 'D', 'E'].map((letter) => (
@@ -87,15 +88,22 @@ export function DragManager() {
           />
         ))}
       </DropZone>
-        {['F'].map((letter) => (
-          <DraggableUnit
-            key={letter}
-            ref={(el) => { unitRefs.current[`Unit ${letter}`] = el; }}
-            label={`Unit ${letter}`}
-            onDragEnd={handleUnitDrop}
-            isDark={isDark}
-          />
-        ))}
+      <DropZone
+        ref={el => { zoneRefs.current['zone2'] = el; }}
+        id="zone2"
+        onMeasure={handleZoneMeasure}
+        isDark={isDark}
+      >
+          {['F'].map((letter) => (
+            <DraggableUnit
+              key={letter}
+              ref={(el) => { unitRefs.current[`Unit ${letter}`] = el; }}
+              label={`Unit ${letter}`}
+              onDragEnd={handleUnitDrop}
+              isDark={isDark}
+            />
+          ))}
+        </DropZone>
     </View>
   );
 }
