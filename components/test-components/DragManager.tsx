@@ -71,7 +71,7 @@ export function DragManager() {
         // Find the current zone the unit belongs to
         const fromZoneId = zones.find((z) => z.units.includes(id))?.id;
         if (!fromZoneId || fromZoneId === targetZoneId) {
-          // Already in correct zone or not found → do nothing
+          unitRefs.current[id]?.resetPosition?.();
           unitInDropZoneShared.value = true;
           return;
         }
