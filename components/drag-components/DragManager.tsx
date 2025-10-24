@@ -1,9 +1,8 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
-import { useTheme } from '../../contexts';
 import { DraggableUnit } from './DraggableUnit';
 import { DropZone } from './DropZone';
-import { useDropManager } from '../../hooks';
+import { useDropManager } from '../../hooks/drag-hooks';
 
 export interface DropZoneData {
   id: string;
@@ -30,7 +29,8 @@ export function DragManager({ isDark = false, data }: DragManagerProps) {
 
   // --- Render zones with their current units ---
   return (
-    <View className="py-[16] px-[16]">
+    <View className="flex-1 justify-between py-[16] px-[16]">
+      <View className="flex-1">
       <FlatList
         data={zones}
         keyExtractor={(z) => z.id}
@@ -50,12 +50,36 @@ export function DragManager({ isDark = false, data }: DragManagerProps) {
                 label={letter}
                 onDragEnd={handleUnitDrop}
                 isDark={isDark}
-                isInDropZoneShared={unitInDropZoneShared}
               />
             ))}
           </DropZone>
         )}
       />
+      </View>
+      <DropZone
+        ref={(el) => { zoneRefs.current['DeadZone'] = el; }}
+        id={'DeadZone'}
+        label={'DeadZone'}
+        sublabel={'DeadZone'}
+        isDeadZone={true}
+        onMeasure={handleZoneMeasure}
+        isDark={isDark}
+      >
+              <DraggableUnit
+                key={'A'}
+                ref={(el) => { unitRefs.current['A'] = el; }}
+                label={'A'}
+                onDragEnd={handleUnitDrop}
+                isDark={isDark}
+              />
+                            <DraggableUnit
+                key={'B'}
+                ref={(el) => { unitRefs.current['B'] = el; }}
+                label={'B'}
+                onDragEnd={handleUnitDrop}
+                isDark={isDark}
+              />
+      </DropZone>
     </View>
   );
 }

@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
-import type { DropZoneRef, UnitRef, DropZoneData } from '../components/test-components';
+import type { DropZoneData } from '../../components';
+import type { UnitRef, DropZoneRef } from '../../types';
 
 export function useDropManager(initialZones: DropZoneData[]) {
   // --- State model ---

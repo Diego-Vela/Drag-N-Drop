@@ -1,6 +1,6 @@
 import React from 'react';
 import { Container, ScreenContent } from '../components/base';
-import { DragManager, DropZoneData } from '../components/test-components';
+import { DragManager, DropZoneData } from '../components/drag-components';
 import { useData, useTheme } from '../contexts';
 
 const GroupName = 'Edit Dashboard';

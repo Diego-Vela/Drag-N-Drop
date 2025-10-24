@@ -1,1 +1,1 @@
-export * from './useDragManager';
+export * from './drag-hooks';
