@@ -87,13 +87,15 @@ export function DragManager() {
           />
         ))}
       </DropZone>
-        <DraggableUnit
-          key={'F'}
-          ref={(el) => { unitRefs.current[`Unit ${'F'}`] = el; }}
-          label={`Unit ${'F'}`}
-          onDragEnd={handleUnitDrop}
-          isDark={isDark}
-        />
+        {['F'].map((letter) => (
+          <DraggableUnit
+            key={letter}
+            ref={(el) => { unitRefs.current[`Unit ${letter}`] = el; }}
+            label={`Unit ${letter}`}
+            onDragEnd={handleUnitDrop}
+            isDark={isDark}
+          />
+        ))}
     </View>
   );
 }
