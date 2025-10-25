@@ -25,10 +25,10 @@ export function useDraggableUnit(
   // Utility: measure middle point on drop
   const getMiddlePoint = () => {
     if (unitRef.current) {
-      unitRef.current.measure(
-        (x, y, width, height, pageX, pageY) => {
-          const middleX = pageX + width / 2;
-          const middleY = pageY + height / 2;
+      unitRef.current.measureInWindow(
+        (x, y, width, height) => {
+          const middleX = x + width / 2;
+          const middleY = y + height / 2;
           if (onDragEnd) {
             onDragEnd(label, { x: middleX, y: middleY });
           }

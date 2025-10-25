@@ -16,11 +16,11 @@ export function useDropZone(
   // Measure zone position and report via callback
   const measureNow = () => {
     if (!zoneRef.current) return;
-    zoneRef.current.measure((x, y, width, height, pageX, pageY) => {
-      const left = pageX;
-      const right = pageX + width;
-      const top = pageY;
-      const bottom = pageY + height;
+    zoneRef.current.measureInWindow((x, y, width, height) => {
+      const left = x;
+      const right = x + width;
+      const top = y;
+      const bottom = y + height;
       onMeasure(id, { left, right, top, bottom });
     });
   };

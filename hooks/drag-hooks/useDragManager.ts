@@ -58,6 +58,11 @@ export function useDropManager(initialZones: DropZoneData[]) {
           break;
         }
       }
+      if (targetZoneId !== null) {
+        console.log(`${targetZoneId} l[${zoneInfo[targetZoneId].left}], r[${zoneInfo[targetZoneId].right}], t[${zoneInfo[targetZoneId].top}], b[${zoneInfo[targetZoneId].bottom}]`);
+      } else {
+        console.log(`No target zone found`);
+      }
 
       if (targetZoneId) {
         const fromZoneId = zones.find((z) => z.units.includes(id))?.id;
@@ -81,9 +86,11 @@ export function useDropManager(initialZones: DropZoneData[]) {
             }
           })
         );
-
+        
+        console.log(`✅ ${id} moved from ${fromZoneId} → ${targetZoneId}`);
         unitInDropZoneShared.value = true;
       } else {
+        console.log(`❌ ${id} not inside any zone`);
         unitInDropZoneShared.value = false;
         unitRefs.current[id]?.resetPosition?.();
       }

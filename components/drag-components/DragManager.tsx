@@ -57,7 +57,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers = null }: Dr
         )}
       />
       </View>
-<View className="absolute bottom-0 left-0 right-0 px-[16] pb-[20]">
+{/*<View className="absolute bottom-0 left-0 right-0 px-[16] pb-[20]">
     <DropZone
       ref={(el) => { zoneRefs.current['DeadZone'] = el; }}
       id={'DeadZone'}
@@ -78,7 +78,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers = null }: Dr
           />
         ))}
     </DropZone>
-  </View>
+  </View>*/}
     </View>
   );
 }
