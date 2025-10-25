@@ -4,10 +4,11 @@ import { useSharedValue } from 'react-native-reanimated';
 import type { DropZoneData } from '../../components';
 import type { UnitRef, DropZoneRef } from '../../types';
 
-export function useDropManager(initialZones: DropZoneData[]) {
+export function useDropManager(initialZones: DropZoneData[], initialDeadZone: DropZoneData) {
   // --- State model ---
   const [zones, setZones] = useState(initialZones);
   const [zoneInfo, setZoneInfo] = useState<Record<string, any>>({});
+  const [deadZone, setDeadZone] = useState(initialDeadZone);
 
   // --- Refs ---
   const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
@@ -31,12 +32,12 @@ export function useDropManager(initialZones: DropZoneData[]) {
       cancelAnimationFrame(f1);
       cancelAnimationFrame(f2);
     };
-  }, [zones]);
+  }, [zones, deadZone]);
 
   // --- Handle drag drop across zones ---
   const handleUnitDrop = useCallback(
     (id: string, position: { x: number; y: number }) => {
-      // Always refresh zone bounds
+      // Refresh zone bounds to adjust for scrolling
       Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
 
       if (Object.keys(zoneInfo).length === 0) {
@@ -58,14 +59,21 @@ export function useDropManager(initialZones: DropZoneData[]) {
           break;
         }
       }
+
       if (targetZoneId !== null) {
-        console.log(`${targetZoneId} l[${zoneInfo[targetZoneId].left}], r[${zoneInfo[targetZoneId].right}], t[${zoneInfo[targetZoneId].top}], b[${zoneInfo[targetZoneId].bottom}]`);
+        console.log(
+          `${targetZoneId} l[${zoneInfo[targetZoneId].left}], r[${zoneInfo[targetZoneId].right}], t[${zoneInfo[targetZoneId].top}], b[${zoneInfo[targetZoneId].bottom}]`
+        );
       } else {
         console.log(`No target zone found`);
       }
 
       if (targetZoneId) {
-        const fromZoneId = zones.find((z) => z.units.includes(id))?.id;
+        // find current container (could be zone or deadZone)
+        const fromZoneId =
+          zones.find((z) => z.units.includes(id))?.id ||
+          (deadZone?.units.includes(id) ? deadZone.id : undefined);
+
         if (!fromZoneId || fromZoneId === targetZoneId) {
           unitRefs.current[id]?.resetPosition?.();
           unitInDropZoneShared.value = true;
@@ -74,7 +82,43 @@ export function useDropManager(initialZones: DropZoneData[]) {
 
         LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
-        // Update zones
+        // --- Move TO DeadZone ---
+        if (targetZoneId === deadZone?.id) {
+          console.log(`📦 moving ${id} → DeadZone`);
+          setZones((prev) =>
+            prev.map((z) =>
+              z.id === fromZoneId
+                ? { ...z, units: z.units.filter((u) => u !== id) }
+                : z
+            )
+          );
+          setDeadZone((prev) =>
+            prev
+              ? { ...prev, units: [...prev.units, id] }
+              : { id: 'DeadZone', label: 'Unassigned', sublabel: '', units: [id] }
+          );
+          return;
+        }
+
+        // --- Move FROM DeadZone ---
+        if (fromZoneId === deadZone?.id) {
+          console.log(`♻️ moving ${id} from DeadZone → ${targetZoneId}`);
+          setDeadZone((prev) =>
+            prev
+              ? { ...prev, units: prev.units.filter((u) => u !== id) }
+              : prev
+          );
+          setZones((prev) =>
+            prev.map((z) =>
+              z.id === targetZoneId
+                ? { ...z, units: [...z.units, id] }
+                : z
+            )
+          );
+          return;
+        }
+
+        // --- Zone → Zone (default behavior) ---
         setZones((prevZones) =>
           prevZones.map((z) => {
             if (z.id === fromZoneId) {
@@ -86,7 +130,7 @@ export function useDropManager(initialZones: DropZoneData[]) {
             }
           })
         );
-        
+
         console.log(`✅ ${id} moved from ${fromZoneId} → ${targetZoneId}`);
         unitInDropZoneShared.value = true;
       } else {
@@ -95,11 +139,13 @@ export function useDropManager(initialZones: DropZoneData[]) {
         unitRefs.current[id]?.resetPosition?.();
       }
     },
-    [zoneInfo, zones]
+    [zoneInfo, zones, deadZone]
   );
 
   return {
     zones,
+    deadZone,
+    setDeadZone,
     zoneRefs,
     unitRefs,
     unitInDropZoneShared,

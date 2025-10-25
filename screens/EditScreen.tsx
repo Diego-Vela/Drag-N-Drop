@@ -37,9 +37,9 @@ export function EditScreen() {
 
   const testUnassigned: DropZoneData = {
     id: 'Unassigned',
-    label: 'Unassigned1',
-    sublabel: 'Unassigned1',
-    units: ['Unit AA', 'Unit AB'],
+    label: 'Unassigned',
+    sublabel: 'Unassigned',
+    units: ['Unit AA'],
   }
 
   return (

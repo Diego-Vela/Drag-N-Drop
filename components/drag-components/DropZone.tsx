@@ -34,7 +34,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
           isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'
         }`}
       >
-        {isDeadZone ? (
+        {/*isDeadZone ? (
           <View
             className={`
               flex-col items-center justify-center rounded-xl border-2 border-dashed
@@ -66,7 +66,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
               {sublabel || 'Drop units here to unassign'}
             </Text>
           </View>
-        ) : (
+        ) : (*/}
           
           <>
             <DropZoneLabelCard title={label} subtitle={sublabel} isDark={isDark} />
@@ -74,7 +74,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
               {children}
             </View>
           </>
-        )}
+        {/*})}*/}
       </View>
     );
   }

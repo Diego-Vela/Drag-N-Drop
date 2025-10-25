@@ -14,19 +14,20 @@ export interface DropZoneData {
 interface DragManagerProps {
   isDark?: boolean;
   data: DropZoneData[];
-  deadZoneMembers?: DropZoneData | null;
+  deadZoneMembers: DropZoneData;
 }
 
-export function DragManager({ isDark = false, data, deadZoneMembers = null }: DragManagerProps) {
+export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {
 
   const {
     zones,
+    deadZone,
     zoneRefs,
     unitRefs,
     unitInDropZoneShared,
     handleZoneMeasure,
     handleUnitDrop,
-  } = useDropManager(data);
+  } = useDropManager(data, deadZoneMembers);
 
   // --- Render zones with their current units ---
   return (
@@ -57,28 +58,28 @@ export function DragManager({ isDark = false, data, deadZoneMembers = null }: Dr
         )}
       />
       </View>
-{/*<View className="absolute bottom-0 left-0 right-0 px-[16] pb-[20]">
-    <DropZone
-      ref={(el) => { zoneRefs.current['DeadZone'] = el; }}
-      id={'DeadZone'}
-      label={'Unassigned Units'}
-      sublabel={'Drop here to unassign'}
-      isDeadZone
-      onMeasure={handleZoneMeasure}
-      isDark={isDark}
-    >
-      {deadZoneMembers &&
-        deadZoneMembers.units.map((letter) => (
-          <DraggableUnit
-            key={letter}
-            ref={(el) => { unitRefs.current[letter] = el; }}
-            label={letter}
-            onDragEnd={handleUnitDrop}
+      {<View>
+          <DropZone
+            ref={(el) => { zoneRefs.current[deadZone.id] = el; }}
+            id={deadZone.id}
+            label={deadZone.label}
+            sublabel={deadZone.sublabel}
+            isDeadZone
+            onMeasure={handleZoneMeasure}
             isDark={isDark}
-          />
-        ))}
-    </DropZone>
-  </View>*/}
+          >
+            {deadZone &&
+              deadZone.units.map((letter) => (
+                <DraggableUnit
+                  key={letter}
+                  ref={(el) => { unitRefs.current[letter] = el; }}
+                  label={letter}
+                  onDragEnd={handleUnitDrop}
+                  isDark={isDark}
+                />
+              ))}
+          </DropZone>
+        </View>}
     </View>
   );
 }
