@@ -20,7 +20,6 @@ export interface Unit {
 export interface Assignment {
   unitId: string;
   locationId: string;
-  customerId: number;
 }
 
 export interface DataContextType {
@@ -71,7 +70,8 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
       .map((a: Assignment) => {
         const unitName = unitsById[a.unitId]?.name || '';
         const locationName = locationsById[a.locationId]?.name || '';
-        const customerName = customersById[a.customerId]?.name || '';
+        const customerId = locationsById[a.locationId]?.customerId;
+        const customerName = customerId ? customersById[customerId]?.name || '' : '';
         return [unitName, locationName, customerName];
       });
 

@@ -1,53 +1,40 @@
 {
   "customers": [
-    { "id": 1, "name": "Customer 1" },
-    { "id": 2, "name": "Customer 2" },
-    { "id": 3, "name": "Customer 3" },
-    { "id": 4, "name": "Customer 4" }
+    {"id": 1, "name": "CalPortland"},
+    {"id": 2, "name": "Griffith"},
+    {"id": 3, "name": "T-9"},
+    {"id": 4, "name": "N.America"},
+    {"id": 5, "name": "Onyx"},
+    {"id": 6, "name": "OHLA"},
+    {"id": 7, "name": "Rove Eng."},
+    {"id": 8, "name": "Skanska"}
   ],
   "locations": [
-    { "id": "ID1", "customerId": 1, "name": "Location 1" },
-    { "id": "ID2", "customerId": 2, "name": "Location 2" },
-    { "id": "ID3", "customerId": 3, "name": "Location 3" },
-    { "id": "ID4", "customerId": 1, "name": "Location 4" },
-    { "id": "ID5", "customerId": 4, "name": "Location 5" }
+    {"id": "ID1", "customerId": 4, "name": "Baldwin Park"},
+    {"id": "ID2", "customerId": 4, "name": "Bolder City"},
+    {"id": "ID3", "customerId": 5, "name": "Corona"},
+    {"id": "ID4", "customerId": 6, "name": "Goodfellow Radial"},
+    {"id": "ID5", "customerId": 6, "name": "Valencia"},
+    {"id": "ID6", "customerId": 7, "name": "Alpine(I-8)"},
+    {"id": "ID7", "customerId": 8, "name": "Ontario"}
   ],
   "units": [
-    { "id": "A", "name": "Unit A" },
-    { "id": "B", "name": "Unit B" },
-    { "id": "C", "name": "Unit C" },
-    { "id": "D", "name": "Unit D" },
-    { "id": "E", "name": "Unit E" },
-    { "id": "F", "name": "Unit F" },
-    { "id": "G", "name": "Unit G" },
-    { "id": "H", "name": "Unit H" },
-    { "id": "I", "name": "Unit I" },
-    { "id": "J", "name": "Unit J" },
-    { "id": "K", "name": "Unit K" },
-    { "id": "L", "name": "Unit L" },
-    { "id": "M", "name": "Unit M" },
-    { "id": "N", "name": "Unit N" },
-    { "id": "O", "name": "Unit O" },
-    { "id": "P", "name": "Unit P" },
-    { "id": "Q", "name": "Unit Q" },
-    { "id": "R", "name": "Unit R" },
-    { "id": "S", "name": "Unit S" },
-    { "id": "T", "name": "Unit T" },
-    { "id": "U", "name": "Unit U" },
-    { "id": "V", "name": "Unit V" },
-    { "id": "W", "name": "Unit W" },
-    { "id": "X", "name": "Unit X" },
-    { "id": "Y", "name": "Unit Y" },
-    { "id": "Z", "name": "Unit Z" }
+    {"id": "1", "name": "LPTX1250x36/2714"},
+    {"id": "2", "name": "LPT1250x36/2694"},
+    {"id": "3", "name": "FT2650/419640"},
+    {"id": "4", "name": "FT4250/420633"},
+    {"id": "5", "name": "36100DHY0421-1"},
+    {"id": "6", "name": "FT2650/420097"},
+    {"id": "7", "name": "FT4250/420107"}
   ],
   "assignments": [
-    { "unitId": "A", "locationId": "ID1", "customerId": 1 },
-    { "unitId": "B", "locationId": "ID4", "customerId": 1 },
-    { "unitId": "C", "locationId": "ID2", "customerId": 2 },
-    { "unitId": "D", "locationId": "ID1", "customerId": 1 },
-    { "unitId": "E", "locationId": "ID1", "customerId": 1 },
-    { "unitId": "F", "locationId": "ID1", "customerId": 1 },
-    { "unitId": "G", "locationId": "ID1", "customerId": 1 },
-    { "unitId": "H", "locationId": "ID1", "customerId": 1 }
+    { "unitId": "1", "locationId": "ID1"},
+    { "unitId": "2", "locationId": "ID2"},
+    { "unitId": "3", "locationId": "ID3"},
+    { "unitId": "4", "locationId": "ID4"},
+    { "unitId": "5", "locationId": "ID5"},
+    { "unitId": "6", "locationId": "ID6"},
+    { "unitId": "7", "locationId": "ID7"},
+    { "unitId": "8", "locationId": "ID7"}
   ]
 }
