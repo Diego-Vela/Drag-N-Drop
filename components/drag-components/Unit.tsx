@@ -6,14 +6,13 @@ import Animated from 'react-native-reanimated';
 export function Unit({
   label,
   isDark,
-  animatedStyle,
-  unitRef,
+  animatedStyle=null,
+  unitRef=null,
 }: {
   label: string;
   isDark: boolean;
-  animatedStyle: any;
-  pan: any;
-  unitRef: any;
+  animatedStyle?: any;
+  unitRef?: any;
 }) {
   return (
     <Animated.View

@@ -1,6 +1,7 @@
 import React from 'react';
 import { View, FlatList } from 'react-native';
 import { DraggableUnit } from './DraggableUnit';
+import { StaticUnit } from './StaticUnit';
 import { DropZone } from './DropZone';
 import { useDropManager } from '../../hooks/drag-hooks';
 
@@ -70,11 +71,10 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
           >
             {deadZone &&
               deadZone.units.map((letter) => (
-                <DraggableUnit
+                <StaticUnit
                   key={letter}
                   ref={(el) => { unitRefs.current[letter] = el; }}
                   label={letter}
-                  onDragEnd={handleUnitDrop}
                   isDark={isDark}
                 />
               ))}
