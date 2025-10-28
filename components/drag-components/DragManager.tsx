@@ -36,17 +36,6 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     handleDragEnd
   } = useDropManager(data, deadZoneMembers);
 
-  //#region Overlay Style
-  const overlayAnimatedStyle = useAnimatedStyle(() => ({
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    zIndex: 999,
-  }));
-
-
   //#region Render
   return (
     <View className="flex-1 justify-between py-[16] px-[16]">
@@ -104,10 +93,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
 
         {/* Overlay Draggable Units */}
         {activeDrag && (
-          <Animated.View
-            pointerEvents="none"
-            style={[ overlayAnimatedStyle]}
-          >
+          <Animated.View pointerEvents="none" className='absolute inset-0 z-[999]'>
             <DraggableOverlayUnit
               label={activeDrag}
               isDark={isDark}
