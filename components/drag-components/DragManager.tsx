@@ -1,11 +1,13 @@
-import React, { useState } from 'react';
+//#region Imports
+import React from 'react';
 import { View, FlatList } from 'react-native';
-import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { StaticUnit } from './StaticUnit';
 import { DropZone } from './DropZone';
 import { useDropManager } from '../../hooks/drag-hooks';
 import { DraggableOverlayUnit } from './DraggableOverlayUnit';
 
+//#region MOVE TO TYPES
 export interface DropZoneData {
   id: string;
   label: string;
@@ -20,7 +22,7 @@ interface DragManagerProps {
 }
 
 export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {
-
+  //#region Hook
   const {
     zones,
     deadZone,
@@ -34,7 +36,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     handleDragEnd
   } = useDropManager(data, deadZoneMembers);
 
-  // Animated style for overlay container
+  //#region Overlay Style
   const overlayAnimatedStyle = useAnimatedStyle(() => ({
     position: 'absolute',
     top: 0,
@@ -45,7 +47,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
   }));
 
 
-  // --- Render zones with their current units ---
+  //#region Render
   return (
     <View className="flex-1 justify-between py-[16] px-[16]">
       {/* Drop Zone List */}

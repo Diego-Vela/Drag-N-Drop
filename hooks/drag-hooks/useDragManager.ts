@@ -1,3 +1,4 @@
+//#region Imports
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
@@ -12,25 +13,27 @@ import {
 } from '../../utils/drag-manager-utils';
 
 export function useDropManager(initialZones: DropZoneData[], initialDeadZone: DropZoneData) {
-  // --- State model ---
+  //#region Variables 
+  // States
   const [zones, setZones] = useState(initialZones);
   const [zoneInfo, setZoneInfo] = useState<Record<string, any>>({});
   const [deadZone, setDeadZone] = useState(initialDeadZone);
   const [activeDrag, setActiveDrag] = useState<string | null>(null);
 
-  // --- Overlay Values --- 
+  // Overlay Values 
   const overlayX = useSharedValue(0);
   const overlayY = useSharedValue(0);
 
-  // --- Refs ---
+  // Zone Refs
   const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
 
-  // --- Collect measurements from DropZones ---
+  //#region Exported Functions
+  // Collect measurements from zones
   const handleZoneMeasure = useCallback((id: string, layout: any) => {
-    setZoneInfo((prev) => ({ ...prev, [id]: layout }));
+    setZoneInfo((prev) => ({ [id]: layout, ...prev }));
   }, []);
 
-  // --- Ensure zones are measured after layout settles ---
+  // Waits two frames before zone measurements
   useEffect(() => {
     let f1: number, f2: number;
     f1 = requestAnimationFrame(() => {
@@ -44,7 +47,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     };
   }, [zones, deadZone]);
 
-  // --- Gesture event handlers from StaticUnit ---
+  // Handles Drag Movements: Start, Move, End
   const handleDragStart = (label: string) => {
     setActiveDrag(label);
   };
@@ -59,7 +62,8 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     setActiveDrag(null);
   };
 
-  // --- INTERNAL HANDLER ---
+  //#region Internal Logic
+  // Internal logic for moving and detecting zones on DragEnd
   const handleUnitDrop = useCallback(
     (id: string, position: { x: number; y: number }) => {
       Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
@@ -93,16 +97,29 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       // --- FROM DEADZONE → Zone ---
       if (fromZoneId === deadZone?.id) {
         moveFromDeadZone(id, targetZoneId, setZones, setDeadZone);
-        return;
-      }
+        
+      } else {
 
-      // --- Zone → Zone ---
-      moveBetweenZones(id, fromZoneId, targetZoneId, setZones);
-      console.log(`✅ ${id} moved from ${fromZoneId} → ${targetZoneId}\n`);
+        // --- Zone → Zone ---`
+        moveBetweenZones(id, fromZoneId, targetZoneId, setZones);
+        console.log(`${id} moved from ${fromZoneId} → ${targetZoneId}\n`);
+      }
+      recalcZoneLayouts();
     },
     [zoneInfo, zones, deadZone]
   );
 
+  // Recalculates Zone layouts after two frames of dropping to get updated sizes. 
+  function recalcZoneLayouts() {
+    requestAnimationFrame(() => {
+      requestAnimationFrame(() => {
+        Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
+        console.log('✅ zone layouts recalculated after two frames');
+      });
+    });
+  }
+
+  //#region Exports
   return {
     zones,
     deadZone,
