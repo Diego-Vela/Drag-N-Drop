@@ -25,15 +25,16 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     zones,
     deadZone,
     zoneRefs,
+    activeDrag,
+    overlayX,
+    overlayY,
     handleZoneMeasure,
-    handleUnitDrop,
+    handleDragStart,
+    handleDragMove,
+    handleDragEnd
   } = useDropManager(data, deadZoneMembers);
 
-  const [activeDrag, setActiveDrag] = useState<string | null>(null);
-  const overlayX = useSharedValue(0);
-  const overlayY = useSharedValue(0);
-
-  // Animated style for overlay container (covers entire screen)
+  // Animated style for overlay container
   const overlayAnimatedStyle = useAnimatedStyle(() => ({
     position: 'absolute',
     top: 0,
@@ -42,21 +43,6 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     bottom: 0,
     zIndex: 999,
   }));
-
-  // --- Gesture event handlers from StaticUnit ---
-  const handleDragStart = (label: string) => {
-    setActiveDrag(label);
-  };
-
-  const handleDragMove = (_label: string, position: { x: number; y: number }) => {
-    overlayX.value = position.x;
-    overlayY.value = position.y;
-  };
-
-  const handleDragEnd = (label: string, position: { x: number; y: number }) => {
-    handleUnitDrop(label, position); // delegate to your hook logic
-    setActiveDrag(null);
-  };
 
 
   // --- Render zones with their current units ---
@@ -87,6 +73,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
             ))}
           </DropZone>
         )}
+        removeClippedSubviews
       />
       {/* Dead Zone */}
       <View className="h-[30%] mt-4">
@@ -117,17 +104,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
         {activeDrag && (
           <Animated.View
             pointerEvents="none"
-            style={[
-              overlayAnimatedStyle,
-              {
-                position: 'absolute',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0,
-                zIndex: 999,
-              },
-            ]}
+            style={[ overlayAnimatedStyle]}
           >
             <DraggableOverlayUnit
               label={activeDrag}
