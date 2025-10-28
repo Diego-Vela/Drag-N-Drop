@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { View, FlatList } from 'react-native';
-import { DraggableUnit } from './DraggableUnit';
+import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
 import { StaticUnit } from './StaticUnit';
 import { DropZone } from './DropZone';
 import { useDropManager } from '../../hooks/drag-hooks';
+import { DraggableOverlayUnit } from './DraggableOverlayUnit';
 
 export interface DropZoneData {
   id: string;
@@ -24,16 +25,44 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     zones,
     deadZone,
     zoneRefs,
-    unitRefs,
-    unitInDropZoneShared,
     handleZoneMeasure,
     handleUnitDrop,
   } = useDropManager(data, deadZoneMembers);
 
+  const [activeDrag, setActiveDrag] = useState<string | null>(null);
+  const overlayX = useSharedValue(0);
+  const overlayY = useSharedValue(0);
+
+  // Animated style for overlay container (covers entire screen)
+  const overlayAnimatedStyle = useAnimatedStyle(() => ({
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    zIndex: 999,
+  }));
+
+  // --- Gesture event handlers from StaticUnit ---
+  const handleDragStart = (label: string) => {
+    setActiveDrag(label);
+  };
+
+  const handleDragMove = (_label: string, position: { x: number; y: number }) => {
+    overlayX.value = position.x;
+    overlayY.value = position.y;
+  };
+
+  const handleDragEnd = (label: string, position: { x: number; y: number }) => {
+    handleUnitDrop(label, position); // delegate to your hook logic
+    setActiveDrag(null);
+  };
+
+
   // --- Render zones with their current units ---
   return (
     <View className="flex-1 justify-between py-[16] px-[16]">
-      <View className="flex-1">
+      {/* Drop Zone List */}
       <FlatList
         data={zones}
         keyExtractor={(z) => z.id}
@@ -47,19 +76,20 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
             isDark={isDark}
           >
             {zone.units.map((letter) => (
-              <DraggableUnit
+              <StaticUnit
                 key={letter}
-                ref={(el) => { unitRefs.current[letter] = el; }}
                 label={letter}
-                onDragEnd={handleUnitDrop}
+                onDragStart={handleDragStart}
+                onDragMove={handleDragMove}
+                onDragEnd={handleDragEnd}
                 isDark={isDark}
               />
             ))}
           </DropZone>
         )}
       />
-      </View>
-      {<View>
+      {/* Dead Zone */}
+      <View className="h-[30%] mt-4">
           <DropZone
             ref={(el) => { zoneRefs.current[deadZone.id] = el; }}
             id={deadZone.id}
@@ -73,13 +103,40 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
               deadZone.units.map((letter) => (
                 <StaticUnit
                   key={letter}
-                  ref={(el) => { unitRefs.current[letter] = el; }}
                   label={letter}
                   isDark={isDark}
+                  onDragStart={handleDragStart}
+                  onDragMove={handleDragMove}
+                  onDragEnd={handleDragEnd}
                 />
               ))}
           </DropZone>
-        </View>}
+        </View>
+
+        {/* Overlay Draggable Units */}
+        {activeDrag && (
+          <Animated.View
+            pointerEvents="none"
+            style={[
+              overlayAnimatedStyle,
+              {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                zIndex: 999,
+              },
+            ]}
+          >
+            <DraggableOverlayUnit
+              label={activeDrag}
+              isDark={isDark}
+              x={overlayX}
+              y={overlayY}
+            />
+          </Animated.View>
+        )}
     </View>
   );
 }

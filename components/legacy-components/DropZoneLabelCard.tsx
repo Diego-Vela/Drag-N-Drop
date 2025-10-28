@@ -1,3 +1,4 @@
+  /* Legacy Component
   import { View, Text } from 'react-native';
 
   export function DropZoneLabelCard({ title, subtitle, isDark }: {title: string, subtitle: string, isDark: boolean }) {
@@ -15,4 +16,4 @@
         </View>
       </View>
     )
-  }
+  }*/

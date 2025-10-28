@@ -1,21 +1,19 @@
-import React, { forwardRef, useImperativeHandle, useRef } from 'react';
-import { Text } from 'react-native';
-import Animated from 'react-native-reanimated';
+/* Legacy Style
+import React from 'react';
+import { Text, View } from 'react-native';
 
-// ---- small Render component ----
+// ---- Consistent Unit Style ----
 export function Unit({
   label,
   isDark,
-  animatedStyle=null,
   unitRef=null,
 }: {
   label: string;
   isDark: boolean;
-  animatedStyle?: any;
   unitRef?: any;
 }) {
   return (
-    <Animated.View
+    <View
       ref={unitRef}
       className={`px-4 py-6 rounded-lg border-2 ${
         isDark
@@ -23,7 +21,6 @@ export function Unit({
           : 'bg-light-highlight border-light-highlight-accent'
       }`}
       style={[
-        animatedStyle,
         {
           width: '100%',
         },
@@ -38,6 +35,7 @@ export function Unit({
       >
         {label}
       </Text>
-    </Animated.View>
+    </View>
   );
 }
+  */

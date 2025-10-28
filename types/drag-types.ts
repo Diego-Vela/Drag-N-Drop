@@ -1,13 +1,14 @@
 import Animated, { SharedValue } from 'react-native-reanimated';
 import { Gesture } from 'react-native-gesture-handler';
 
-// DraggableUnit Props
-export interface DraggableUnitProps {
-  label?: string;
-  onDragEnd?: (id: string, position: { x: number; y: number }) => void;
+// Static Unit Props
+export interface StaticUnitProps {
+  label: string;
   isDark?: boolean;
+  onDragStart: (id: string) => void;
+  onDragMove: (id: string, position: DragPosition) => void;
+  onDragEnd: (id: string, position: DragPosition) => void;
 }
-
 // DropZone Props
 export interface DropZoneProps {
   id: string;
@@ -18,7 +19,6 @@ export interface DropZoneProps {
   isDeadZone?: boolean;
   children?: React.ReactNode;
 }
-
 // useDraggableUnit Props
 export interface UseDraggableUnitReturn {
   unitRef: React.RefObject<Animated.View | null>;
@@ -37,4 +37,10 @@ export interface UnitRef {
 // DropZoneRef: DropZone.tsx, useDragManager.ts
 export interface DropZoneRef {
   measureNow: () => void;
+}
+
+// Drag Position Helper Type
+export interface DragPosition {
+  x: number;
+  y: number;
 }

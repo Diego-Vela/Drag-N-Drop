@@ -3,7 +3,7 @@ import { Container, ScreenContent } from '../components/base';
 import { DragManager, DropZoneData } from '../components/drag-components';
 import { useData, useTheme } from '../contexts';
 
-const GroupName = 'Edit Dashboard';
+const GroupName = 'Sugma Dashboard';
 
 export function EditScreen() {
   const { isDark } = useTheme();
