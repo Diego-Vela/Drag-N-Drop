@@ -47,6 +47,7 @@ export function StaticUnit({ label, isDark=false, onDragStart, onDragMove, onDra
               ? 'text-dark-highlight-text'
               : 'text-light-highlight-text'
           }`}
+          numberOfLines={2}
         >
           {label}
         </Text>
