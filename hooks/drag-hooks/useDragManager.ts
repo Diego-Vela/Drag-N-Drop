@@ -1,4 +1,3 @@
-//#region Imports
 import { useState, useRef, useEffect, useCallback } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
@@ -27,6 +26,19 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   // Zone Refs
   const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
 
+  useEffect(() => {
+    let f1: number, f2: number;
+    f1 = requestAnimationFrame(() => {
+      f2 = requestAnimationFrame(() => {
+        Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
+      });
+    });
+    return () => {
+      cancelAnimationFrame(f1);
+      cancelAnimationFrame(f2);
+    };
+  }, [zones, deadZone]);
+
   //#region Exported Functions
   // Collect measurements from zones
   const handleZoneMeasure = useCallback((id: string, layout: any) => {
@@ -51,8 +63,8 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   //#region Internal Logic
   // Internal logic for moving and detecting zones on DragEnd
   const handleUnitDrop = useCallback(
-    async (id: string, position: { x: number; y: number }) => {
-      await recalcZoneLayouts();
+    (id: string, position: { x: number; y: number }) => {
+      recalcZoneLayouts();
       if (Object.keys(zoneInfo).length === 0) return;
 
       console.log(`Position X: ${position.x}, Position Y: ${position.y}`);
@@ -88,23 +100,21 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
         moveBetweenZones(id, fromZoneId, targetZoneId, setZones);
         console.log(`${id} moved from ${fromZoneId} → ${targetZoneId}\n`);
       }
+      setZoneInfo({});
     },
     [zoneInfo, zones, deadZone]
   );
 
   // Recalculates Zone layouts after two frames of dropping to get updated sizes. 
-  function recalcZoneLayouts(): Promise<void> {
-    return new Promise((resolve) => {
+  function recalcZoneLayouts() {
+    requestAnimationFrame(() => {
       requestAnimationFrame(() => {
-        requestAnimationFrame(() => {
-          setZoneInfo({});
-          Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
-          console.log('✅ zone layouts recalculated after two frames');
-          resolve();
-        });
+        setZoneInfo({});
+        Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
+        console.log('✅ zone layouts recalculated after two frames');
       });
     });
-  }
+  };
 
   //#region Exports
   return {
