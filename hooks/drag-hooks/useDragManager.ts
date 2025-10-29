@@ -80,11 +80,12 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       } else {
         console.log(`No target zone found`);
         console.log(`${id} not inside any zone\n`);
+        recalcZoneLayouts();
         return;
       }
 
       const fromZoneId = findFromZoneId(id, zones, deadZone);
-      if (!fromZoneId || fromZoneId === targetZoneId) return;
+      if (!fromZoneId || fromZoneId === targetZoneId) {recalcZoneLayouts(); return;}
 
       LayoutAnimation.configureNext(LayoutAnimation.Presets.easeInEaseOut);
 
