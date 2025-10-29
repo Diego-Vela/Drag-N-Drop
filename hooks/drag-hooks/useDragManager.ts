@@ -65,8 +65,8 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   //#region Internal Logic
   // Internal logic for moving and detecting zones on DragEnd
   const handleUnitDrop = useCallback(
-    (id: string, position: { x: number; y: number }) => {
-      Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
+    async (id: string, position: { x: number; y: number }) => {
+      await recalcZoneLayouts();
       if (Object.keys(zoneInfo).length === 0) return;
 
       console.log(`Position X: ${position.x}, Position Y: ${position.y}`);
@@ -80,7 +80,6 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       } else {
         console.log(`No target zone found`);
         console.log(`${id} not inside any zone\n`);
-        recalcZoneLayouts();
         return;
       }
 
@@ -103,17 +102,19 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
         moveBetweenZones(id, fromZoneId, targetZoneId, setZones);
         console.log(`${id} moved from ${fromZoneId} → ${targetZoneId}\n`);
       }
-      recalcZoneLayouts();
     },
     [zoneInfo, zones, deadZone]
   );
 
   // Recalculates Zone layouts after two frames of dropping to get updated sizes. 
-  function recalcZoneLayouts() {
-    requestAnimationFrame(() => {
+  function recalcZoneLayouts(): Promise<void> {
+    return new Promise((resolve) => {
       requestAnimationFrame(() => {
-        Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
-        console.log('✅ zone layouts recalculated after two frames');
+        requestAnimationFrame(() => {
+          Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
+          console.log('✅ zone layouts recalculated after two frames');
+          resolve();
+        });
       });
     });
   }
