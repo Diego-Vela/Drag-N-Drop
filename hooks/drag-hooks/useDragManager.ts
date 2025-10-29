@@ -33,20 +33,6 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     setZoneInfo((prev) => ({ [id]: layout, ...prev }));
   }, []);
 
-  // Waits two frames before zone measurements
-  useEffect(() => {
-    let f1: number, f2: number;
-    f1 = requestAnimationFrame(() => {
-      f2 = requestAnimationFrame(() => {
-        Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
-      });
-    });
-    return () => {
-      cancelAnimationFrame(f1);
-      cancelAnimationFrame(f2);
-    };
-  }, [zones, deadZone]);
-
   // Handles Drag Movements: Start, Move, End
   const handleDragStart = (label: string) => {
     setActiveDrag(label);
@@ -111,6 +97,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     return new Promise((resolve) => {
       requestAnimationFrame(() => {
         requestAnimationFrame(() => {
+          setZoneInfo({});
           Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
           console.log('✅ zone layouts recalculated after two frames');
           resolve();

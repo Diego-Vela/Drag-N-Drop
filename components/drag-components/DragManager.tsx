@@ -1,11 +1,12 @@
 //#region Imports
-import React from 'react';
-import { View, FlatList } from 'react-native';
+import React, { useState } from 'react';
+import { View, ScrollView } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
 import { StaticUnit } from './StaticUnit';
 import { DropZone } from './DropZone';
 import { useDropManager } from '../../hooks/drag-hooks';
 import { DraggableOverlayUnit } from './DraggableOverlayUnit';
+import { RefreshControl } from 'react-native-gesture-handler';
 
 //#region MOVE TO TYPES
 export interface DropZoneData {
@@ -36,15 +37,28 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     handleDragEnd
   } = useDropManager(data, deadZoneMembers);
 
+  //#region TODO
+  // Add functionality to refresh
+  const [refreshing, setRefreshing] = useState(false);
+  const onRefresh = () => {};
+
   //#region Render
   return (
     <View className="flex-1 justify-between py-[16] px-[16]">
       {/* Drop Zone List */}
-      <FlatList
-        data={zones}
-        keyExtractor={(z) => z.id}
-        renderItem={({ item: zone }) => (
+      <ScrollView
+        pointerEvents='auto'
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+          />
+        }
+        showsVerticalScrollIndicator={false}
+      >
+        {zones.map((zone) => (
           <DropZone
+            key={zone.id}
             ref={(el) => { zoneRefs.current[zone.id] = el; }}
             id={zone.id}
             label={zone.label}
@@ -63,9 +77,8 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
               />
             ))}
           </DropZone>
-        )}
-        removeClippedSubviews={true}
-      />
+        ))}
+      </ScrollView>
       {/* Dead Zone */}
       <View className="h-[30%] mt-4">
           <DropZone
