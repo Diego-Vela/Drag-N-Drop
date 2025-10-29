@@ -18,7 +18,10 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
               isDark ? 'bg-dark-surface/40' : 'bg-orange-300'
             }`}
           >
-            <View className='flex items-center justify-center self-center bg-yellow-300 h-[30%] w-full'>
+            <View className='flex items-center justify-center self-center bg-green-300 h-[5%] w-full'>
+              <Text className='text-xs text-center'>Optional ReSize Bar</Text>
+            </View>
+            <View className='flex items-center justify-center self-center bg-yellow-300 h-[20%] w-full'>
               <Text className='text-lg text-center'>SearchBar Component</Text>
             </View>
             <ScrollView
@@ -56,7 +59,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
                 </Text>
               </View>
             </View>
-            <View className="ml-4 flex-1 gap-4 items-start justify-center">
+            <View className="ml-4 flex-1 flex-row flex-wrap gap-4 items-center justify-start">
               {children}
             </View>
           </View>

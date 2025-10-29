@@ -41,6 +41,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
   // Add functionality to refresh
   const [refreshing, setRefreshing] = useState(false);
   const onRefresh = () => {};
+  // zones contains the new data to pass back to the home screen.
 
   //#region Render
   return (

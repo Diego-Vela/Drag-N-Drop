@@ -21,7 +21,7 @@ export function useDropZone(
       const right = x + width;
       const top = y;
       const bottom = y + height;
-      console.log(`id: ${id}, [left: ${left}, right: $${right}, top:${top}, bottom:${bottom}]`)
+      // console.log(`id: ${id}, [left: ${left}, right: $${right}, top:${top}, bottom:${bottom}]`)
       onMeasure(id, { left, right, top, bottom });
     });
   };

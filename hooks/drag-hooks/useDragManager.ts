@@ -67,7 +67,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       recalcZoneLayouts();
       if (Object.keys(zoneInfo).length === 0) return;
 
-      console.log(`Position X: ${position.x}, Position Y: ${position.y}`);
+      // console.log(`Position X: ${position.x}, Position Y: ${position.y}`);
 
       const targetZoneId = findTargetZoneId(position, zoneInfo);
 
@@ -98,7 +98,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
 
         // --- Zone → Zone ---`
         moveBetweenZones(id, fromZoneId, targetZoneId, setZones);
-        console.log(`${id} moved from ${fromZoneId} → ${targetZoneId}\n`);
+        // console.log(`${id} moved from ${fromZoneId} → ${targetZoneId}\n`);
       }
       setZoneInfo({});
     },
