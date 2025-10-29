@@ -64,7 +64,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
             ))}
           </DropZone>
         )}
-        removeClippedSubviews
+        removeClippedSubviews={true}
       />
       {/* Dead Zone */}
       <View className="h-[30%] mt-4">

@@ -91,13 +91,11 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       // --- DEADZONE PRIORITY ---
       if (targetZoneId === deadZone?.id) {
         moveToDeadZone(id, fromZoneId, setZones, setDeadZone, deadZone);
-        return;
       }
 
       // --- FROM DEADZONE → Zone ---
-      if (fromZoneId === deadZone?.id) {
+      else if (fromZoneId === deadZone?.id) {
         moveFromDeadZone(id, targetZoneId, setZones, setDeadZone);
-        
       } else {
 
         // --- Zone → Zone ---`

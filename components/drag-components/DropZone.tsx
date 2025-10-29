@@ -1,5 +1,5 @@
 import React, { forwardRef } from 'react';
-import { View, Text } from 'react-native';
+import { View, Text, FlatList, ScrollView } from 'react-native';
 import { DropZoneRef, DropZoneProps } from '../../types';
 import { useDropZone } from '../../hooks';
 
@@ -18,9 +18,23 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
               isDark ? 'bg-dark-surface/40' : 'bg-orange-300'
             }`}
           >
-            <View className="flex-row gap-6 mx-4 w-60 min-w-[30%] max-w-[60%]">
-              {children}
+            <View className='flex items-center justify-center self-center bg-yellow-300 h-[30%] w-full'>
+              <Text className='text-lg text-center'>SearchBar Component</Text>
             </View>
+            <ScrollView
+              contentContainerStyle={{
+                flexDirection: 'column',  
+                flexWrap: 'wrap',
+                gap: 16,
+                margin: 12,
+                justifyContent: 'center',
+                
+              }}
+              horizontal={true}
+              
+            > 
+              {children}
+            </ScrollView>
           </View>
         ) : (
           <View
@@ -42,7 +56,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
                 </Text>
               </View>
             </View>
-            <View className="ml-4 flex-1 gap-6 items-center justify-center">
+            <View className="ml-4 flex-1 gap-4 items-start justify-center">
               {children}
             </View>
           </View>
