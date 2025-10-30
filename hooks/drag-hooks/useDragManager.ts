@@ -68,12 +68,12 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       const targetZoneId = findTargetZoneId(position, zoneInfo);
 
       if (targetZoneId !== null) {
-        console.log(
+        /*console.log(
           `${targetZoneId} l[${zoneInfo[targetZoneId].left}], r[${zoneInfo[targetZoneId].right}], t[${zoneInfo[targetZoneId].top}], b[${zoneInfo[targetZoneId].bottom}]`
-        );
+        );*/
       } else {
-        console.log(`No target zone found`);
-        console.log(`${id} not inside any zone\n`);
+        //console.log(`No target zone found`);
+        //console.log(`${id} not inside any zone\n`);
         return;
       }
 
@@ -107,7 +107,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
       requestAnimationFrame(() => {
         setZoneInfo({});
         Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
-        console.log('✅ zone layouts recalculated after two frames');
+        //console.log('✅ zone layouts recalculated after two frames');
       });
     });
   };

@@ -45,9 +45,7 @@ export function EditScreen() {
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/EditScreen.tsx">
-        {/* Search Bar Component Here */}
-        {/* Decide whether to place flat list here or inside drag manager */}
-        <DragManager isDark={isDark} data={combinedData}  deadZoneMembers={testUnassigned}/*deadZoneMembers={unassignedUnits}*//>
+        <DragManager isDark={isDark} data={combinedData}  deadZoneMembers={unassignedUnits}/*deadZoneMembers={unassignedUnits}*//>
       </ScreenContent>
     </Container>
   );

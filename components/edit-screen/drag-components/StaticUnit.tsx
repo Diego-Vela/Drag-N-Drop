@@ -6,7 +6,7 @@ import { StaticUnitProps } from '../../../types';
 import { playSound } from '../../../utils';
 
 const MIN_THRESHOLD = 10;
-const UNIT_HEIGHT = 80;
+const UNIT_HEIGHT = 60;
 
 export function StaticUnit({ label, isDark=false, onDragStart, onDragMove, onDragEnd}: StaticUnitProps) {
   

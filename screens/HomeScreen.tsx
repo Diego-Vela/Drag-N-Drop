@@ -12,7 +12,6 @@ export function HomeScreen() {
   const { getUnassignedUnits, getGroupedAssignments } = useData();
   const groupedAssignments = getGroupedAssignments();
   const unassigned = getUnassignedUnits();
-  const isEditing = true; // Testing boolean for the future
 
   // Compose all units: unassigned first, then assigned (flattened)
   const assignedUnits = groupedAssignments.flatMap(g => g.units);
@@ -62,8 +61,6 @@ export function HomeScreen() {
           showsVerticalScrollIndicator={false}
         />
       </ScreenContent>
-      {/* Unassigned List: Horizontal */}
-      {isEditing && <UnitScroller allUnits={allUnits} />}
     </Container>
   );
 }
