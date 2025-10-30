@@ -22,7 +22,7 @@ interface DragManagerProps {
   deadZoneMembers: DropZoneData;
 }
 
-export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {
+export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {  
   //#region Hook
   const {
     zones,
@@ -31,16 +31,18 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     activeDrag,
     overlayX,
     overlayY,
+    isDragging,
+    refreshing,
     handleZoneMeasure,
     handleDragStart,
     handleDragMove,
-    handleDragEnd
+    handleDragEnd,
+    onRefresh,
   } = useDropManager(data, deadZoneMembers);
 
-  //#region TODO
+  //#region 
   // Add functionality to refresh
-  const [refreshing, setRefreshing] = useState(false);
-  const onRefresh = () => {};
+  
   // zones contains the new data to pass back to the home screen.
 
   //#region Render
@@ -49,6 +51,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
       {/* Drop Zone List */}
       <ScrollView
         pointerEvents='auto'
+        scrollEnabled={!isDragging}
         refreshControl={
           <RefreshControl
             refreshing={refreshing}

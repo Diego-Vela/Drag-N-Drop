@@ -18,6 +18,7 @@
     "@react-navigation/native-stack": "^7.3.28",
     "@shopify/react-native-skia": "2.2.12",
     "expo": "^54.0.0",
+    "expo-audio": "~1.0.14",
     "expo-status-bar": "~3.0.8",
     "nativewind": "latest",
     "react": "19.1.0",

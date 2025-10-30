@@ -8,8 +8,8 @@ import {
   findFromZoneId,
   moveBetweenZones,
   moveToDeadZone,
-  moveFromDeadZone,
-} from '../../utils/drag-manager-utils';
+  moveFromDeadZone
+} from '../../utils';
 
 export function useDropManager(initialZones: DropZoneData[], initialDeadZone: DropZoneData) {
   //#region Variables 
@@ -18,26 +18,16 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   const [zoneInfo, setZoneInfo] = useState<Record<string, any>>({});
   const [deadZone, setDeadZone] = useState(initialDeadZone);
   const [activeDrag, setActiveDrag] = useState<string | null>(null);
+  const [isDragging, setIsDragging] = useState(false);
+  const [refreshing, setRefreshing] = useState(false); 
+  const [_, forceUpdate] = useState(0);
 
-  // Overlay Values 
+  // Shared Values 
   const overlayX = useSharedValue(0);
   const overlayY = useSharedValue(0);
 
   // Zone Refs
   const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
-
-  useEffect(() => {
-    let f1: number, f2: number;
-    f1 = requestAnimationFrame(() => {
-      f2 = requestAnimationFrame(() => {
-        Object.values(zoneRefs.current).forEach((ref) => ref?.measureNow?.());
-      });
-    });
-    return () => {
-      cancelAnimationFrame(f1);
-      cancelAnimationFrame(f2);
-    };
-  }, [zones, deadZone]);
 
   //#region Exported Functions
   // Collect measurements from zones
@@ -47,7 +37,9 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
 
   // Handles Drag Movements: Start, Move, End
   const handleDragStart = (label: string) => {
+    setIsDragging(true);
     setActiveDrag(label);
+    recalcZoneLayouts();
   };
 
   const handleDragMove = (_label: string, position: { x: number; y: number }) => {
@@ -56,15 +48,20 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   };
 
   const handleDragEnd = (label: string, position: { x: number; y: number }) => {
-    handleUnitDrop(label, position); // delegate to your hook logic
+    handleUnitDrop(label, position);
+    setIsDragging(false);
     setActiveDrag(null);
   };
+
+  const onRefresh = () => {
+    forceUpdate(n => n+1);
+    //console.log('Placeholder Re-render: Does nothing');
+  }
 
   //#region Internal Logic
   // Internal logic for moving and detecting zones on DragEnd
   const handleUnitDrop = useCallback(
     (id: string, position: { x: number; y: number }) => {
-      recalcZoneLayouts();
       if (Object.keys(zoneInfo).length === 0) return;
 
       // console.log(`Position X: ${position.x}, Position Y: ${position.y}`);
@@ -122,12 +119,15 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     deadZone,
     zoneRefs,
     activeDrag,
+    isDragging,
+    refreshing,
     overlayX,
     overlayY,
     handleZoneMeasure,
     handleDragStart,
     handleDragMove,
     handleDragEnd,
-    setDeadZone
+    setDeadZone,
+    onRefresh,
   };
 }

@@ -19,7 +19,6 @@ export function DraggableAssignmentContainer({
   isDark,
   isUnassigned = false,
 }: DraggableAssignmentContainerProps) {
-  // Local state — visual order only
   const [data, setData] = useState(units);
 
   // Render each draggable unit as a small "sub-container"
@@ -36,11 +35,11 @@ export function DraggableAssignmentContainer({
   return (
     <DraggableFlatList
       data={data}
-      onDragEnd={({ data }) => setData(data)} // just updates order locally
+      onDragEnd={({ data }) => setData(data)} 
       keyExtractor={(item) => item.id}
       renderItem={renderItem}
       scrollEnabled={false}
-      activationDistance={10} // how far you must move to start dragging
+      activationDistance={10}
       contentContainerStyle={{
         paddingBottom: 8,
       }}
