@@ -1,6 +1,6 @@
 import React from 'react';
-import { Container, ScreenContent } from '../components/base';
-import { DragManager, DropZoneData } from '../components/drag-components';
+import { Container, ScreenContent, DragManager } from '../components';
+import type { DropZoneData } from '../types';
 import { useData, useTheme } from '../contexts';
 
 const GroupName = 'Sugma Dashboard';

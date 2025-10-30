@@ -1,7 +1,7 @@
 import React, { forwardRef } from 'react';
 import { View, Text, FlatList, ScrollView } from 'react-native';
-import { DropZoneRef, DropZoneProps } from '../../types';
-import { useDropZone } from '../../hooks';
+import { DropZoneRef, DropZoneProps } from '../../../types';
+import { useDropZone } from '../../../hooks';
 
 export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
   ({ id, onMeasure, label = 'Drop Zone', sublabel = 'Drop Here', isDark = false, isDeadZone = false, children }, ref ) => {
@@ -18,12 +18,6 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
               isDark ? 'bg-dark-surface/40' : 'bg-orange-300'
             }`}
           >
-            <View className='flex items-center justify-center self-center bg-green-300 h-[5%] w-full'>
-              <Text className='text-xs text-center'>Optional ReSize Bar</Text>
-            </View>
-            <View className='flex items-center justify-center self-center bg-yellow-300 h-[20%] w-full'>
-              <Text className='text-lg text-center'>SearchBar Component</Text>
-            </View>
             <ScrollView
               contentContainerStyle={{
                 flexDirection: 'column',  

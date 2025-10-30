@@ -2,8 +2,8 @@ import React from 'react';
 import { View, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { runOnJS, useSharedValue } from 'react-native-reanimated';
-import { StaticUnitProps } from '../../types';
-import { playSound } from '../../utils';
+import { StaticUnitProps } from '../../../types';
+import { playSound } from '../../../utils';
 
 const MIN_THRESHOLD = 10;
 const UNIT_HEIGHT = 80;

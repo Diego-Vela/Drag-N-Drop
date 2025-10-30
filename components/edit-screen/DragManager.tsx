@@ -1,26 +1,14 @@
-//#region Imports
-import React, { useState } from 'react';
-import { View, ScrollView } from 'react-native';
-import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import { StaticUnit } from './StaticUnit';
-import { DropZone } from './DropZone';
-import { useDropManager } from '../../hooks/drag-hooks';
-import { DraggableOverlayUnit } from './DraggableOverlayUnit';
+import React from 'react';
+import { View, ScrollView, Text } from 'react-native';
+import Animated from 'react-native-reanimated';
 import { RefreshControl } from 'react-native-gesture-handler';
 
-//#region MOVE TO TYPES
-export interface DropZoneData {
-  id: string;
-  label: string;
-  sublabel?: string;
-  units: string[];
-}
+import { DropZone, StaticUnit, DraggableOverlayUnit } from './drag-components';
+import { useDropManager } from '../../hooks/drag-hooks';
+import type { DragManagerProps } from '../../types';
 
-interface DragManagerProps {
-  isDark?: boolean;
-  data: DropZoneData[];
-  deadZoneMembers: DropZoneData;
-}
+import { SearchBar } from '../general/SearchBar'; 
+
 
 export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {  
   //#region Hook
@@ -40,10 +28,8 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     onRefresh,
   } = useDropManager(data, deadZoneMembers);
 
-  //#region 
-  // Add functionality to refresh
-  
-  // zones contains the new data to pass back to the home screen.
+  //#region Temp Logic
+  // NOTE: zones contains the new data to pass back to the home screen.
 
   //#region Render
   return (
@@ -85,6 +71,12 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
       </ScrollView>
       {/* Dead Zone */}
       <View className="h-[30%] mt-4">
+          <View className='flex items-center justify-center self-center bg-green-300 h-[5%] w-full'>
+            <Text className='text-xs text-center'>Optional ReSize Bar</Text>
+          </View>
+          <View className='flex items-center justify-center self-center bg-yellow-300 h-[20%] w-full'>
+            <SearchBar data={''}/>
+          </View>
           <DropZone
             ref={(el) => { zoneRefs.current[deadZone.id] = el; }}
             id={deadZone.id}

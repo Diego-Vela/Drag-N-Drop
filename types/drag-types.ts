@@ -44,3 +44,18 @@ export interface DragPosition {
   x: number;
   y: number;
 }
+
+// DropZone Data
+export interface DropZoneData {
+  id: string;
+  label: string;
+  sublabel?: string;
+  units: string[];
+}
+
+// DragManager Props
+export interface DragManagerProps {
+  isDark?: boolean;
+  data: DropZoneData[];
+  deadZoneMembers: DropZoneData;
+}
