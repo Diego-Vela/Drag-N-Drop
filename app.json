@@ -10,7 +10,8 @@
       "tsconfigPaths": true
     },
     "plugins": [
-      "expo-audio"
+      "expo-audio",
+      "expo-sqlite"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
