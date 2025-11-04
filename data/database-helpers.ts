@@ -35,3 +35,10 @@ export async function addAssignment(id: string, unit_id: string, location_id: st
   );
   console.log(`Added assignment: ${id}`);
 }
+
+// Get
+export async function getCustomers() {
+  const db = await dbPromise;
+  const result = await db.getAllAsync('SELECT * FROM customers');
+  return result; 
+}

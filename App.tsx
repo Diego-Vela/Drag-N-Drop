@@ -8,7 +8,7 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Screen Imports
 import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen, EditScreen } from './screens';
 // Context Imports
-import { ThemeProvider, useTheme, DataProvider } from './contexts';
+import { ThemeProvider, useTheme, DataProvider, NewDataProvider } from './contexts';
 // Styles
 import './global.css';
 
@@ -78,9 +78,11 @@ export default function App() {
     <GestureHandlerRootView style={{ flex: 1 }}>
       <ThemeProvider>
         <DataProvider>
-          <NavigationContainer>
-            <TabNavigator />
-          </NavigationContainer>
+          <NewDataProvider>
+            <NavigationContainer>
+              <TabNavigator />
+            </NavigationContainer>
+          </NewDataProvider>
         </DataProvider>
       </ThemeProvider>
     </GestureHandlerRootView>

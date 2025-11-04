@@ -1,22 +1,22 @@
 {
   "customers": [
-    {"id": 1, "name": "CalPortland"},
-    {"id": 2, "name": "Griffith"},
-    {"id": 3, "name": "T-9"},
-    {"id": 4, "name": "N.America"},
-    {"id": 5, "name": "Onyx"},
-    {"id": 6, "name": "OHLA"},
-    {"id": 7, "name": "Rove Eng."},
-    {"id": 8, "name": "Skanska"}
+    {"id": "1", "name": "CalPortland"},
+    {"id": "2", "name": "Griffith"},
+    {"id": "3", "name": "T-9"},
+    {"id": "4", "name": "N.America"},
+    {"id": "5", "name": "Onyx"},
+    {"id": "6", "name": "OHLA"},
+    {"id": "7", "name": "Rove Eng."},
+    {"id": "8", "name": "Skanska"}
   ],
   "locations": [
-    {"id": "ID1", "customerId": 4, "name": "Baldwin Park"},
-    {"id": "ID2", "customerId": 4, "name": "Bolder City"},
-    {"id": "ID3", "customerId": 5, "name": "Corona"},
-    {"id": "ID4", "customerId": 6, "name": "Goodfellow Radial"},
-    {"id": "ID5", "customerId": 6, "name": "Valencia"},
-    {"id": "ID6", "customerId": 7, "name": "Alpine(I-8)"},
-    {"id": "ID7", "customerId": 8, "name": "Ontario"}
+    {"id": "ID1", "customerId": "4", "name": "Baldwin Park"},
+    {"id": "ID2", "customerId": "4", "name": "Bolder City"},
+    {"id": "ID3", "customerId": "5", "name": "Corona"},
+    {"id": "ID4", "customerId": "6", "name": "Goodfellow Radial"},
+    {"id": "ID5", "customerId": "6", "name": "Valencia"},
+    {"id": "ID6", "customerId": "7", "name": "Alpine(I-8)"},
+    {"id": "ID7", "customerId": "8", "name": "Ontario"}
   ],
   "units": [
     {"id": "1", "name": "LPTX1250x36/2714"},
