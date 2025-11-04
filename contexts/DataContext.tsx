@@ -146,3 +146,45 @@ export const useData = (): DataContextType => {
   }
   return context;
 };
+
+
+
+import { useState, useEffect } from 'react';
+import { initDatabase } from '../data/database';
+import { addCustomer, addLocation, addUnit, addAssignment } from 'data/database-helpers';
+
+const NewDataContext = createContext<NewDataContextType | null>(null);
+
+export interface NewDataContextType {
+  customers: Customer[];
+  locations: Location[];
+  units: Unit[];
+  assignments: Assignment[];
+}
+
+
+export const NewDataProvider = ({ children }: { children: ReactNode }) => {
+  const [customers, setCustomers] = useState([]);
+  const [locations, setLocations] = useState([]);
+  const [units, setUnits] = useState([]);
+  const [assignments, setAssignments] = useState([])
+
+  useEffect(() => {
+    (async () => {
+      const db = await initDatabase();
+    })
+  }, []);
+
+  const value: NewDataContextType ={
+    customers: customers,
+    locations: locations,
+    units: units,
+    assignments: assignments,
+  }
+
+  return (
+    <NewDataContext.Provider value={value}>
+      {children}
+    </NewDataContext.Provider>
+  )
+}
