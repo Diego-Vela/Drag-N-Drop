@@ -23,7 +23,7 @@ export function SearchBar({
 
   return (
     <View
-      className={`w-[95%] flex-row h-full items-center my-2 justify-between rounded-xl shadow-sm border border-black ${containerBg} ${borderColor} opacity-90`}
+      className={`flex-row h-full items-center my-2 justify-between rounded-xl shadow-sm border border-black ${containerBg} ${borderColor} opacity-90`}
     >
       <TextInput
         className={`flex-1 px-3 py-1 text-base ${textColor}`}

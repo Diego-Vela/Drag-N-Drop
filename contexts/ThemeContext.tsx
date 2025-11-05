@@ -21,12 +21,10 @@ export const ThemeProvider = ({ children }: { children: React.ReactNode }) => {
   const isDark = theme === 'dark' || (theme === 'system' && systemTheme === 'dark');
   const colorScheme = isDark ? 'dark' : 'light';
 
-  // Load saved theme on app start
   useEffect(() => {
     loadTheme();
   }, []);
 
-  // Update NativeWind's color scheme
   useEffect(() => {
     vars({ colorScheme: colorScheme });
   }, [colorScheme]);

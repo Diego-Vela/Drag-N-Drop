@@ -150,7 +150,7 @@ export const useData = (): DataContextType => {
 
 import { useState, useEffect } from 'react';
 import { initDatabase } from '../data/database';
-import { addCustomer, addLocation, addUnit, addAssignment, getCustomers } from 'data/database-helpers';
+import { addCustomer, addLocation, addUnit, addAssignment, getCustomers, getLocations, addCustomerLocationPair, dropAllTables } from 'data/database-helpers';
 
 const NewDataContext = createContext<NewDataContextType | null>(null);
 
@@ -161,11 +161,17 @@ export interface NewDataContextType {
   assignments: Assignment[];
 
   addCustomer: (id: string, name: string) => Promise<void>;
-  addLocation: (id: string, location: string, customer_id: string) => Promise<void>;
+  addLocation: (id: string, location: string, customer_id: string) => Promise<boolean>;
   addUnit: (id: string, unit: string) => Promise<void>;
   addAssignment: (id: string, unit_id: string, location_id: string) => Promise<void>;
+  addCustomerLocationPair: (customerName: string, locationName: string) => Promise<boolean>;
 
-  //getCustomers: () => Promise<Customer[]>; // ✅ fix type: it's async, returns a Promise
+  getCustomers: () => Promise<Customer[]>;
+  getLocations: () => Promise<Location[]>;
+
+  dropAllTables: () => Promise<void>;
+
+  refetch: () => Promise<void>;
 }
 
 export const NewDataProvider = ({ children }: { children: ReactNode }) => {
@@ -176,23 +182,40 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     (async () => {
-      await initDatabase(); // ✅ ensure DB exists and tables are created
+      await initDatabase();
       const dbCustomers = await getCustomers();
-      //setCustomers(dbCustomers);
-      console.log('✅ Database initialized and customers loaded');
-    })(); // ✅ must call the async function
+      const dbLocations = await getLocations();
+      setCustomers(dbCustomers as Customer[]);
+      setLocations(dbLocations as Location[]);
+      console.log('Db Connected');
+    })(); 
   }, []);
+
+  const refetch = async () => {
+    const dbCustomers = await getCustomers();
+    const dbLocations = await getLocations();
+    setCustomers(dbCustomers as Customer[]);
+    setLocations(dbLocations as Location[]);
+  }
 
   const value: NewDataContextType = {
     customers,
     locations,
     units,
     assignments,
+
     addCustomer,
     addLocation,
     addUnit,
     addAssignment,
-    //getCustomers,
+    addCustomerLocationPair,
+
+    getCustomers,
+    getLocations,
+
+    dropAllTables,
+
+    refetch,
   };
 
   return (
@@ -200,4 +223,12 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
       {children}
     </NewDataContext.Provider>
   );
+};
+
+export const useNewData = (): NewDataContextType => {
+  const context = useContext(NewDataContext);
+  if (!context) {
+    throw new Error('useNewData must be used within a NewDataProvider');
+  }
+  return context;
 };

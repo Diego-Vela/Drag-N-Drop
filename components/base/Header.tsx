@@ -17,7 +17,7 @@ export const Header = ({ title = "Organization Name" }: { title?: string }) => {
   const borderColor = isDark ? '#374151' : '#1e40af';     // dark-border or navy-border
 
   return (
-    <View style={{ position: 'relative', height: 85 }}>
+    <View style={{ position: 'relative', height: 85, zIndex: 500 }}>
       <Canvas style={{ position: 'absolute', top: 0, left: 0, right: 0, bottom: 0 }}>
         <Rect x={0} y={0} width={width} height={85} color={backgroundColor} />
         <Rect x={0} y={84} width={width} height={1} color={borderColor} />
