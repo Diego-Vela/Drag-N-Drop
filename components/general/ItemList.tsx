@@ -61,8 +61,8 @@ export function ItemList({isDark, elements}: Props) {
         keyExtractor={(item, index) => item.label + index}
         renderItem={renderItem}
         renderSectionHeader={renderSectionHeader}
-        stickySectionHeadersEnabled={false} // optional
-        showsVerticalScrollIndicator={false} // optional
+        stickySectionHeadersEnabled={false} 
+        showsVerticalScrollIndicator={false} 
       />
     </View>
   );

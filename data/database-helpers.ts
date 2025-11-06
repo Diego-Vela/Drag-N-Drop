@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { dbPromise } from './database';
-import type { Customer, Location } from '../contexts';
+import type { Customer, Location, Unit } from '../contexts';
 import * as Crypto from 'expo-crypto';
 
 //#region TODO
@@ -59,22 +59,32 @@ export async function addLocation(
   }
 }
 
-export async function addUnit(id: string, unit: string) {
+export async function addUnit( unit: string): Promise<boolean> {
   const db = await dbPromise;
-  await db.runAsync(
-    'INSERT INTO units (id, unit) VALUES (?, ?)',
-    [id, unit]
-  );
-  console.log(`Added unit: ${unit}`);
+  const id = Crypto.randomUUID();
+  try {
+    await db.runAsync(
+      'INSERT INTO units (id, unit) VALUES (?, ?)',
+      [id, unit]
+    );
+    console.log(`Added unit: ${unit}`);
+    return true;
+  } catch(err) {
+    return false;
+  }
 }
 
 export async function addAssignment(id: string, unit_id: string, location_id: string) {
   const db = await dbPromise;
-  await db.runAsync(
-    'INSERT INTO assignments (id, unit_id, location_id) VALUES (?, ?, ?)',
-    [id, unit_id, location_id]
-  );
-  console.log(`Added assignment: ${id}`);
+  try {
+    await db.runAsync(
+      'INSERT INTO assignments (id, unit_id, location_id) VALUES (?, ?, ?)',
+      [id, unit_id, location_id]
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
 }
 
 // Get
@@ -88,6 +98,12 @@ export async function getLocations(): Promise<Location[]> {
   const db = await dbPromise;
   const result = await db.getAllAsync('SELECT id, customer_id AS customerId, location AS name FROM locations');
   return result as Location[];
+}
+
+export async function getUnits(): Promise<Unit[]> {
+  const db = await dbPromise;
+  const result = await db.getAllAsync('SELECT id, unit AS name FROM units');
+  return result as Unit[];
 }
 
 //#region Temps

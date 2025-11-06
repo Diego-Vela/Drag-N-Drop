@@ -71,8 +71,6 @@ export function CustomersScreen() {
     });
   }, [customers, locations]);
 
-  const resetButtonTitle = 'RESET DB'
-
   //#region Render
   return (
     <Container headerTitle="Customer/Locations">

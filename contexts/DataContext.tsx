@@ -150,7 +150,7 @@ export const useData = (): DataContextType => {
 
 import { useState, useEffect } from 'react';
 import { initDatabase } from '../data/database';
-import { addCustomer, addLocation, addUnit, addAssignment, getCustomers, getLocations, addCustomerLocationPair, dropAllTables } from 'data/database-helpers';
+import { addCustomer, addLocation, addUnit, addAssignment, getCustomers, getLocations, getUnits, addCustomerLocationPair, dropAllTables } from 'data/database-helpers';
 
 const NewDataContext = createContext<NewDataContextType | null>(null);
 
@@ -162,12 +162,13 @@ export interface NewDataContextType {
 
   addCustomer: (id: string, name: string) => Promise<void>;
   addLocation: (id: string, location: string, customer_id: string) => Promise<boolean>;
-  addUnit: (id: string, unit: string) => Promise<void>;
-  addAssignment: (id: string, unit_id: string, location_id: string) => Promise<void>;
+  addUnit: ( unit: string) => Promise<boolean>;
+  addAssignment: (id: string, unit_id: string, location_id: string) => Promise<boolean>;
   addCustomerLocationPair: (customerName: string, locationName: string) => Promise<boolean>;
 
   getCustomers: () => Promise<Customer[]>;
   getLocations: () => Promise<Location[]>;
+  getUnits: () => Promise<Unit[]>;
 
   dropAllTables: () => Promise<void>;
 
@@ -185,8 +186,10 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
       await initDatabase();
       const dbCustomers = await getCustomers();
       const dbLocations = await getLocations();
+      const dbUnits = await getUnits();
       setCustomers(dbCustomers as Customer[]);
       setLocations(dbLocations as Location[]);
+      setUnits(dbUnits as Unit[]);
       console.log('Db Connected');
     })(); 
   }, []);
@@ -194,8 +197,10 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
   const refetch = async () => {
     const dbCustomers = await getCustomers();
     const dbLocations = await getLocations();
+    const dbUnits = await getUnits();
     setCustomers(dbCustomers as Customer[]);
     setLocations(dbLocations as Location[]);
+    setUnits(dbUnits as Unit[]); 
   }
 
   const value: NewDataContextType = {
@@ -212,6 +217,7 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
 
     getCustomers,
     getLocations,
+    getUnits,
 
     dropAllTables,
 
