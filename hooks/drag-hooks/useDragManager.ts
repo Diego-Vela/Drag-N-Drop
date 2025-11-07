@@ -20,6 +20,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   const [isDragging, setIsDragging] = useState(false);
   const [refreshing, setRefreshing] = useState(false); 
   const [_, forceUpdate] = useState(0);
+  const [showDeadZone, setShowDeadZone] = useState(true);
 
   // Shared Values 
   const overlayX = useSharedValue(0);
@@ -55,6 +56,10 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   const onRefresh = () => {
     forceUpdate(n => n+1);
     //console.log('Placeholder Re-render: Does nothing');
+  }
+
+  const handleShowDeadZoneButton = () => {
+    setShowDeadZone(!showDeadZone);
   }
 
   //#region Internal Logic
@@ -117,16 +122,24 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     zones,
     deadZone,
     zoneRefs,
+
     activeDrag,
     isDragging,
+
     refreshing,
+    showDeadZone,
+
     overlayX,
     overlayY,
+
     handleZoneMeasure,
+    
     handleDragStart,
     handleDragMove,
     handleDragEnd,
+    
     setDeadZone,
     onRefresh,
+    handleShowDeadZoneButton,
   };
 }

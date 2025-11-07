@@ -36,7 +36,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
           <View
             ref={zoneRef}
             onLayout={measureNow}
-            className={`flex-row mb-4 p-6 rounded-lg  ${
+            className={`flex-row mb-4 p-3 rounded-lg  ${
               isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'
             }`}
           >

@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, ScrollView, Text } from 'react-native';
+import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { RefreshControl } from 'react-native-gesture-handler';
 
@@ -7,7 +7,9 @@ import { DropZone, StaticUnit, DraggableOverlayUnit } from './drag-components';
 import { useDropManager, useSearchFilter } from '../../hooks';
 import type { DragManagerProps } from '../../types';
 
-import { SearchBar } from '../general/SearchBar'; 
+import { SearchBar } from '../'; 
+
+import { Ionicons } from '@expo/vector-icons';
 
 
 export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {  
@@ -17,6 +19,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     deadZone,
     zoneRefs,
     activeDrag,
+    showDeadZone,
     overlayX,
     overlayY,
     isDragging,
@@ -26,6 +29,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
     handleDragMove,
     handleDragEnd,
     onRefresh,
+    handleShowDeadZoneButton,
   } = useDropManager(data, deadZoneMembers);
 
   //#region Search hook
@@ -44,9 +48,9 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
 
   //#region Render
   return (
-    <View className="flex-1 justify-between px-[16]">
+    <View className="flex-1 justify-between">
       {/* Zone Search Bar */}
-      <View className="w-full h-16 min-h-[5%] max-h-[7%] my-4 items-center justify-center rounded-lg">
+      <View className="flex h-16 min-h-[5%] max-h-[7%] my-4 mx-4 items-center justify-center rounded-lg">
         <SearchBar
           placeholder="Search zones, locations, or units..."
           query={zoneQuery}
@@ -62,7 +66,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
         refreshControl={
           <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
         }
-        contentContainerStyle={{ marginVertical: 12 }}
+        contentContainerStyle={{ marginVertical: 12, marginHorizontal: 16 }}
         showsVerticalScrollIndicator={false}
       >
         {filteredZones.map((zone) => (
@@ -91,46 +95,48 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
         ))}
       </ScrollView>
 
+      {/* DeadZone Visibility Bar */}
+      <TouchableOpacity className={`flex h-4 mt-4 items-center justify-center self-center w-full rounded-t-lg ${isDark ? 'bg-gray-600': 'bg-gray-300'}`} onPress={handleShowDeadZoneButton}>
+        <Ionicons name={showDeadZone ? 'chevron-down' : 'chevron-up'} size={16} color={isDark? '#ffffffff': '#585858ff'} />
+      </TouchableOpacity>
+
       {/* Dead Zone Section */}
-      <View className={`h-[30%] mt-4 rounded-t-lg ${isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'}`}>
-        <View className={`flex items-center justify-center mb-2 self-center h-[5%] w-full rounded-t-lg`}>
-          <Text className="text-xs text-center">^Resize Bar^</Text>
-        </View>
-
-        {/* Unassigned Unit Search Bar */}
-        <View className="items-center justify-center self-center h-16 min-h-[5%] mx-4 rounded-lg">
-          <SearchBar
-            placeholder="Search unassigned units..."
-            query={unitQuery}
-            onSearchChange={setUnitQuery}
-            isDark={isDark}
-          />
-        </View>
-
-        {/* Filtered Dead Zone Units */}
-        <DropZone
-          ref={(el) => {
-            zoneRefs.current[deadZone.id] = el;
-          }}
-          id={deadZone.id}
-          label={deadZone.label}
-          sublabel={deadZone.sublabel}
-          isDeadZone
-          onMeasure={handleZoneMeasure}
-          isDark={isDark}
-        >
-          {filteredUnits.map((letter) => (
-            <StaticUnit
-              key={letter}
-              label={letter}
+      {showDeadZone &&(
+        <View className={`h-[28%] ${isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'}`}>
+          {/* Unassigned Unit Search Bar */}
+          <View className="items-center justify-center self-center h-16 min-h-[5%] my-2 mx-4">
+            <SearchBar
+              placeholder="Search unassigned units..."
+              query={unitQuery}
+              onSearchChange={setUnitQuery}
               isDark={isDark}
-              onDragStart={handleDragStart}
-              onDragMove={handleDragMove}
-              onDragEnd={handleDragEnd}
             />
-          ))}
-        </DropZone>
-      </View>
+          </View>
+          {/* Filtered Dead Zone Units */}
+          <DropZone
+            ref={(el) => {
+              zoneRefs.current[deadZone.id] = el;
+            }}
+            id={deadZone.id}
+            label={deadZone.label}
+            sublabel={deadZone.sublabel}
+            isDeadZone
+            onMeasure={handleZoneMeasure}
+            isDark={isDark}
+          >
+            {filteredUnits.map((letter) => (
+              <StaticUnit
+                key={letter}
+                label={letter}
+                isDark={isDark}
+                onDragStart={handleDragStart}
+                onDragMove={handleDragMove}
+                onDragEnd={handleDragEnd}
+              />
+            ))}
+          </DropZone>
+        </View>
+      )}
 
       {/* Overlay for Active Drag */}
       {activeDrag && (
