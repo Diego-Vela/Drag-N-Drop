@@ -40,14 +40,19 @@ export function ItemList({isDark, elements}: Props) {
   //#region Components
   const renderSectionHeader = ({ section }: any) => (
     <View className={`${isDark ? 'bg-dark-warning' : 'bg-light-accent'} p-4`}>
-      <Text className={`font-semibold text-2xl ${isDark ? 'text-black' : 'text-white'}`}>{section.label}</Text>
+      <Text className={`font-bold text-lg ${isDark ? 'text-black' : 'text-white'}`}>{section.label}</Text>
     </View>
   );
 
   const renderItem = ({ item }: { item: ListElement }) => (
     <View className={`p-4 border-b border-dark-border ${isDark ? 'bg-dark-warning/20' : 'bg-white'}`}>
-      <Text className={`text-xl font-bold ${isDark ? 'text-dark-highlight-text' :'text-black'}`}>{item.label}</Text>
-      <Text className={`text-lg  ${isDark ? 'text-dark-highlight-text/50' :'text-gray-500'}`}>{item.sublabel}</Text>
+      <Text className={`text-md font-bold ${isDark ? 'text-dark-highlight-text' :'text-black'}`}>{item.label}</Text>
+      {item.sublabel !== '' ? (
+        <Text className={`text-md  ${isDark ? 'text-dark-highlight-text/50' :'text-gray-500'}`}>{item.sublabel}</Text>
+      ) : (
+        <></>
+      )}
+      
     </View>
   );
   //#region Render

@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Screen Imports
-import { HomeScreen, CustomersScreen, UnitsScreen, AssignmentsScreen, SettingsScreen, EditScreen } from './screens';
+import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen } from './screens';
 // Context Imports
 import { ThemeProvider, useTheme, DataProvider, NewDataProvider } from './contexts';
 // Styles
@@ -47,7 +47,7 @@ function TabNavigator() {
               iconName = 'people';
               break;
             case 'Units':
-              iconName = 'build-outline'; // truck-like icon
+              iconName = 'build-outline';
               break;
             case 'Assignments':
               iconName = 'document-text';
@@ -55,6 +55,9 @@ function TabNavigator() {
             case 'Settings':
               iconName = 'settings';
               break;
+              case 'Edit':
+                iconName = 'create-outline';
+                break;
             default:
               iconName = 'help';
           }
@@ -64,11 +67,10 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Edit" component={EditScreen} />
       <Tab.Screen name="Customers" component={CustomersScreen} />
       <Tab.Screen name="Units" component={UnitsScreen} />
-      <Tab.Screen name="Assignments" component={AssignmentsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Edit" component={EditScreen} />
     </Tab.Navigator>
   );
 }

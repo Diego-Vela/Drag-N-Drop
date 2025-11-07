@@ -57,7 +57,7 @@ export function UnitsScreen() {
       <ScreenContent title="Units" path="screens/UnitsScreen.tsx"/>
 
         {/* Search Bar Component */}
-        <View className='h-16 justify-center items-center mt-4 mx-4'>
+        <View className='h-16 min-h-[5%] max-h-[7%] justify-center items-center mt-4 mx-4'>
           <SearchBar isDark={isDark} onSearchChange={()=>{}}/>
         </View>
 

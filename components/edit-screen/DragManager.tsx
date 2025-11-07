@@ -46,9 +46,9 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
   return (
     <View className="flex-1 justify-between px-[16]">
       {/* Zone Search Bar */}
-      <View className="w-full min-h-[4%] max-h-[6%] my-2 items-center justify-center rounded-lg">
+      <View className="w-full h-16 min-h-[5%] max-h-[7%] my-4 items-center justify-center rounded-lg">
         <SearchBar
-          placeholder="Search zones..."
+          placeholder="Search zones, locations, or units..."
           query={zoneQuery}
           onSearchChange={setZoneQuery}
           isDark={isDark}
@@ -92,13 +92,13 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
       </ScrollView>
 
       {/* Dead Zone Section */}
-      <View className={`h-[30%] mt-4 border rounded-t-lg ${isDark ? 'bg-transparent' : 'bg-neutral-100/60'}`}>
-        <View className="flex items-center justify-center mb-2 self-center h-[5%] w-full border-b rounded-t-lg ">
+      <View className={`h-[30%] mt-4 rounded-t-lg ${isDark ? 'bg-dark-surface/40' : 'bg-neutral-100/60'}`}>
+        <View className={`flex items-center justify-center mb-2 self-center h-[5%] w-full rounded-t-lg`}>
           <Text className="text-xs text-center">^Resize Bar^</Text>
         </View>
 
         {/* Unassigned Unit Search Bar */}
-        <View className="flex items-center justify-center self-center bg-transparent h-[20%] w-full rounded-lg">
+        <View className="items-center justify-center self-center h-16 min-h-[5%] mx-4 rounded-lg">
           <SearchBar
             placeholder="Search unassigned units..."
             query={unitQuery}
@@ -132,7 +132,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
         </DropZone>
       </View>
 
-      {/* 🔹 Overlay for Active Drag */}
+      {/* Overlay for Active Drag */}
       {activeDrag && (
         <Animated.View
           pointerEvents="none"
