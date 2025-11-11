@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { dbPromise } from './database';
-import type { Customer, Location, Unit } from '../contexts';
+import type { Customer, Location, Unit, Assignment, CustomerLocation, AssignmentObject } from '../contexts';
 import * as Crypto from 'expo-crypto';
 
 //#region TODO
@@ -96,7 +96,7 @@ export async function getCustomers(): Promise<Customer[]> {
 
 export async function getLocations(): Promise<Location[]> {
   const db = await dbPromise;
-  const result = await db.getAllAsync('SELECT id, customer_id AS customerId, location AS name FROM locations');
+  const result = await db.getAllAsync('SELECT id, customer_id, location AS name FROM locations');
   return result as Location[];
 }
 
@@ -104,6 +104,26 @@ export async function getUnits(): Promise<Unit[]> {
   const db = await dbPromise;
   const result = await db.getAllAsync('SELECT id, unit AS name FROM units');
   return result as Unit[];
+}
+
+export async function getAssignments(): Promise<Assignment[]> {
+  const db = await dbPromise;
+  const result = await db.getAllAsync('Select id, unit_id AS unitID, location_id AS locationID FROM assignments');
+  return result as Assignment[];
+}
+
+export async function getCustomerLocations(): Promise<CustomerLocation[]> {
+  const db = await dbPromise;
+  const result = await db.getAllAsync(
+    `SELECT
+      c.id AS customer_id,
+      c.name AS customer_name,
+      l.id AS location_id,
+      l.location AS location_name
+    FROM customers c
+    JOIN locations l ON l.customer_id = c.id`
+  );
+  return result as CustomerLocation[];
 }
 
 //#region Temps

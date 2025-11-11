@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react';
+import { useState, useRef, useCallback, useEffect } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import type { DropZoneRef, DropZoneData } from '../../types';
@@ -28,6 +28,13 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
 
   // Zone Refs
   const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
+
+  // Init Zones
+  useEffect(() => {
+    setZones(initialZones);
+    setDeadZone(initialDeadZone);
+  }, [initialZones, initialDeadZone]);
+
 
   //#region Functions
   // Collect measurements from zones

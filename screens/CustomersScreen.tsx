@@ -56,7 +56,7 @@ export function CustomersScreen() {
     if (!customers || !locations) return [];
     return customers.map((customer) => {
       const customerLocations = locations.filter(
-        (loc) => loc.customerId === customer.id
+        (loc) => loc.customer_id === customer.id
       );
 
       const elements: ListElement[] = customerLocations.map((loc) => ({

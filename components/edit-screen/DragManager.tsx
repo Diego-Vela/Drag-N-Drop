@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, ScrollView, Text, TouchableOpacity } from 'react-native';
 import Animated from 'react-native-reanimated';
 import { RefreshControl } from 'react-native-gesture-handler';
@@ -38,13 +38,17 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
     query: zoneQuery,
     setQuery: setZoneQuery,
     filtered: filteredZones,
-  } = useSearchFilter(zones, { keys: ['label', 'sublabel', 'units'], fuzzy: true });
+  } = useSearchFilter(zones, { keys: ['label', 'sublabel', 'units']});
 
   const {
     query: unitQuery,
     setQuery: setUnitQuery,
     filtered: filteredUnits,
   } = useSearchFilter(deadZone.units);
+
+  useEffect(() => {
+    console.log('Filtered zones changed:');
+  }, [filteredZones]);
 
   //#region Render
   return (

@@ -2,13 +2,13 @@ import React, { createContext, useContext, useMemo, ReactNode } from 'react';
 import testData from '../test-files/test-data.json';
 
 export interface Customer {
-  id: string; // changed from number → string
+  id: string; 
   name: string;
 }
 
 export interface Location {
   id: string;
-  customerId: string; // changed from number → string
+  customer_id: string; 
   name: string;
 }
 
@@ -18,8 +18,21 @@ export interface Unit {
 }
 
 export interface Assignment {
-  unitId: string;
-  locationId: string;
+  unit_id: string;
+  location_id: string;
+}
+
+export interface CustomerLocation {
+  customer_id: string;
+  customer_name: string;
+  location_id: string;
+  location_name: string;
+}
+
+export interface AssignmentObject {
+  customer: string;
+  location: string;
+  units: Unit[];
 }
 
 export interface DataContextType {
@@ -107,11 +120,11 @@ export const DataProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getUnassignedCustomerLocations = () => {
-    const assignedLocationIds = new Set(testData.assignments.map((a: Assignment) => a.locationId));
+    const assignedLocationIds = new Set(testData.assignments.map((a: Assignment) => a.location_id));
     return testData.locations
       .filter((loc: Location) => !assignedLocationIds.has(loc.id))
       .map((loc: Location) => {
-        const customer = customersById[loc.customerId];
+        const customer = customersById[loc.customer_id];
         return {
           customerName: customer ? customer.name : '',
           locationName: loc.name,
@@ -147,10 +160,22 @@ export const useData = (): DataContextType => {
 };
 
 
-
 import { useState, useEffect } from 'react';
 import { initDatabase } from '../data/database';
-import { addCustomer, addLocation, addUnit, addAssignment, getCustomers, getLocations, getUnits, addCustomerLocationPair, dropAllTables } from 'data/database-helpers';
+import { 
+  addCustomer, 
+  addLocation, 
+  addUnit, 
+  addAssignment, 
+  
+  getCustomers, 
+  getLocations, 
+  getUnits, 
+  getAssignments,
+  getCustomerLocations, 
+  
+  addCustomerLocationPair, 
+  dropAllTables } from 'data/database-helpers';
 
 const NewDataContext = createContext<NewDataContextType | null>(null);
 
@@ -169,6 +194,11 @@ export interface NewDataContextType {
   getCustomers: () => Promise<Customer[]>;
   getLocations: () => Promise<Location[]>;
   getUnits: () => Promise<Unit[]>;
+  getAssignments: () => Promise<Assignment[]>;
+  getCustomerLocations: () => Promise<CustomerLocation[]>;
+
+  getUnassignedUnits: () => Unit[];
+  getAssignmentObjects: () => Promise<AssignmentObject[]>;
 
   dropAllTables: () => Promise<void>;
 
@@ -180,16 +210,24 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
   const [locations, setLocations] = useState<Location[]>([]);
   const [units, setUnits] = useState<Unit[]>([]);
   const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [customerLocations, setCustomerLocations] = useState<CustomerLocation[]>([]);
 
   useEffect(() => {
     (async () => {
       await initDatabase();
+      
       const dbCustomers = await getCustomers();
       const dbLocations = await getLocations();
       const dbUnits = await getUnits();
+      const dbAssignments = await getAssignments();
+      const dbCustomerLocations = await getCustomerLocations();
+      
       setCustomers(dbCustomers as Customer[]);
       setLocations(dbLocations as Location[]);
       setUnits(dbUnits as Unit[]);
+      setAssignments(dbAssignments as Assignment[]);
+      setCustomerLocations(dbCustomerLocations as CustomerLocation[]);
+
       console.log('Db Connected');
     })(); 
   }, []);
@@ -198,9 +236,39 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     const dbCustomers = await getCustomers();
     const dbLocations = await getLocations();
     const dbUnits = await getUnits();
+    const dbAssignments = await getAssignments();
+
     setCustomers(dbCustomers as Customer[]);
     setLocations(dbLocations as Location[]);
-    setUnits(dbUnits as Unit[]); 
+    setUnits(dbUnits as Unit[]);
+    setAssignments(dbAssignments as Assignment[]); 
+  }
+
+  const getUnassignedUnits = (): Unit[] => {
+    const assignedUnitIds = new Set(assignments.map(a => a.unit_id));
+    return units.filter(u => !assignedUnitIds.has(u.id));
+  };
+
+  const getAssignmentObjects = async (): Promise<AssignmentObject[]> => {
+    const unitMap = new Map(units.map(unit => [unit.id, unit]));
+    const locationToUnits = new Map<string, Unit[]>();
+
+    for (const assignment of assignments) {
+      const unit = unitMap.get(assignment.unit_id);
+      if (!unit) continue;
+
+      if (!locationToUnits.has(assignment.location_id)) {
+        locationToUnits.set(assignment.location_id, []);
+      }
+      locationToUnits.get(assignment.location_id)!.push(unit);
+    }
+
+    return customerLocations.map(cl => ({
+      customer: cl.customer_name,
+      location: cl.location_name,
+      units: locationToUnits.get(cl.location_id) || [],
+    }) as AssignmentObject);
+
   }
 
   const value: NewDataContextType = {
@@ -218,6 +286,11 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     getCustomers,
     getLocations,
     getUnits,
+    getAssignments,
+    getCustomerLocations,
+    
+    getUnassignedUnits,
+    getAssignmentObjects,
 
     dropAllTables,
 
