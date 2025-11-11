@@ -7,12 +7,12 @@ import { DropZone, StaticUnit, DraggableOverlayUnit } from './drag-components';
 import { useDropManager, useSearchFilter } from '../../hooks';
 import type { DragManagerProps } from '../../types';
 
-import { SearchBar } from '../'; 
+import { SearchBar, ActionBar } from '../'; 
 
 import { Ionicons } from '@expo/vector-icons';
 
 
-export function DragManager({ isDark = false, data, deadZoneMembers }: DragManagerProps) {  
+export function DragManager({ isDark = false, data, deadZoneMembers, saveData = () => {} }: DragManagerProps) {  
   //#region Hook
   const {
     zones,
@@ -50,13 +50,18 @@ export function DragManager({ isDark = false, data, deadZoneMembers }: DragManag
   return (
     <View className="flex-1 justify-between">
       {/* Zone Search Bar */}
-      <View className="flex h-16 min-h-[5%] max-h-[7%] my-4 mx-4 items-center justify-center rounded-lg">
+      <View className="flex h-16 min-h-[5%] max-h-[7%] mt-4 mx-4 items-center justify-center rounded-lg">
         <SearchBar
           placeholder="Search zones, locations, or units..."
           query={zoneQuery}
           onSearchChange={setZoneQuery}
           isDark={isDark}
         />
+      </View>
+
+      {/* Action Bar */}
+      <View className={`flex h-16 min-h-[5%] max-h-[7%] mx-4 items-center bg-transparent justify-center`}>
+        <ActionBar isDark={isDark} buttons={['Save','Reset','Test']} actions={[saveData,()=>{},()=>{}]}/>
       </View>
 
       {/* Scrollable Drop Zone List */}

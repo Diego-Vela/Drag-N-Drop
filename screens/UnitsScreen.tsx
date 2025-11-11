@@ -63,7 +63,7 @@ export function UnitsScreen() {
 
         {/* Action Bar Reservation */}
         <View className={`h-16 mx-4 my-2 rounded-xl overflow-hidden`}>
-          <ActionBar isDark={isDark} handleButtonPress={()=>{}} handleAddButton={handleAddButton}/>
+          <ActionBar isDark={isDark} buttons={['Add']} actions={[handleAddButton]}/>
         </View>
 
         {/* List Component: will take in an array of section titles and an equal length, 2D array of elements that correspond to each section */}

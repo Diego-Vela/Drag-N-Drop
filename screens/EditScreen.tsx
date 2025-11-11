@@ -42,6 +42,10 @@ export function EditScreen() {
     units: ['Unit AA'],
   }
 
+  const handleSave = (data: any) => {
+    console.log(data);
+  }
+
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/EditScreen.tsx">

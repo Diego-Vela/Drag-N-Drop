@@ -58,4 +58,5 @@ export interface DragManagerProps {
   isDark?: boolean;
   data: DropZoneData[];
   deadZoneMembers: DropZoneData;
+  saveData?: () => void;
 }
