@@ -32,5 +32,4 @@ export async function initDatabase() {
       FOREIGN KEY (location_id) REFERENCES locations (id)
     );
   `);
-
 }
