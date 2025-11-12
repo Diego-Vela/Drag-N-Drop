@@ -1,5 +1,5 @@
 import { Alert } from 'react-native';
-import { dbPromise } from './database';
+import { dbPromise, initDatabase } from './database';
 import type { Customer, Location, Unit, Assignment, CustomerLocation, AssignmentObject } from '../contexts';
 import * as Crypto from 'expo-crypto';
 
@@ -108,7 +108,7 @@ export async function getUnits(): Promise<Unit[]> {
 
 export async function getAssignments(): Promise<Assignment[]> {
   const db = await dbPromise;
-  const result = await db.getAllAsync('Select id, unit_id AS unitID, location_id AS locationID FROM assignments');
+  const result = await db.getAllAsync('SELECT unit_id, location_id FROM assignments');
   return result as Assignment[];
 }
 
@@ -124,6 +124,25 @@ export async function getCustomerLocations(): Promise<CustomerLocation[]> {
     JOIN locations l ON l.customer_id = c.id`
   );
   return result as CustomerLocation[];
+}
+
+//#region Internal Helpers
+export async function getUnitByName(name: string): Promise<Unit | null> {
+  const db = await dbPromise;
+  const result = await db.getAllAsync(
+    `SELECT id, unit AS name FROM units WHERE unit = ?`,
+    [name]
+  );
+  return result.length > 0 ? result[0] as Unit : null;
+}
+
+export async function getLocationByName(name: string): Promise <Location | null> {
+  const db = await dbPromise;
+  const result = await db.getAllAsync(
+    `SELECT id, location AS name FROM locations WHERE location = ?`,
+    [name]
+  )
+  return result.length > 0 ? result[0] as Location : null;
 }
 
 //#region Temps
@@ -169,6 +188,31 @@ export async function addCustomerLocationPair(
   }
 }
 
+export async function saveAssignments(newAssignments: Assignment[]): Promise<boolean> {
+  const db = await dbPromise;
+  await db.execAsync('BEGIN TRANSACTION;');
+  // console.log(newAssignments);
+
+  try {
+    await db.execAsync('DELETE FROM assignments;');
+    // console.log('Deleting old assignments')
+    for (const a of newAssignments) {
+      await db.runAsync(
+        `INSERT INTO assignments (unit_id, location_id) VALUES (?, ?)`,
+        [a.unit_id, a.location_id]
+      );
+    }
+    // console.log('Inserted into table');
+
+    await db.execAsync('COMMIT;');
+    return true;
+  } catch (err) {
+    console.error('Something went wrong in insertion...');
+    await db.execAsync('ROLLBACK;');
+    return false;
+  }  
+};
+
 export async function dropAllTables() {
   const db = await dbPromise;
 
@@ -179,6 +223,7 @@ export async function dropAllTables() {
       DROP TABLE IF EXISTS units;
       DROP TABLE IF EXISTS assignments;
     `);
+    await initDatabase;
   } catch (err) {
     console.error('Error dropping tables:', err);
   }

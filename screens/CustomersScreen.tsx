@@ -45,7 +45,7 @@ export function CustomersScreen() {
       console.log('Error', 'Failed to add entry. Check logs for details.');
     }
 
-    refetch();
+    await refetch();
     setRefreshKey((prev) => prev + 1);
     setCanEdit(false);
   };

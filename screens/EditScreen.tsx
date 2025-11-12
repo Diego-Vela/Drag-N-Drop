@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Container, ScreenContent, DragManager } from '../components';
 import type { DropZoneData } from '../types';
-import { useData, useTheme, useNewData } from '../contexts';
+import { useTheme, useNewData, Assignment } from '../contexts';
 
 const GroupName = 'Sugma Dashboard';
 
 export function EditScreen() {
   const { isDark } = useTheme();
-  const { getUnassignedUnits, getAssignmentObjects } = useNewData();
+  const { getUnassignedUnits, getAssignmentObjects, prepareSaveAssignment, refetch } = useNewData();
 
   const [data, setData] = useState<DropZoneData[]>([]);
   const [unassigned, setUnassigned] = useState<DropZoneData>({
@@ -17,16 +17,13 @@ export function EditScreen() {
     units: [],
   });
 
-  const memoizedData = useMemo(() => data, [data]);
-  const memoizedUnassigned = useMemo(() => unassigned, [unassigned]);
-
   useEffect(() => {
     const loadAssignments = async () => {
       const assignmentObjects = await getAssignmentObjects();
       const zoneData: DropZoneData[] = assignmentObjects.map((g) => ({
         id: `${g.customer}/${g.location}`,
-        label: g.customer,
-        sublabel: g.location,
+        label: g.location,
+        sublabel: g.customer,
         units: g.units.map((u) => u.name),
       }));
 
@@ -39,21 +36,22 @@ export function EditScreen() {
       setData(zoneData);
       setUnassigned(unassignedUnits);
     };
-
-    console.log(getUnassignedUnits());
     loadAssignments();
   }, [getAssignmentObjects, getUnassignedUnits]);
 
-  const handleSave = (data: any) => {
-    console.log(data);
+  const handleSave = async (data: DropZoneData[]) => {
+    if (await prepareSaveAssignment(data)) {
+      //console.log('Completed');
+      refetch();
+    } else {
+      console.error('Assignments not saved');
+    }
   }
-
-  console.log(memoizedUnassigned);
 
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/EditScreen.tsx">
-        <DragManager isDark={isDark} data={memoizedData}  deadZoneMembers={memoizedUnassigned}/>
+        <DragManager isDark={isDark} data={data}  deadZoneMembers={unassigned} saveData={handleSave}/>
       </ScreenContent>
     </Container>
   );

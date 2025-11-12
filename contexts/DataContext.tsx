@@ -35,130 +35,6 @@ export interface AssignmentObject {
   units: Unit[];
 }
 
-export interface DataContextType {
-  customers: Customer[];
-  locations: Location[];
-  units: Unit[];
-  assignments: Assignment[];
-  customersById: Record<string, Customer>; // changed from number → string
-  locationsById: Record<string, Location>;
-  unitsById: Record<string, Unit>;
-  getAssignmentsForLocation: (locationId: string) => [string, string, string][];
-  getUnitsForLocation: (locationId: string) => Unit[];
-  getUnassignedUnits: () => Unit[];
-  getGroupedAssignments: () => { customerName: string; locationName: string; units: Unit[] }[];
-  getUnassignedCustomerLocations: () => { customerName: string; locationName: string }[];
-}
-
-const DataContext = createContext<DataContextType | null>(null);
-
-export const DataProvider = ({ children }: { children: ReactNode }) => {
-  // --- Create ID maps for faster lookup ---
-  const customersById = useMemo(() => {
-    const map: Record<string, Customer> = {}; // ✅ string keys
-    testData.customers.forEach((customer: Customer) => {
-      map[customer.id] = customer;
-    });
-    return map;
-  }, []);
-
-  const locationsById = useMemo(() => {
-    const map: Record<string, Location> = {};
-    testData.locations.forEach((location: Location) => {
-      map[location.id] = location;
-    });
-    return map;
-  }, []);
-
-  const unitsById = useMemo(() => {
-    const map: Record<string, Unit> = {};
-    testData.units.forEach((unit: Unit) => {
-      map[unit.id] = unit;
-    });
-    return map;
-  }, []);
-
-  // --- Derived helpers ---
-  const getAssignmentsForLocation = (locationId: string): [string, string, string][] =>
-    testData.assignments
-      .filter((a: Assignment) => a.locationId === locationId)
-      .map((a: Assignment) => {
-        const unitName = unitsById[a.unitId]?.name || '';
-        const locationName = locationsById[a.locationId]?.name || '';
-        const customerId = locationsById[a.locationId]?.customerId;
-        const customerName = customerId ? customersById[customerId]?.name || '' : '';
-        return [unitName, locationName, customerName];
-      });
-
-  const getUnitsForLocation = (locationId: string): Unit[] =>
-    testData.assignments
-      .filter((a: Assignment) => a.locationId === locationId)
-      .map((a: Assignment) => unitsById[a.unitId])
-      .filter(Boolean) as Unit[];
-
-  const getUnassignedUnits = (): Unit[] => {
-    const assignedIds = new Set(testData.assignments.map((a: Assignment) => a.unitId));
-    return testData.units.filter((u: Unit) => !assignedIds.has(u.id));
-  };
-
-  const getGroupedAssignments = () => {
-    const grouped: Record<string, { customerName: string; locationName: string; units: Unit[] }> = {};
-    testData.assignments.forEach((a: Assignment) => {
-      const location = locationsById[a.locationId];
-      if (!location) return;
-      const customer = customersById[location.customerId];
-      if (!customer) return;
-      const unit = unitsById[a.unitId];
-      if (!unit) return;
-      const key = `${customer.name}__${location.name}`;
-      if (!grouped[key]) {
-        grouped[key] = { customerName: customer.name, locationName: location.name, units: [] };
-      }
-      grouped[key].units.push(unit);
-    });
-    return Object.values(grouped);
-  };
-
-  const getUnassignedCustomerLocations = () => {
-    const assignedLocationIds = new Set(testData.assignments.map((a: Assignment) => a.location_id));
-    return testData.locations
-      .filter((loc: Location) => !assignedLocationIds.has(loc.id))
-      .map((loc: Location) => {
-        const customer = customersById[loc.customer_id];
-        return {
-          customerName: customer ? customer.name : '',
-          locationName: loc.name,
-        };
-      });
-  };
-
-  // --- Final Context Value ---
-  const value: DataContextType = {
-    customers: testData.customers,
-    locations: testData.locations,
-    units: testData.units,
-    assignments: testData.assignments,
-    customersById,
-    locationsById,
-    unitsById,
-    getAssignmentsForLocation,
-    getUnitsForLocation,
-    getUnassignedUnits,
-    getGroupedAssignments,
-    getUnassignedCustomerLocations,
-  };
-
-  return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
-};
-
-export const useData = (): DataContextType => {
-  const context = useContext(DataContext);
-  if (!context) {
-    throw new Error('useData must be used within a DataProvider');
-  }
-  return context;
-};
-
 
 import { useState, useEffect } from 'react';
 import { initDatabase } from '../data/database';
@@ -173,8 +49,12 @@ import {
   getUnits, 
   getAssignments,
   getCustomerLocations, 
+
+  getUnitByName,
+  getLocationByName,
   
-  addCustomerLocationPair, 
+  addCustomerLocationPair,
+  saveAssignments, 
   dropAllTables } from 'data/database-helpers';
 
 const NewDataContext = createContext<NewDataContextType | null>(null);
@@ -196,9 +76,12 @@ export interface NewDataContextType {
   getUnits: () => Promise<Unit[]>;
   getAssignments: () => Promise<Assignment[]>;
   getCustomerLocations: () => Promise<CustomerLocation[]>;
+  getAssignmentObjects: () => Promise<AssignmentObject[]>;
 
   getUnassignedUnits: () => Unit[];
-  getAssignmentObjects: () => Promise<AssignmentObject[]>;
+
+  prepareSaveAssignment: (data: any) => Promise<boolean>;
+  saveAssignments: (newAssignments: Assignment[]) => Promise<boolean>;
 
   dropAllTables: () => Promise<void>;
 
@@ -217,10 +100,15 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
       await initDatabase();
       
       const dbCustomers = await getCustomers();
+      //console.log(`dbCustomers = ${dbCustomers}`);
       const dbLocations = await getLocations();
+      //console.log(`dbLocations = ${dbLocations}`);
       const dbUnits = await getUnits();
+      //console.log(`dbUnits = ${dbUnits}`);
       const dbAssignments = await getAssignments();
+      //console.log(`dbAssignments = ${dbAssignments}`);
       const dbCustomerLocations = await getCustomerLocations();
+      //console.log(`dbCLs = ${dbCustomerLocations}`);
       
       setCustomers(dbCustomers as Customer[]);
       setLocations(dbLocations as Location[]);
@@ -268,7 +156,35 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
       location: cl.location_name,
       units: locationToUnits.get(cl.location_id) || [],
     }) as AssignmentObject);
+  }
 
+  const prepareSaveAssignment = async (data: any): Promise<boolean> => {
+    const preparedData: Assignment[] = [];
+
+    for (const zone of data) {
+      const location = await getLocationByName(zone.label);
+      if (!location) {
+        console.error(`${zone.label} was not found.`);
+        return false
+      }
+      
+      for (const unitName of zone.units) {
+        const unit = await getUnitByName(unitName);
+        if (!unit) {
+          console.error(`${unitName} was not found`);
+          return false
+        }
+
+        preparedData.push({
+          unit_id: unit.id,
+          location_id: location.id,
+        });
+      }
+    }
+
+    const success = await saveAssignments(preparedData);
+    console.log(success);
+    return success;
   }
 
   const value: NewDataContextType = {
@@ -288,10 +204,12 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     getUnits,
     getAssignments,
     getCustomerLocations,
+    getAssignmentObjects,
     
     getUnassignedUnits,
-    getAssignmentObjects,
-
+    prepareSaveAssignment,
+    
+    saveAssignments,
     dropAllTables,
 
     refetch,

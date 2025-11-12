@@ -12,7 +12,7 @@ import { SearchBar, ActionBar } from '../';
 import { Ionicons } from '@expo/vector-icons';
 
 
-export function DragManager({ isDark = false, data, deadZoneMembers, saveData = () => {} }: DragManagerProps) {  
+export function DragManager({ isDark = false, data, deadZoneMembers, saveData = async (data:any) => {} }: DragManagerProps) {  
   //#region Hook
   const {
     zones,
@@ -46,10 +46,6 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
     filtered: filteredUnits,
   } = useSearchFilter(deadZone.units);
 
-  useEffect(() => {
-    console.log('Filtered zones changed:');
-  }, [filteredZones]);
-
   //#region Render
   return (
     <View className="flex-1 justify-between">
@@ -65,7 +61,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
 
       {/* Action Bar */}
       <View className={`flex h-16 min-h-[5%] max-h-[7%] mx-4 items-center bg-transparent justify-center`}>
-        <ActionBar isDark={isDark} buttons={['Save','Reset','Test']} actions={[saveData,()=>{},()=>{}]}/>
+        <ActionBar isDark={isDark} buttons={['Save','Reset','Test']} actions={[() => saveData(zones), ()=>{}, ()=>{}]}/>
       </View>
 
       {/* Scrollable Drop Zone List */}
