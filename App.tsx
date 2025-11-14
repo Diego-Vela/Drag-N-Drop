@@ -6,7 +6,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 // Screen Imports
-import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen } from './screens';
+import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen, NotesScreen } from './screens';
 // Context Imports
 import { ThemeProvider, useTheme, NewDataProvider } from './contexts';
 // Styles
@@ -59,7 +59,7 @@ function TabNavigator() {
                 iconName = 'create-outline';
                 break;
             default:
-              iconName = 'help';
+              iconName = 'document-outline';
           }
 
           return <Ionicons name={iconName} size={size} color={color} />;
@@ -71,6 +71,7 @@ function TabNavigator() {
       <Tab.Screen name="Customers" component={CustomersScreen} />
       <Tab.Screen name="Units" component={UnitsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
+      <Tab.Screen name="Notes" component={NotesScreen} />
     </Tab.Navigator>
   );
 }

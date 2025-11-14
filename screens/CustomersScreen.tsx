@@ -2,6 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, Button, FlatList, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { Container, ScreenContent, SearchBar, ItemList, ActionBar } from '../components';
 import { useNewData, useTheme } from '../contexts';
+import { useSearchFilter } from '../hooks';
 
 import type { ListGroup, ListElement } from '../components';
 
@@ -51,6 +52,8 @@ export function CustomersScreen() {
   };
 
 
+
+
   // Helper function to map to list ready data - Memoized to not recalc on every render
   const listData: ListGroup[] = useMemo(() => {
     if (!customers || !locations) return [];
@@ -71,6 +74,13 @@ export function CustomersScreen() {
     });
   }, [customers, locations]);
 
+  //#region Search Hooks
+  const { 
+    query: clQuery,
+    setQuery: setClQuery,
+    filtered: filteredListData,
+  } = useSearchFilter(listData, { keys: ['label', 'elements']})
+
   //#region Render
   return (
     <Container headerTitle="Customer/Locations">
@@ -78,7 +88,7 @@ export function CustomersScreen() {
       
         {/* Search Bar Component */}
         <View className='h-16 min-h-[5%] max-h-[7%] justify-center items-center mt-4 mx-4'>
-          <SearchBar isDark={isDark} onSearchChange={()=>{}}/>
+          <SearchBar placeholder="Search for customer/locations..." query={clQuery} onSearchChange={setClQuery} isDark={isDark}/>
         </View>
 
         {/* Action Bar Reservation */}
@@ -88,7 +98,7 @@ export function CustomersScreen() {
         
         {/* List Component: will take in an array of section titles and an equal length, 2D array of elements that correspond to each section */}
         <View className='flex-1'>
-          <ItemList isDark={isDark} elements={listData} />
+          <ItemList isDark={isDark} elements={filteredListData} />
         </View>
 
         {/* Temp Section to Add New Customer Locations */}
