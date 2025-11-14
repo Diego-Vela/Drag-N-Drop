@@ -31,5 +31,14 @@ export async function initDatabase() {
       FOREIGN KEY (unit_id) REFERENCES units (id),
       FOREIGN KEY (location_id) REFERENCES locations (id)
     );
+
+    CREATE TABLE IF NOT EXISTS notes (
+      id TEXT PRIMARY KEY NOT NULL,
+      unit_id TEXT NOT NULL,
+      location_id TEXT NOT NULL,
+      note TEXT NOT NULL,
+      FOREIGN KEY (unit_id) REFERENCES units (id),
+      FOREIGN KEY (location_id) REFERENCES locations (id)
+    );
   `);
 }

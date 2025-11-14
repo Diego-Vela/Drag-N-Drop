@@ -9,7 +9,7 @@ import * as Crypto from 'expo-crypto';
   To achieve this, I will probably also need a refresh button somewhere that will refetch from the proper database.
 */
 
-// Patch/Update/Post
+//#region Add Helpers 
 export async function addCustomer(id: string, name: string) {
   const db = await dbPromise;
   await db.runAsync(
@@ -67,7 +67,6 @@ export async function addUnit( unit: string): Promise<boolean> {
       'INSERT INTO units (id, unit) VALUES (?, ?)',
       [id, unit]
     );
-    console.log(`Added unit: ${unit}`);
     return true;
   } catch(err) {
     return false;
@@ -87,7 +86,21 @@ export async function addAssignment(id: string, unit_id: string, location_id: st
   }
 }
 
-// Get
+export async function addNote(unit_id: string, location_id: string, note: string): Promise<boolean> {
+  const db = await dbPromise;
+  const id = Crypto.randomUUID();
+  try {
+    await db.runAsync(
+      'INSERT INTO notes (id, unit_id, location_id, note) VALUES (?, ?, ?, ?)',
+      [id, unit_id, location_id, note]
+    );
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+//#region Get Helpers
 export async function getCustomers(): Promise<Customer[]> {
   const db = await dbPromise;
   const result = await db.getAllAsync('SELECT * FROM customers');
@@ -126,7 +139,6 @@ export async function getCustomerLocations(): Promise<CustomerLocation[]> {
   return result as CustomerLocation[];
 }
 
-//#region Internal Helpers
 export async function getUnitByName(name: string): Promise<Unit | null> {
   const db = await dbPromise;
   const result = await db.getAllAsync(
@@ -145,7 +157,31 @@ export async function getLocationByName(name: string): Promise <Location | null>
   return result.length > 0 ? result[0] as Location : null;
 }
 
-//#region Temps
+//#region Cleanup Helpers
+export async function cleanupNotes(): Promise<void> {
+  const db = await dbPromise;
+  await db.runAsync(
+    'DELETE FROM notes WHERE (unit_id, location_id) NOT IN (SELECT unit_id, location_id FROM assignments)'
+  );
+}
+
+export async function cleanupOrphanLocations(): Promise<void> {
+  const db = await dbPromise;
+  await db.runAsync(`
+    DELETE FROM locations
+    WHERE customer_id NOT IN (SELECT id FROM customers)
+  `);
+}
+
+export async function cleanupOrphanCustomers(): Promise<void> {
+  const db = await dbPromise;
+  await db.runAsync(`
+    DELETE FROM customers
+    WHERE id NOT IN (SELECT customer_id FROM locations)
+  `);
+}
+
+//#region Internal Helpers
 export async function addCustomerLocationPair(
   customerName: string,
   locationName: string
@@ -165,7 +201,7 @@ export async function addCustomerLocationPair(
     // 3️⃣ Create the customer if it doesn't exist
     if (!existing) {
       await addCustomer(customerId, customerName);
-      console.log(`✅ Created new customer: ${customerName}`);
+      //console.log(`Created new customer: ${customerName}`);
     }
 
     // 4️⃣ Add the location (uses your prebuilt validation)
@@ -176,10 +212,10 @@ export async function addCustomerLocationPair(
       throw new Error(`Failed to create location '${locationName}'.`);
     }
 
-    console.log(`✅ Added location '${locationName}' for ${customerName}`);
+    //console.log(`Added location '${locationName}' for ${customerName}`);
     return true;
   } catch (err: any) {
-    console.error('❌ Failed to add customer/location pair:', err.message);
+    console.error('Failed to add customer/location pair:', err.message);
     Alert.alert(
       'Add Customer/Location Failed',
       err.message || 'Unexpected error occurred.'

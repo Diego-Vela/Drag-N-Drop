@@ -42,7 +42,8 @@ import {
   addCustomer, 
   addLocation, 
   addUnit, 
-  addAssignment, 
+  addAssignment,
+  addNote, 
   
   getCustomers, 
   getLocations, 
@@ -69,6 +70,7 @@ export interface NewDataContextType {
   addLocation: (id: string, location: string, customer_id: string) => Promise<boolean>;
   addUnit: ( unit: string) => Promise<boolean>;
   addAssignment: (id: string, unit_id: string, location_id: string) => Promise<boolean>;
+  addNote: (unit_id: string, location_id: string, note: string) => Promise<boolean>;
   addCustomerLocationPair: (customerName: string, locationName: string) => Promise<boolean>;
 
   getCustomers: () => Promise<Customer[]>;
@@ -186,6 +188,7 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     console.log(success);
     return success;
   }
+  
 
   const value: NewDataContextType = {
     customers,
@@ -197,6 +200,7 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     addLocation,
     addUnit,
     addAssignment,
+    addNote,
     addCustomerLocationPair,
 
     getCustomers,
