@@ -1,7 +1,7 @@
 // Base Imports
 import React from 'react';
 import { View } from 'react-native';
-import { PairCard, RouterUnitCard } from './container-components';
+import { PairCard, RouterUnitCard, UnitCard } from './container-components';
 import { Customer, Location, Unit } from '../../contexts';
 
 interface AssignmentContainerProps {
@@ -27,16 +27,27 @@ export function AssignmentContainer({ title, subtitle, units, isDark, isUnassign
 
       {/* Right Column: Units Flex Container - Single Column Centered */}
         <View className=" mx-4 flex-1 flex-row flex-wrap gap-4 items-center justify-start">
-          {units.map((unit) => (
-            <RouterUnitCard
-              key={unit.name}
-              unit={unit}
-              isUnassigned={isUnassigned}
-              isDark={isDark}
-              location={title}
-              customer={subtitle}
-            />
-          ))}
+          {units.map((unit) =>
+            isUnassigned
+              ? (
+                <UnitCard
+                  key={unit.id}
+                  unit={unit}
+                  isUnassigned={isUnassigned}
+                  isDark={isDark}
+                />
+              )
+              : (
+                <RouterUnitCard
+                  key={unit.id}
+                  unit={unit}
+                  isUnassigned={isUnassigned}
+                  isDark={isDark}
+                  location={title}
+                  customer={subtitle}
+                />
+              )
+          )}
       </View>
     </View>
   );

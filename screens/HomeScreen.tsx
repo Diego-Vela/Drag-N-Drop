@@ -1,17 +1,26 @@
 import React, { useState, useEffect } from 'react';
-import { FlatList } from 'react-native';
-import { Container, ScreenContent } from '../components/base';
+import { FlatList, View } from 'react-native';
+import { Container, ScreenContent, SearchBar, ActionBar } from '../components';
 import { AssignmentContainer } from '../components/home-screen';
 import { useTheme, useNewData, AssignmentObject, Unit } from '../contexts';
+import { useSearchFilter } from '../hooks';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { playSound } from 'utils';
 
-const GroupName = 'Sugma';
+import { RootStackParamList } from '../App';
+
+const GroupName = 'Dashboard';
 
 export function HomeScreen() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  
   const { isDark } = useTheme();
   const { assignments, units, customers, locations, getAssignmentObjects, getUnassignedUnits } = useNewData();
 
   const [groupedAssignments, setGroupedAssignments] = useState<AssignmentObject[]>([]);
   const [unassigned, setUnassigned] = useState<Unit[]>([]);
+
+
 
   // --- Load data when component mounts ---
   useEffect(() => {
@@ -21,6 +30,7 @@ export function HomeScreen() {
         const unassignedUnits = getUnassignedUnits();
         setGroupedAssignments(assignments);
         setUnassigned(unassignedUnits);
+        playSound('wow');
       } catch (err) {
         console.error('Error loading assignments:', err);
       }
@@ -29,10 +39,14 @@ export function HomeScreen() {
   }, [customers, locations, units, assignments]);
 
   // --- Prepare flat list data ---
-  const flatListData = [
+  const listData = [
     // Assigned zones
     ...groupedAssignments.map(({ customer, location, units }) => ({
-      key: `${customer.name}__${location.name}`,
+      key: [
+        customer?.name,
+        location?.name,
+        ...(units?.map(u => u.name) || [])
+      ].filter(Boolean).join(' '),
       customer,
       location,
       units,
@@ -40,7 +54,11 @@ export function HomeScreen() {
     })),
     // Unassigned zone at the bottom
     {
-      key: 'unassigned',
+      key: [
+        'Unassigned',
+        'Available Units',
+        ...(unassigned?.map(u => u.name) || [])
+      ].filter(Boolean).join(' '),
       customer: { id: 'Unassigned', name: 'Unassigned'},
       location: { id: 'unassigned', customer_id: 'Unassigned', name: 'Available Units' },
       units: unassigned,
@@ -48,17 +66,33 @@ export function HomeScreen() {
     },
   ];
 
+  const {
+    query: listQuery,
+    setQuery: setListQuery,
+    filtered: filteredListData
+  } = useSearchFilter(listData, { keys: ['key']});
+
+  const handleEditButton = () => {
+    navigation.navigate('Edit');
+  }
+
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/HomeScreen.tsx">
 
         {/* Search Bar */}
+        <View className='h-16 min-h-[5%] max-h-[7%] justify-center items-center mt-4 mx-4'>
+          <SearchBar isDark={isDark} placeholder='Search for customer/locations/units...' query={listQuery} onSearchChange={setListQuery}/>
+        </View>
 
-        {/* Action Bar */}
+        {/* Action Bar Reservation */}
+        <View className={`h-16 mx-4 mt-2 rounded-xl overflow-hidden`}>
+          <ActionBar isDark={isDark} buttons={['Edit Mode']} actions={[handleEditButton]}/>
+        </View>
 
         {/* Data Section */}
         <FlatList
-          data={flatListData}
+          data={filteredListData}
           renderItem={({ item }) => (
             <AssignmentContainer
               key={item.key}
@@ -74,7 +108,6 @@ export function HomeScreen() {
             paddingBottom: 60,
             overflow: 'visible',
             paddingHorizontal: 16,
-            paddingTop: 16,
           }}
           showsVerticalScrollIndicator={false}
         />

@@ -35,6 +35,13 @@ export interface AssignmentObject {
   units: Unit[];
 }
 
+export interface Note {
+  id: string;
+  unit_id: string;
+  location_id: string;
+  note: string;
+}
+
 
 import { useState, useEffect } from 'react';
 import { initDatabase } from '../data/database';
@@ -48,11 +55,17 @@ import {
   getCustomers, 
   getLocations, 
   getUnits, 
+  getNotes,
   getAssignments,
   getCustomerLocations, 
 
   getUnitByName,
   getLocationByName,
+
+  deleteNote,
+  cleanupNotes,
+  cleanupOrphanCustomers,
+  cleanupOrphanLocations,
   
   addCustomerLocationPair,
   saveAssignments, 
@@ -70,13 +83,14 @@ export interface NewDataContextType {
   addLocation: (id: string, location: string, customer_id: string) => Promise<boolean>;
   addUnit: ( unit: string) => Promise<boolean>;
   addAssignment: (id: string, unit_id: string, location_id: string) => Promise<boolean>;
-  addNote: (unit_id: string, location_id: string, note: string) => Promise<boolean>;
+  addNote: (unit_id: string, location_id: string, note: string) => Promise<Note | null>;
   addCustomerLocationPair: (customerName: string, locationName: string) => Promise<boolean>;
 
   getCustomers: () => Promise<Customer[]>;
   getLocations: () => Promise<Location[]>;
   getUnits: () => Promise<Unit[]>;
   getAssignments: () => Promise<Assignment[]>;
+  getNotes: (unit_id: string, location_id: string) => Promise<Note[]>;
   getCustomerLocations: () => Promise<CustomerLocation[]>;
   getAssignmentObjects: () => Promise<AssignmentObject[]>;
 
@@ -85,11 +99,14 @@ export interface NewDataContextType {
 
   getUnassignedUnits: () => Unit[];
 
-  prepareSaveAssignment: (data: any) => Promise<boolean>;
-  saveAssignments: (newAssignments: Assignment[]) => Promise<boolean>;
+  deleteNote: (id: string) => Promise<boolean>;
+  cleanupNotes: () => Promise<void>;
 
   dropAllTables: () => Promise<void>;
 
+  // Internal Functions
+  prepareSaveAssignment: (data: any) => Promise<boolean>;
+  saveAssignments: (newAssignments: Assignment[]) => Promise<boolean>;
   refetch: () => Promise<void>;
 }
 
@@ -217,10 +234,14 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     getLocations,
     getUnits,
     getAssignments,
+    getNotes,
     getCustomerLocations,
     getAssignmentObjects,
     getUnitByName,
     getLocationByName,
+
+    deleteNote,
+    cleanupNotes,
     
     getUnassignedUnits,
     prepareSaveAssignment,

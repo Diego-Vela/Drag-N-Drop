@@ -1,7 +1,7 @@
 import { Unit, Customer, Location } from '../../../contexts';
 import { View, Text, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { useNewData } from '../../../contexts';
+import type { RootStackParamList } from '../../../App';
 
 interface RouterUnitCardProps {
   unit: Unit;
@@ -11,18 +11,8 @@ interface RouterUnitCardProps {
   location: Location;
 }
 
-type RootStackParamList = {
-  NotesScreen: {
-    unit: Unit;
-    location: Location;
-    customer: Customer;
-  };
-};
-
 export function RouterUnitCard({ unit, isUnassigned, isDark, customer, location }: RouterUnitCardProps) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  
-  console.log(`unitID: ${unit.id}, locationID: ${location.id}, customerID: ${customer.id}`);
 
   const handleRouterPress = () => {
     navigation.navigate('NotesScreen', {

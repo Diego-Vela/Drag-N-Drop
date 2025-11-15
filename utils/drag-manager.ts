@@ -1,4 +1,4 @@
-import { DropZoneData } from '../components';
+import { DropZoneData } from '../types';
 
 export const findTargetZoneId = (
     position: { x: number; y: number },

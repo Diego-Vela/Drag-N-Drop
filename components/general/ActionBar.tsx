@@ -30,7 +30,7 @@ export function ActionBar({
   }));
 
   return (
-    <View className="flex-row w-full justify-evenly items-center py-2">
+    <View className="flex-row w-full justify-evenly items-center pt-2">
       {buttonList.map((btn, index) => (
         <TouchableOpacity
           key={index}

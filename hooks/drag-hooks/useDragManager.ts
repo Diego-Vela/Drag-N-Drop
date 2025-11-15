@@ -2,6 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
 import type { DropZoneRef, DropZoneData } from '../../types';
+import { playSound } from '../../utils';
 import {
   findTargetZoneId,
   findFromZoneId,
@@ -35,6 +36,9 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     setDeadZone(initialDeadZone);
   }, [initialZones, initialDeadZone]);
 
+  const handleTestButton = () => {
+    playSound('baka');
+  }
 
   //#region Functions
   // Collect measurements from zones
@@ -145,6 +149,8 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     handleDragMove,
     handleDragEnd,
     
+    handleTestButton,
+
     setDeadZone,
     onRefresh,
     handleShowDeadZoneButton,

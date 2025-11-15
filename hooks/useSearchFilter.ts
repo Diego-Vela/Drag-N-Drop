@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 
 interface UseSearchFilterOptions<T> {
-  keys?: (keyof T)[];  // keys to match (for objects)
+  keys?: (keyof T)[];  
   delayMs?: number;    // debounce delay
 }
 
@@ -23,35 +23,31 @@ export function useSearchFilter<T>(
       try {
         const trimmed = query.trim().toLowerCase();
 
-        // Empty query → return all
+        // Empty query will return all
         if (!trimmed) {
           setFiltered(data);
           return;
         }
 
-        // Handle arrays of strings directly
-        if (typeof data[0] === 'string') {
-          const result = (data as unknown as string[]).filter((item) =>
-            item.toLowerCase().includes(trimmed)
-          );
-          setFiltered(result as T[]);
-          return;
-        }
+        // Split query by '&' for OR search
+        const terms = trimmed.split('&').map(t => t.trim()).filter(Boolean);
 
-        // Handle arrays of objects (by keys)
-        if (keys && keys.length > 0) {
-          const result = data.filter((item) =>
-            keys.some((key) => {
-              const value = String((item as any)[key] ?? '').toLowerCase();
-              return value.includes(trimmed);
-            })
-          );
-          setFiltered(result);
-          return;
-        }
+        // Helper to get searchable string for an item
+        const getSearchString = (item: any) => {
+          if (typeof item === 'string') {
+            return item.toLowerCase();
+          } else if (item && typeof item === 'object' && 'name' in item) {
+            return String(item.name ?? '').toLowerCase();
+          } else if (keys && keys.length > 0) {
+            return keys.map(key => String(item[key] ?? '').toLowerCase()).join(' ');
+          }
+          return '';
+        };
 
-        // Fallback — if no match mode defined
-        setFiltered(data);
+        const result = data.filter(item =>
+          terms.some(term => getSearchString(item).includes(term))
+        );
+        setFiltered(result);
       } catch (err) {
         console.error('Search processing error:', err);
         setFiltered(data);

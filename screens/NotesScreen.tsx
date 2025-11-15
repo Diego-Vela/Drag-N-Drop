@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, FlatList } from 'react-native';
 import { Container, ScreenContent } from '../components';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme, Unit, Location, Customer } from '../contexts';
+import { useTheme, Unit, Location, Customer, Note, useNewData } from '../contexts';
 import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 
@@ -12,34 +12,48 @@ type RootStackParamList = {
     location: Location;
     customer: Customer;
   };
-  // Add other screens if needed
 };
 
 type NotesScreenProps = NativeStackScreenProps<RootStackParamList, 'NotesScreen'>;
 
 export function NotesScreen({ route, navigation }: NotesScreenProps) {
   const { isDark } = useTheme();
+  const { addNote, getNotes, deleteNote } = useNewData();
 
-  const [notes, setNotes] = useState<string[]>([]);
+  const [notes, setNotes] = useState<Note[]>([]);
   const [note, setNote] = useState('');
 
   const { unit, location, customer } = route.params;
 
-  const handleSaveButton = () => {
+  useEffect(() => {
+    const fetchNotes = async () => {
+      const elements = await getNotes(unit.id, location.id);
+      setNotes(elements);
+    };
+    fetchNotes();
+  }, [])
+
+  const handleSaveButton = async () => {
     const trimmedNote = note.trim();
-    if (!trimmedNote) return;
-    setNotes(prevNotes => [...prevNotes, trimmedNote]);
-    setNote('');
+    if (!trimmedNote){
+      setNote('');
+      return;
+    } 
+
+    const newNote = await addNote(unit.id, location.id, trimmedNote);
+    if (newNote) {
+      setNotes(prev => [...prev, newNote]);
+      setNote('');
+    }
+    
   }
   
-  const handleDeleteButton = (item: string, idx: number) => {
-    console.log(`The element selected is: ${item}, index: ${idx}`);
-    setNotes(prevNotes => prevNotes.filter((_, i) => i !== idx));
+  const handleDeleteButton = async (item: Note, idx: number) => {
+    console.log(`The element selected is: ${item.note}, index: ${idx}`);
+    if (await deleteNote(item.id)) {
+      setNotes(prev => prev.filter((_, i) => i !== idx));
+    }
   }
-
-  useEffect(() => {
-    console.log(`My Notes: ${notes}`);
-  }, [notes])
 
   return (
     <Container headerTitle={`${location.name} - ${unit.name}`}>
@@ -96,15 +110,28 @@ export function NotesScreen({ route, navigation }: NotesScreenProps) {
               data={notes}
               keyExtractor={(item, idx) => idx.toString()}
               renderItem={({ item, index }) => (
-                <View className="mb-2 p-3 rounded-lg flex-row items-center justify-between" style={{ backgroundColor: isDark ? '#222' : '#f3f3f3' }}>
-                  <Text className={isDark ? 'text-white' : 'text-gray-900'}>{item}</Text>
-                  <TouchableOpacity
-                    onPress={() => handleDeleteButton(item, index)}
-                    className="ml-2 w-8 h-8 rounded-full bg-red-500 justify-center items-center"
-                    activeOpacity={0.7}
-                  >
-                    <Ionicons name="trash" size={20} color="#fff" />
-                  </TouchableOpacity>
+                <View className={`
+                  mb-4 p-3 rounded-lg flex-row items-center justify-between 
+                  ${isDark 
+                    ? 'bg-dark-surface/60 boder-gray-700' 
+                    : 'bg-white border-gray-300'}`} 
+                >
+                  <Text className={`w-[90%] ${isDark ? 'text-white' : 'text-gray-900'}`}>{item.note}</Text>
+                  <View className={`w-[10%] items-center justify-center`}>
+                    <TouchableOpacity
+                      onPress={() => handleDeleteButton(item, index)}
+                      className={`
+                        ml-2 w-8 h-8 rounded-full justify-center items-center
+                        ${isDark 
+                          ? 'bg-red-800/80'
+                          : 'bg-red-500'
+                        }
+                        `}
+                      activeOpacity={0.7}
+                    >
+                      <Ionicons name="trash" size={20} color="#fff" />
+                    </TouchableOpacity>
+                  </View>
                 </View>
               )}
               ListFooterComponent={
@@ -116,7 +143,7 @@ export function NotesScreen({ route, navigation }: NotesScreenProps) {
                     placeholder="Add note..."
                     placeholderTextColor={isDark ? '#aaa' : '#666'}
                     className={`
-                      w-full h-40 p-4 rounded-xl mb-4 border
+                      w-full p-4 rounded-xl mb-4 border
                       ${isDark 
                         ? 'bg-dark-surface/60 text-white border-gray-700'
                         : 'bg-white text-black border-gray-300'

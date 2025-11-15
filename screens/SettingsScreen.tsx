@@ -13,7 +13,7 @@ export function SettingsScreen() {
         path="screens/SettingsScreen.tsx"
       />
         {/* Search Bar Component */}
-        <View className='h-16 justify-center items-center my-4'>
+        <View className='h-16 justify-center items-center my-4 mx-4'>
           <SearchBar isDark={isDark} onSearchChange={()=>{}}/>
         </View>
         {/* List Component */}

@@ -1,6 +1,6 @@
 import { Alert } from 'react-native';
 import { dbPromise, initDatabase } from './database';
-import type { Customer, Location, Unit, Assignment, CustomerLocation, AssignmentObject } from '../contexts';
+import type { Customer, Location, Unit, Assignment, Note, CustomerLocation, AssignmentObject } from '../contexts';
 import * as Crypto from 'expo-crypto';
 
 //#region TODO
@@ -86,17 +86,21 @@ export async function addAssignment(id: string, unit_id: string, location_id: st
   }
 }
 
-export async function addNote(unit_id: string, location_id: string, note: string): Promise<boolean> {
+export async function addNote(unit_id: string, location_id: string, note: string): Promise<Note | null> {
   const db = await dbPromise;
-  const id = Crypto.randomUUID();
+  const id = await Crypto.randomUUID();
   try {
     await db.runAsync(
       'INSERT INTO notes (id, unit_id, location_id, note) VALUES (?, ?, ?, ?)',
       [id, unit_id, location_id, note]
     );
-    return true;
+    const result = await db.getFirstAsync(
+      'SELECT id, unit_id, location_id, note FROM notes WHERE id = ?',
+      [id]
+    );
+    return result as Note;
   } catch (err) {
-    return false;
+    return null;
   }
 }
 
@@ -157,7 +161,28 @@ export async function getLocationByName(name: string): Promise <Location | null>
   return result.length > 0 ? result[0] as Location : null;
 }
 
-//#region Cleanup Helpers
+export async function getNotes(unit_id: string, location_id: string): Promise<Note[]> {
+  const db = await dbPromise;
+  const result = await db.getAllAsync(
+    `SELECT id, unit_id, location_id, note FROM notes WHERE unit_id = ? AND location_id = ?`,
+    [unit_id, location_id]
+  )
+  return result as Note[];
+}
+
+//#region Delete Helpers
+export async function deleteNote(id: string): Promise<boolean> {
+  const db = await dbPromise;
+  try {
+    await db.runAsync(`DELETE FROM notes WHERE id = ?`, [id])
+    return true;
+  } catch (err) {
+    console.log('Could not delete Note');
+    return false
+  }
+  
+}
+
 export async function cleanupNotes(): Promise<void> {
   const db = await dbPromise;
   await db.runAsync(
@@ -258,6 +283,7 @@ export async function dropAllTables() {
       DROP TABLE IF EXISTS locations;
       DROP TABLE IF EXISTS units;
       DROP TABLE IF EXISTS assignments;
+      DROP TABLE IF EXISTS notes;
     `);
     await initDatabase;
   } catch (err) {

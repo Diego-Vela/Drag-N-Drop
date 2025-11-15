@@ -10,8 +10,7 @@ import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Screen Imports
-import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen } from './screens';
-import { NotesScreen } from './screens/NotesScreen'; 
+import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen, NotesScreen } from './screens';
 
 // Context Imports
 import { ThemeProvider, useTheme, NewDataProvider } from './contexts';
@@ -21,8 +20,9 @@ import './global.css';
 
 const Tab = createBottomTabNavigator();
 
-type RootStackParamList = {
+export type RootStackParamList = {
   Tabs: undefined;
+  Edit: undefined;
   NotesScreen: {
     unit: Unit;
     location: Location;
@@ -78,7 +78,6 @@ function TabNavigator() {
       })}
     >
       <Tab.Screen name="Home" component={HomeScreen} />
-      <Tab.Screen name="Edit" component={EditScreen} />
       <Tab.Screen name="Customers" component={CustomersScreen} />
       <Tab.Screen name="Units" component={UnitsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
@@ -97,6 +96,11 @@ export default function App() {
               <Stack.Screen 
                 name="NotesScreen" 
                 component={NotesScreen}
+                options={{ headerShown: false }}
+              />
+              <Stack.Screen
+                name="Edit"
+                component={EditScreen}
                 options={{ headerShown: false }}
               />
             </Stack.Navigator>

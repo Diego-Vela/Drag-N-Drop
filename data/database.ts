@@ -14,7 +14,7 @@ export async function initDatabase() {
 
     CREATE TABLE IF NOT EXISTS locations (
       id TEXT PRIMARY KEY NOT NULL,
-      location TEXT NOT NULL UNIQUE,
+      location TEXT NOT NULL,
       customer_id TEXT NOT NULL,
       FOREIGN KEY (customer_id) REFERENCES customers (id)
     );

@@ -67,19 +67,26 @@ export function CustomersScreen() {
         sublabel: customer.name 
       }));
 
+      // Key is customer name + all location names
+      const key = [
+        customer.name,
+        ...customerLocations.map(loc => loc.name)
+      ].filter(Boolean).join(' ');
+
       return {
+        key,
         label: customer.name,
         elements,
       };
     });
   }, [customers, locations]);
 
-  //#region Search Hooks
+  //#region Search Hooks FIXXX
   const { 
     query: clQuery,
     setQuery: setClQuery,
     filtered: filteredListData,
-  } = useSearchFilter(listData, { keys: ['label', 'elements']})
+  } = useSearchFilter(listData, { keys: ['key']})
 
   //#region Render
   return (

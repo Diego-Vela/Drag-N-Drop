@@ -14,8 +14,11 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
           <View
             ref={zoneRef}
             onLayout={measureNow}
-            className={`flex-col justify-center items-start w-full h-[75%] bg-transparent`}
+            className={`flex-col justify-center items-start w-full h-[75%] bg-gray-500/20 border-2 border-dashed ${isDark ? 'border-gray-500': 'border-black'}`}
           >
+            <Text className={`text-center w-full py-2 font-semibold ${isDark ? 'text-yellow-400' : 'text-light-highlight-text'}`}>
+              Drag Here to Unassign
+            </Text>
             <ScrollView
               contentContainerStyle={{
                 flexDirection: 'column',  
@@ -24,10 +27,8 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
                 margin: 12,
                 paddingRight: 24,
                 justifyContent: 'center',
-                
               }}
               horizontal={true}
-              
             > 
               {children}
             </ScrollView>

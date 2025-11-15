@@ -12,7 +12,7 @@ import { SearchBar, ActionBar } from '../';
 import { Ionicons } from '@expo/vector-icons';
 
 
-export function DragManager({ isDark = false, data, deadZoneMembers, saveData = async (data:any) => {} }: DragManagerProps) {  
+export function DragManager({ isDark = false, data, deadZoneMembers, saveData = async (data:any) => {}, cancelDrag = () => {} }: DragManagerProps) {  
   //#region Hook
   const {
     zones,
@@ -28,6 +28,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
     handleDragStart,
     handleDragMove,
     handleDragEnd,
+    handleTestButton,
     onRefresh,
     handleShowDeadZoneButton,
   } = useDropManager(data, deadZoneMembers);
@@ -61,7 +62,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
 
       {/* Action Bar */}
       <View className={`flex h-16 min-h-[5%] max-h-[7%] mx-4 items-center bg-transparent justify-center`}>
-        <ActionBar isDark={isDark} buttons={['Save','Reset','Test']} actions={[() => saveData(zones), ()=>{}, ()=>{}]}/>
+        <ActionBar isDark={isDark} buttons={['Save', 'Cancel', 'Test']} actions={[() => saveData(zones), cancelDrag, handleTestButton]}/>
       </View>
 
       {/* Scrollable Drop Zone List */}
@@ -101,7 +102,15 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
       </ScrollView>
 
       {/* DeadZone Visibility Bar */}
-      <TouchableOpacity className={`flex h-4 mt-4 items-center justify-center self-center w-full rounded-t-lg ${isDark ? 'bg-gray-600': 'bg-gray-300'}`} onPress={handleShowDeadZoneButton}>
+      <TouchableOpacity className={`
+        flex mt-4 items-center justify-center self-center w-full rounded-t-lg 
+          ${isDark 
+            ? 'bg-gray-600'
+            : 'bg-gray-300'}
+          ${ showDeadZone ? 'h-4' : 'h-16'}
+          `}
+            
+          onPress={handleShowDeadZoneButton}>
         <Ionicons name={showDeadZone ? 'chevron-down' : 'chevron-up'} size={16} color={isDark? '#ffffffff': '#585858ff'} />
       </TouchableOpacity>
 

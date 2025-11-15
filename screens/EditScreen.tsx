@@ -4,16 +4,16 @@ import type { DropZoneData } from '../types';
 import { useTheme, useNewData, Assignment } from '../contexts';
 import { useEditScreen } from '../hooks';
 
-const GroupName = 'Sugma Dashboard';
+const GroupName = 'Edit Assignments';
 
 export function EditScreen() {
   const { isDark } = useTheme();
-  const { data, unassigned, handleSave } = useEditScreen();
+  const { data, unassigned, handleSave, cancelEdit } = useEditScreen();
 
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/EditScreen.tsx">
-        <DragManager isDark={isDark} data={data}  deadZoneMembers={unassigned} saveData={handleSave}/>
+        <DragManager isDark={isDark} data={data}  deadZoneMembers={unassigned} saveData={handleSave} cancelDrag={cancelEdit} />
       </ScreenContent>
     </Container>
   );

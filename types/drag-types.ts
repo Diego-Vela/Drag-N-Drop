@@ -59,4 +59,5 @@ export interface DragManagerProps {
   data: DropZoneData[];
   deadZoneMembers: DropZoneData;
   saveData?: (data: any) => Promise<void>;
+  cancelDrag?: () => void;
 }

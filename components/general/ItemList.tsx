@@ -8,34 +8,20 @@ export type ListElement = {
 };
 
 export type ListGroup = {
+  key: string;
   label: string;           
   elements: ListElement[]; 
 };
 
 export type Props = {
   isDark: boolean;
-  elements?: ListGroup[]; 
+  elements: ListGroup[]; 
 }
 
 
 export function ItemList({isDark, elements}: Props) {
   //#region Test Data
-  const data: ListGroup[] = elements ? elements : [
-    {
-      label: 'Header 1',
-      elements: [
-        { label: 'Item 1', sublabel: 'Subitem 1' },
-        { label: 'Item 2', sublabel: 'Subitem 2' },
-      ],
-    },
-    {
-      label: 'Header 2',
-      elements: [
-        { label: 'Item 3', sublabel: 'Subitem 3' },
-        { label: 'Item 4', sublabel: 'Subitem 4' },
-      ],
-    },
-  ];
+  const data: ListGroup[] = elements;
 
   //#region Components
   const renderSectionHeader = ({ section }: any) => (

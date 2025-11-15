@@ -2,9 +2,13 @@
 import { useState, useEffect } from 'react';
 import type { DropZoneData } from '../../types';
 import { useNewData } from '../../contexts';
+import { NavigationProp, useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../App';
 
 export function useEditScreen() {
-  const { getUnassignedUnits, getAssignmentObjects, prepareSaveAssignment, refetch } = useNewData();
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const { getUnassignedUnits, getAssignmentObjects, prepareSaveAssignment, refetch, cleanupNotes } = useNewData();
   const [data, setData] = useState<DropZoneData[]>([]);
   const [unassigned, setUnassigned] = useState<DropZoneData>({
     id: 'Unassigned',
@@ -12,6 +16,7 @@ export function useEditScreen() {
     sublabel: 'Unassigned',
     units: [],
   });
+
 
   useEffect(() => {
     const loadAssignments = async () => {
@@ -38,10 +43,15 @@ export function useEditScreen() {
   const handleSave = async (data: DropZoneData[]) => {
     if (await prepareSaveAssignment(data)) {
       refetch();
+      await cleanupNotes();
     } else {
       console.error('Assignments not saved');
     }
   };
 
-  return { data, unassigned, handleSave };
+  const cancelEdit = () => {
+    navigation.goBack();
+  }
+
+  return { data, unassigned, handleSave, cancelEdit };
 }
