@@ -32,7 +32,7 @@ export function HomeScreen() {
   const flatListData = [
     // Assigned zones
     ...groupedAssignments.map(({ customer, location, units }) => ({
-      key: `${customer}__${location}`,
+      key: `${customer.name}__${location.name}`,
       customer,
       location,
       units,
@@ -41,8 +41,8 @@ export function HomeScreen() {
     // Unassigned zone at the bottom
     {
       key: 'unassigned',
-      customer: 'Unassigned',
-      location: 'Available Units',
+      customer: { id: 'Unassigned', name: 'Unassigned'},
+      location: { id: 'unassigned', customer_id: 'Unassigned', name: 'Available Units' },
       units: unassigned,
       isUnassigned: true,
     },
@@ -51,13 +51,19 @@ export function HomeScreen() {
   return (
     <Container headerTitle={GroupName}>
       <ScreenContent title="Dashboard" path="screens/HomeScreen.tsx">
+
+        {/* Search Bar */}
+
+        {/* Action Bar */}
+
+        {/* Data Section */}
         <FlatList
           data={flatListData}
           renderItem={({ item }) => (
             <AssignmentContainer
               key={item.key}
-              title={item.customer}
-              subtitle={item.location}
+              title={item.location}
+              subtitle={item.customer}
               units={item.units}
               isDark={isDark}
               isUnassigned={item.isUnassigned}

@@ -30,8 +30,8 @@ export interface CustomerLocation {
 }
 
 export interface AssignmentObject {
-  customer: string;
-  location: string;
+  customer: Customer;
+  location: Location;
   units: Unit[];
 }
 
@@ -79,6 +79,9 @@ export interface NewDataContextType {
   getAssignments: () => Promise<Assignment[]>;
   getCustomerLocations: () => Promise<CustomerLocation[]>;
   getAssignmentObjects: () => Promise<AssignmentObject[]>;
+
+  getUnitByName: (name: string) => Promise<Unit | null>,
+  getLocationByName: (name: string) => Promise<Location | null>,
 
   getUnassignedUnits: () => Unit[];
 
@@ -154,10 +157,17 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     }
 
     return customerLocations.map(cl => ({
-      customer: cl.customer_name,
-      location: cl.location_name,
+      customer: {
+        id: cl.customer_id,
+        name: cl.customer_name,
+      },
+      location: {
+        id: cl.location_id,
+        customer_id: cl.customer_id,
+        name: cl.location_name,
+      },
       units: locationToUnits.get(cl.location_id) || [],
-    }) as AssignmentObject);
+    }));
   }
 
   const prepareSaveAssignment = async (data: any): Promise<boolean> => {
@@ -188,7 +198,7 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     console.log(success);
     return success;
   }
-  
+
 
   const value: NewDataContextType = {
     customers,
@@ -209,6 +219,8 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     getAssignments,
     getCustomerLocations,
     getAssignmentObjects,
+    getUnitByName,
+    getLocationByName,
     
     getUnassignedUnits,
     prepareSaveAssignment,

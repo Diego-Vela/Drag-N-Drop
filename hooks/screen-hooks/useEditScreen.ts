@@ -17,9 +17,9 @@ export function useEditScreen() {
     const loadAssignments = async () => {
       const assignmentObjects = await getAssignmentObjects();
       const zoneData: DropZoneData[] = assignmentObjects.map((g) => ({
-        id: `${g.customer}/${g.location}`,
-        label: g.location,
-        sublabel: g.customer,
+        id: `${g.customer.name}/${g.location.name}`,
+        label: g.location.name,
+        sublabel: g.customer.name,
         units: g.units.map((u) => u.name),
       }));
 

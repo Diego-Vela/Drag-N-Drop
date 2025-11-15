@@ -1,40 +1,54 @@
 // Base Imports
 import React from 'react';
+
 // Third-party Imports
 import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { Unit, Location, Customer } from './contexts';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { Ionicons } from '@expo/vector-icons';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 // Screen Imports
-import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen, NotesScreen } from './screens';
+import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen } from './screens';
+import { NotesScreen } from './screens/NotesScreen'; 
+
 // Context Imports
 import { ThemeProvider, useTheme, NewDataProvider } from './contexts';
+
 // Styles
 import './global.css';
 
 const Tab = createBottomTabNavigator();
 
+type RootStackParamList = {
+  Tabs: undefined;
+  NotesScreen: {
+    unit: Unit;
+    location: Location;
+    customer: Customer;
+  };
+};
+
+const Stack = createNativeStackNavigator<RootStackParamList>();
+
 function TabNavigator() {
   const { isDark } = useTheme();
-  
+
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
         headerShown: false,
         tabBarShowLabel: true,
-        tabBarActiveTintColor: isDark ? '#60a5fa' : '#ffffff', // dark-accent : white for navy background
-        tabBarInactiveTintColor: isDark ? '#9ca3af' : '#93c5fd', // dark-secondary : light blue for navy
+        tabBarActiveTintColor: isDark ? '#60a5fa' : '#ffffff',
+        tabBarInactiveTintColor: isDark ? '#9ca3af' : '#93c5fd',
         tabBarStyle: {
-          backgroundColor: isDark ? '#1f2937' : '#1e3a8a', // dark-surface : sophisticated navy
+          backgroundColor: isDark ? '#1f2937' : '#1e3a8a',
           borderTopWidth: 1,
-          borderTopColor: isDark ? '#374151' : '#1e40af', // dark-border : navy border
+          borderTopColor: isDark ? '#374151' : '#1e40af',
           elevation: 10,
           height: 70,
-          paddingTop: 8, 
-          shadowColor: '#000',
-          shadowOffset: { width: 0, height: -2 },
-          shadowOpacity: isDark ? 0.3 : 0.1,
-          shadowRadius: 4,
+          paddingTop: 8,
         },
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;
@@ -49,15 +63,12 @@ function TabNavigator() {
             case 'Units':
               iconName = 'build-outline';
               break;
-            case 'Assignments':
-              iconName = 'document-text';
-              break;
             case 'Settings':
               iconName = 'settings';
               break;
-              case 'Edit':
-                iconName = 'create-outline';
-                break;
+            case 'Edit':
+              iconName = 'create-outline';
+              break;
             default:
               iconName = 'document-outline';
           }
@@ -71,7 +82,6 @@ function TabNavigator() {
       <Tab.Screen name="Customers" component={CustomersScreen} />
       <Tab.Screen name="Units" component={UnitsScreen} />
       <Tab.Screen name="Settings" component={SettingsScreen} />
-      <Tab.Screen name="Notes" component={NotesScreen} />
     </Tab.Navigator>
   );
 }
@@ -82,10 +92,17 @@ export default function App() {
       <ThemeProvider>
         <NewDataProvider>
           <NavigationContainer>
-            <TabNavigator />
+            <Stack.Navigator>
+              <Stack.Screen name="Tabs" component={TabNavigator} options={{ headerShown: false }} />
+              <Stack.Screen 
+                name="NotesScreen" 
+                component={NotesScreen}
+                options={{ headerShown: false }}
+              />
+            </Stack.Navigator>
           </NavigationContainer>
         </NewDataProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
-  )
+  );
 }

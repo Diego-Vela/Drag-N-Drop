@@ -1,17 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, KeyboardAvoidingView, Platform, FlatList } from 'react-native';
-import { useLocalSearchParams } from 'expo-router';
 import { Container, ScreenContent } from '../components';
 import { Ionicons } from '@expo/vector-icons';
-import { useTheme } from '../contexts';
+import { useTheme, Unit, Location, Customer } from '../contexts';
+import { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export function NotesScreen() {
+
+type RootStackParamList = {
+  NotesScreen: {
+    unit: Unit;
+    location: Location;
+    customer: Customer;
+  };
+  // Add other screens if needed
+};
+
+type NotesScreenProps = NativeStackScreenProps<RootStackParamList, 'NotesScreen'>;
+
+export function NotesScreen({ route, navigation }: NotesScreenProps) {
   const { isDark } = useTheme();
 
   const [notes, setNotes] = useState<string[]>([]);
   const [note, setNote] = useState('');
 
-  const { unitId = 'Mock Unit', locationId = 'Mock Location', customerId = 'Mock Customer' } = useLocalSearchParams();
+  const { unit, location, customer } = route.params;
 
   const handleSaveButton = () => {
     const trimmedNote = note.trim();
@@ -26,21 +38,36 @@ export function NotesScreen() {
   }
 
   useEffect(() => {
-    console.log(notes);
+    console.log(`My Notes: ${notes}`);
   }, [notes])
 
   return (
-    <Container headerTitle={`${unitId} / ${locationId}`}>
+    <Container headerTitle={`${location.name} - ${unit.name}`}>
       <ScreenContent title="Notes" path="screens/Notes.tsx">
         <KeyboardAvoidingView
           behavior={Platform.OS === 'ios' ? 'padding' : undefined}
           className="flex-1 mx-4 mt-4"
         >
+          {/* Back Button */}
+          <TouchableOpacity 
+            onPress={() => navigation.goBack()}
+            className="flex-row items-center mb-4"
+          >
+            <Ionicons 
+              name="arrow-back" 
+              size={24} 
+              color={isDark ? 'rgba(202, 138, 4, 0.8)' : 'rgba(59, 130, 246, 0.8)'} 
+            />
+            <Text className={`ml-2 text-lg ${isDark ? 'text-dark-highlight-text/80' : 'text-blue-500/80'}`}>
+              Back
+            </Text>
+          </TouchableOpacity>
+
           {/* Informational Section */}
-          <View className="mb-6">
+          <View className="mb-6 gap-3">
             <Text
-              className={`text-base opacity-70 ${
-                isDark ? 'text-white' : 'text-gray-900'
+              className={`text-bold text-lg opacity-80 ${
+                isDark ? 'text-white' : 'text-black'
               }`}
             >
               Customer
@@ -48,10 +75,10 @@ export function NotesScreen() {
 
             <Text
               className={`text-xl font-semibold ${
-                isDark ? 'text-dark-highlight-text' : 'text-blue-500'
+                isDark ? 'text-white' : 'text-gray-500'
               }`}
             >
-              {`${customerId}`}
+              {`${customer.name}`}
             </Text>
           </View>
 

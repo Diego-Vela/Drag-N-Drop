@@ -52,7 +52,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
                 </Text>
               </View>
             </View>
-            <View className="ml-4 flex-1 flex-row flex-wrap gap-4 items-center justify-start">
+            <View className="mx-4 flex-1 flex-row flex-wrap gap-4 items-center justify-start">
               {children}
             </View>
           </View>
