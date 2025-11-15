@@ -41,7 +41,7 @@ export function UnitsScreen() {
   // Helper function to list ready data - Memoized to not recalc on every render.
   const listData: ListGroup[] = useMemo(() => {
     if (!units || units.length === 0) {
-      return [{ label: 'Units', elements: [] }];
+      return [{ key: 'empty', label: 'Units', elements: [] }];
     }
 
     const elements: ListElement[] = units.map((u: any) => ({
@@ -49,7 +49,7 @@ export function UnitsScreen() {
       sublabel: ''
     }));
 
-    return [{ label: 'Units', elements }];
+    return [{ key:'temp', label: 'Units', elements }];
   }, [units]);
 
   return (
