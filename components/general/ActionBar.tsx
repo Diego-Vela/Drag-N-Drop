@@ -30,7 +30,7 @@ export function ActionBar({
   }));
 
   return (
-    <View className="flex-row w-full justify-evenly items-center pt-2">
+    <View className="flex-row w-full justify-evenly items-center pt-2 px-2">
       {buttonList.map((btn, index) => (
         <TouchableOpacity
           key={index}
@@ -41,7 +41,7 @@ export function ActionBar({
           disabled={!btn.label}
         >
           <Text
-            className={`text-white text-center ${
+            className={`text-white text-center px-2 ${
               btn.label ? 'opacity-100' : 'opacity-40'
             }`}
           >

@@ -30,7 +30,6 @@ export function HomeScreen() {
         const unassignedUnits = getUnassignedUnits();
         setGroupedAssignments(assignments);
         setUnassigned(unassignedUnits);
-        playSound('wow');
       } catch (err) {
         console.error('Error loading assignments:', err);
       }

@@ -16,14 +16,11 @@ export function CustomersScreen() {
   const [canEdit, setCanEdit] = useState(false);
   
   //#region Functions
-  // Refresh Functionality to help
-  const [refreshKey, setRefreshKey] = useState(0);
 
   const handleResetButton = async () => {
-    dropAllTables();
+    await dropAllTables();
     Alert.alert('Pressed!', '💣 YOU JUST BOOMED THE DATABASE!!!.');
     await refetch();
-    setRefreshKey((prev) => prev + 1);
   }
 
   const handleAddButton = () => {
@@ -47,7 +44,6 @@ export function CustomersScreen() {
     }
 
     await refetch();
-    setRefreshKey((prev) => prev + 1);
     setCanEdit(false);
   };
 
@@ -100,38 +96,40 @@ export function CustomersScreen() {
 
         {/* Action Bar Reservation */}
         <View className={`h-16 mx-4 my-2 rounded-xl overflow-hidden`}>
-          <ActionBar isDark={isDark} buttons={['Add', 'Reset DB']} actions={[handleAddButton, handleResetButton]}/>
-        </View>
-        
-        {/* List Component: will take in an array of section titles and an equal length, 2D array of elements that correspond to each section */}
-        <View className='flex-1'>
-          <ItemList isDark={isDark} elements={filteredListData} />
+          <ActionBar isDark={isDark} buttons={[canEdit ? 'Cancel Add' : 'Add', 'Reset DB']} actions={[handleAddButton, handleResetButton]}/>
         </View>
 
         {/* Temp Section to Add New Customer Locations */}
         {canEdit ? ( 
-        <View className={`h-48 mx-4 p-4`}>
+        <View className={`mb-4 mx-4`}>
           <TextInput
             placeholder="Customer Name"
             value={customerName}
             onChangeText={setCustomerName}
-            className="bg-white p-3 rounded-md w-full mb-3"
+            placeholderTextColor={isDark ? '#6B7280' : ''}
+            className={` p-3 rounded-md w-full mb-3 ${ isDark ? 'bg-dark-surface/80' : 'bg-white' }`}
           />
           <TextInput
             placeholder="Location Name"
             value={locationName}
             onChangeText={setLocationName}
-            className="bg-white p-3 rounded-md w-full mb-3"
+            placeholderTextColor={isDark ? '#6B7280' : ''}
+            className={`bg-white p-3 rounded-md w-full mb-3 ${ isDark ? 'bg-dark-surface/80' : 'bg-white' }`}
           />
           <TouchableOpacity
             onPress={handleAdd}
-            className="bg-blue-500 px-6 py-3 rounded-lg"
+            className={`px-6 py-3 rounded-lg ${ isDark ? 'bg-green-500/60': 'bg-green-500' }`}
             activeOpacity={0.7}
           >
             <Text className="text-white text-lg font-semibold">Add Customer - Location</Text>
           </TouchableOpacity>
         </View>
         ) : ( <></> )}
+        
+        {/* List Component: will take in an array of section titles and an equal length, 2D array of elements that correspond to each section */}
+        <View className='flex-1'>
+          <ItemList isDark={isDark} elements={filteredListData} />
+        </View>
 
       </ScreenContent>
     </Container>

@@ -1,5 +1,5 @@
 import React from 'react';
-import { Text, View } from 'react-native';
+import { Text, View, Keyboard, TouchableWithoutFeedback } from 'react-native';
 import { useTheme } from '../../contexts/ThemeContext';
 
 
@@ -15,8 +15,10 @@ export const ScreenContent = ({
 }: ScreenContentProps) => {
   
   return (
-    <>            
-      {children}
-    </>
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+      <View className='flex-1 flex'>
+        {children}
+      </View>
+    </TouchableWithoutFeedback>
   );
 };

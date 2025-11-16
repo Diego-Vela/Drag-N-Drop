@@ -14,7 +14,7 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
           <View
             ref={zoneRef}
             onLayout={measureNow}
-            className={`flex-col justify-center items-start w-full h-[75%] bg-gray-500/20 border-2 border-dashed ${isDark ? 'border-gray-500': 'border-black'}`}
+            className={`flex-col justify-center items-start w-full h-[75%] bg-gray-500/20 border-t-2 border-b-2 border-dashed ${isDark ? 'border-gray-500': 'border-black'}`}
           >
             <Text className={`text-center w-full py-2 font-semibold ${isDark ? 'text-yellow-400' : 'text-light-highlight-text'}`}>
               Drag Here to Unassign

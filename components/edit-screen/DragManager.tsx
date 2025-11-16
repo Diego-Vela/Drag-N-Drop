@@ -62,7 +62,7 @@ export function DragManager({ isDark = false, data, deadZoneMembers, saveData = 
 
       {/* Action Bar */}
       <View className={`flex h-16 min-h-[5%] max-h-[7%] mx-4 items-center bg-transparent justify-center`}>
-        <ActionBar isDark={isDark} buttons={['Save', 'Cancel', 'Test']} actions={[() => saveData(zones), cancelDrag, handleTestButton]}/>
+        <ActionBar isDark={isDark} buttons={['Save', 'Cancel', 'Test']} actions={[() => { saveData(zones); cancelDrag(); }, cancelDrag, handleTestButton]}/>
       </View>
 
       {/* Scrollable Drop Zone List */}

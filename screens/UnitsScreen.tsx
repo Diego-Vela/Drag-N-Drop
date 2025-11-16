@@ -54,7 +54,7 @@ export function UnitsScreen() {
 
   return (
     <Container headerTitle="Units">
-      <ScreenContent title="Units" path="screens/UnitsScreen.tsx"/>
+      <ScreenContent title="Units" path="screens/UnitsScreen.tsx">
 
         {/* Search Bar Component */}
         <View className='h-16 min-h-[5%] max-h-[7%] justify-center items-center mt-4 mx-4'>
@@ -63,34 +63,36 @@ export function UnitsScreen() {
 
         {/* Action Bar Reservation */}
         <View className={`h-16 mx-4 my-2 rounded-xl overflow-hidden`}>
-          <ActionBar isDark={isDark} buttons={['Add']} actions={[handleAddButton]}/>
+          <ActionBar isDark={isDark} buttons={[canEdit ? 'Cancel Add' : 'Add']} actions={[handleAddButton]}/>
         </View>
 
-        {/* List Component: will take in an array of section titles and an equal length, 2D array of elements that correspond to each section */}
-        <View className='flex-1'>
-          <ItemList isDark={isDark} elements={listData} />
-        </View>
-        
         {/* Temp Section to Add New Customer Locations */}
         {canEdit ? ( 
-        <View className={`h-48 mx-4 p-4`}>
+        <View className={`mb-4 mx-4`}>
           <TextInput
             placeholder="Unit Name"
             value={unitName}
             onChangeText={setUnitName}
-            className="bg-white p-3 rounded-md w-full mb-3"
+            placeholderTextColor={isDark ? '#6B7280' : ''}
+            className={`bg-white p-3 rounded-md w-full mb-3 ${ isDark ? 'bg-dark-surface/80' : 'bg-white' }`}
           />
 
           <TouchableOpacity
             onPress={handleAdd}
-            className="bg-blue-500 px-6 py-3 rounded-lg"
+            className={`px-6 py-3 rounded-lg ${ isDark ? 'bg-green-500/60': 'bg-green-500' }`}
             activeOpacity={0.7}
           >
             <Text className="text-white text-lg font-semibold">Add Unit</Text>
           </TouchableOpacity>
         </View>
         ) : ( <></> )}
-
+        
+        {/* List Component: will take in an array of section titles and an equal length, 2D array of elements that correspond to each section */}
+        <View className='flex-1'>
+          <ItemList isDark={isDark} elements={listData} />
+        </View>
+        
+      </ScreenContent>
     </Container>
   );
 }

@@ -285,7 +285,7 @@ export async function dropAllTables() {
       DROP TABLE IF EXISTS assignments;
       DROP TABLE IF EXISTS notes;
     `);
-    await initDatabase;
+    await initDatabase();
   } catch (err) {
     console.error('Error dropping tables:', err);
   }

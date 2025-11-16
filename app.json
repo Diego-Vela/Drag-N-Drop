@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "Droppers",
+    "name": "UDrop",
     "slug": "Droppers",
     "version": "1.0.0",
     "web": {
@@ -11,7 +11,9 @@
     },
     "plugins": [
       "expo-audio",
-      "expo-sqlite"
+      "expo-sqlite",
+      "expo-font",
+      "expo-asset"
     ],
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -31,7 +33,18 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.MODIFY_AUDIO_SETTINGS"
+      ],
+      "package": "com.dvela2.UDrop"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "7e744174-f8e0-46fc-895f-9e5710b60626"
       }
-    }
+    },
+    "owner": "dvela-2"
   }
 }
