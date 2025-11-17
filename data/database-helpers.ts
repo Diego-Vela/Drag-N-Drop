@@ -16,7 +16,7 @@ export async function addCustomer(id: string, name: string) {
     'INSERT INTO customers (id, name) VALUES (?, ?)',
     [id, name]
   );
-  console.log(`Added customer: ${name}`);
+  //console.log(`Added customer: ${name}`);
 }
 
 export async function addLocation(
@@ -47,7 +47,7 @@ export async function addLocation(
       [id, location, customer_id]
     );
 
-    console.log(`Added location: ${location}`);
+    //console.log(`Added location: ${location}`);
     return true; 
 
   } catch (err: any) {

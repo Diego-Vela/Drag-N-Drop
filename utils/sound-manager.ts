@@ -14,6 +14,7 @@ export async function playSound(key: keyof typeof sounds) {
 
   try {
     const player = createAudioPlayer(soundFile);
+    player.seekTo(0);
     player.play();
   } catch (error) {
     console.error(`Error playing sound ${key}:`, error);

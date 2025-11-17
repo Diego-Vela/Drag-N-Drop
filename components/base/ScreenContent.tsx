@@ -15,10 +15,8 @@ export const ScreenContent = ({
 }: ScreenContentProps) => {
   
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-      <View className='flex-1 flex'>
-        {children}
-      </View>
-    </TouchableWithoutFeedback>
+    <>
+      {children}
+    </>
   );
 };
