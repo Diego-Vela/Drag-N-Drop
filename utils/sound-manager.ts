@@ -14,7 +14,7 @@ export function getSound(key: keyof typeof sounds): any | boolean {
   return soundFile;
 }
 
-export function playSound(key: keyof typeof sounds, callback?: () => void) {
+export function playSoundAndroid(key: keyof typeof sounds, callback?: () => void) {
   const player = createAudioPlayer(getSound(key));
   if (!player) return false;
   player.seekTo(0);

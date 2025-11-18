@@ -49,10 +49,14 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
     setZoneInfo((prev) => ({ ...prev, [id]: layout }));
   }, []);
 
+  const playing = () => {
+    playSound('dragStart');
+  }
+
   // Handles Drag Movements: Start, Move, End
   const handleDragStart = (label: string) => {
     setIsDragging(true);
-    playSound('dragStart');
+    playing();
     setActiveDrag(label);
     recalcZoneLayouts();
   };

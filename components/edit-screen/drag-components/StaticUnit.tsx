@@ -1,7 +1,8 @@
 import React from 'react';
 import { View, Text } from 'react-native';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import { runOnJS, useSharedValue } from 'react-native-reanimated';
+import { useSharedValue } from 'react-native-reanimated';
+import { scheduleOnRN } from 'react-native-worklets';
 import { StaticUnitProps } from '../../../types';
 
 const MIN_THRESHOLD = 10;
@@ -12,19 +13,23 @@ export function StaticUnit({ label, isDark=false, onDragStart, onDragMove, onDra
   const hasStarted = useSharedValue(false);
 
   const pan = Gesture.Pan()
+    .runOnJS(true)
     .onUpdate((e) => {
       const distance = Math.sqrt(e.translationX ** 2 + e.translationY ** 2);
       if (!hasStarted.value && distance > MIN_THRESHOLD) {
         hasStarted.value = true;
-        runOnJS(onDragStart)?.(label);
+        scheduleOnRN(() => onDragStart?.(label));
+        //runOnJS(onDragStart)?.(label);
       }
       if (hasStarted.value) {
-        runOnJS(onDragMove)?.(label, { x: e.absoluteX, y: e.absoluteY });
+        scheduleOnRN(() => onDragMove?.(label, { x: e.absoluteX, y: e.absoluteY }));
+        //runOnJS(onDragMove)?.(label, { x: e.absoluteX, y: e.absoluteY });
       }
     })
     .onEnd((e) => {
       if (hasStarted.value) {
-        runOnJS(onDragEnd)?.(label, { x: e.absoluteX, y: e.absoluteY });
+        scheduleOnRN(() => onDragEnd?.(label, { x: e.absoluteX, y: e.absoluteY }));
+        //runOnJS(onDragEnd)?.(label, { x: e.absoluteX, y: e.absoluteY });
       }
       hasStarted.value = false;
     })

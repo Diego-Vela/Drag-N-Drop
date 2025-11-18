@@ -48,7 +48,7 @@ export function CustomersScreen() {
       console.log('Error', 'Failed to add entry. Check logs for details.');
     }
 
-    await refetch();
+    refetch();
     setCanEdit(false);
   };
 

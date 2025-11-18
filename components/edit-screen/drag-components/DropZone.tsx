@@ -26,7 +26,6 @@ export const DropZone = forwardRef<DropZoneRef, DropZoneProps>(
                 gap: 16,
                 margin: 12,
                 paddingRight: 24,
-                justifyContent: 'center',
               }}
               horizontal={true}
             > 
