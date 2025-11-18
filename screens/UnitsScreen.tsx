@@ -2,7 +2,7 @@ import React, { useState, useMemo } from 'react';
 import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
 import { Container, ScreenContent, SearchBar, ActionBar, ItemList } from '../components';
 import type { ListGroup, ListElement } from '../components';
-import { useNewData, useTheme } from '../contexts';
+import { useNewData, useTheme, useSound } from '../contexts';
 
 export function UnitsScreen() {
   const { isDark } = useTheme();
@@ -11,6 +11,8 @@ export function UnitsScreen() {
   const [unitName, setUnitName] = useState('');
   const [canEdit, setCanEdit] = useState(false);
   const [refreshKey, setRefreshKey] = useState(0);
+
+  const { playSound } = useSound();
 
   //setRefreshKey((prev) => prev + 1);
 
@@ -34,6 +36,7 @@ export function UnitsScreen() {
     }
 
     refetch();
+    playSound('unitMove'); 
     setRefreshKey((prev) => prev + 1);
     setCanEdit(false);
   }

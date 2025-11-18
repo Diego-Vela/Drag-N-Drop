@@ -1,4 +1,4 @@
-import { createAudioPlayer } from 'expo-audio';
+import { createAudioPlayer } from "expo-audio";
 
 const sounds = {
   dragStart: require('../assets/sounds/drag-start.mp3'),
@@ -8,15 +8,19 @@ const sounds = {
   baka: require('../assets/sounds/baka-oneechan.mp3'),
 };
 
-export async function playSound(key: keyof typeof sounds) {
+export function getSound(key: keyof typeof sounds): any | boolean {
   const soundFile = sounds[key];
-  if (!soundFile) return;
+  if (!soundFile) return false;
+  return soundFile;
+}
 
-  try {
-    const player = createAudioPlayer(soundFile);
-    player.seekTo(0);
-    player.play();
-  } catch (error) {
-    console.error(`Error playing sound ${key}:`, error);
+export function playSound(key: keyof typeof sounds, callback?: () => void) {
+  const player = createAudioPlayer(getSound(key));
+  if (!player) return false;
+  player.seekTo(0);
+  player.play();
+
+  if (typeof player.duration === 'number' && callback) {
+    setTimeout(callback, player.duration * 1000);
   }
 }

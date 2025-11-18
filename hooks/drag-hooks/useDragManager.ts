@@ -1,14 +1,14 @@
 import { useState, useRef, useCallback, useEffect } from 'react';
 import { LayoutAnimation } from 'react-native';
 import { useSharedValue } from 'react-native-reanimated';
+import { useSound } from '../../contexts';
 import type { DropZoneRef, DropZoneData } from '../../types';
-import { playSound } from '../../utils';
 import {
   findTargetZoneId,
   findFromZoneId,
   moveBetweenZones,
   moveToDeadZone,
-  moveFromDeadZone
+  moveFromDeadZone,
 } from '../../utils';
 
 export function useDropManager(initialZones: DropZoneData[], initialDeadZone: DropZoneData) {
@@ -30,6 +30,9 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   // Zone Refs
   const zoneRefs = useRef<Record<string, DropZoneRef | null>>({});
 
+  // Sounds
+  const { playSound } = useSound()
+
   // Init Zones
   useEffect(() => {
     setZones(initialZones);
@@ -43,12 +46,13 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
   //#region Functions
   // Collect measurements from zones
   const handleZoneMeasure = useCallback((id: string, layout: any) => {
-    setZoneInfo((prev) => ({ [id]: layout, ...prev }));
+    setZoneInfo((prev) => ({ ...prev, [id]: layout }));
   }, []);
 
   // Handles Drag Movements: Start, Move, End
   const handleDragStart = (label: string) => {
     setIsDragging(true);
+    playSound('dragStart');
     setActiveDrag(label);
     recalcZoneLayouts();
   };
@@ -81,7 +85,7 @@ export function useDropManager(initialZones: DropZoneData[], initialDeadZone: Dr
 
       // console.log(`Position X: ${position.x}, Position Y: ${position.y}`);
 
-      const targetZoneId = findTargetZoneId(position, zoneInfo);
+      const targetZoneId = findTargetZoneId(position, zoneInfo );
 
       if (targetZoneId !== null) {
         /*console.log(

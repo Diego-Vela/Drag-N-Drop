@@ -51,7 +51,7 @@ export function ItemList({isDark, elements}: Props) {
         }))}
         keyExtractor={(item, index) => item.label + index}
         renderItem={renderItem}
-        renderSectionHeader={renderSectionHeader}
+        //renderSectionHeader={renderSectionHeader}
         stickySectionHeadersEnabled={false} 
         showsVerticalScrollIndicator={false} 
       />

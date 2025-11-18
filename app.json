@@ -30,7 +30,10 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.dvela2.UDrop",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "UIBackgroundModes": [
+          "audio"
+        ]
       }
     },
     "android": {

@@ -2,7 +2,7 @@ import { DropZoneData } from '../types';
 
 export const findTargetZoneId = (
     position: { x: number; y: number },
-    zoneInfo: Record<string, { left: number; right: number; top: number; bottom: number }>
+    zoneInfo: Record<string, { left: number; right: number; top: number; bottom: number }>,
   ): string | null => {
     for (const [zoneId, { left, right, top, bottom }] of Object.entries(zoneInfo)) {
       const inside =

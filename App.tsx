@@ -13,7 +13,8 @@ import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { HomeScreen, CustomersScreen, UnitsScreen, SettingsScreen, EditScreen, NotesScreen } from './screens';
 
 // Context Imports
-import { ThemeProvider, useTheme, NewDataProvider } from './contexts';
+import { ThemeProvider, NewDataProvider, SoundProvider } from './contexts';
+import { useTheme } from './contexts'
 
 // Styles
 import './global.css';
@@ -88,24 +89,31 @@ function TabNavigator() {
 export default function App() {
   return (
     <GestureHandlerRootView style={{ flex: 1 }}>
+      
       <ThemeProvider>
-        <NewDataProvider>
-          <NavigationContainer>
-            <Stack.Navigator>
-              <Stack.Screen name="Tabs" component={TabNavigator} options={{ headerShown: false }} />
-              <Stack.Screen 
-                name="NotesScreen" 
-                component={NotesScreen}
-                options={{ headerShown: false }}
-              />
-              <Stack.Screen
-                name="Edit"
-                component={EditScreen}
-                options={{ headerShown: false }}
-              />
-            </Stack.Navigator>
-          </NavigationContainer>
-        </NewDataProvider>
+        <SoundProvider>
+          <NewDataProvider>
+
+              <NavigationContainer>
+                <Stack.Navigator>
+
+                  <Stack.Screen name="Tabs" component={TabNavigator} options={{ headerShown: false }} />
+                  <Stack.Screen 
+                    name="NotesScreen" 
+                    component={NotesScreen}
+                    options={{ headerShown: false }}
+                  />
+                  <Stack.Screen
+                    name="Edit"
+                    component={EditScreen}
+                    options={{ headerShown: false }}
+                  />
+
+                </Stack.Navigator>
+              </NavigationContainer>
+
+          </NewDataProvider>
+        </SoundProvider>
       </ThemeProvider>
     </GestureHandlerRootView>
   );

@@ -5,7 +5,8 @@ import { AssignmentContainer } from '../components/home-screen';
 import { useTheme, useNewData, AssignmentObject, Unit } from '../contexts';
 import { useSearchFilter } from '../hooks';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { playSound } from 'utils';
+import { useAudioPlayer } from 'expo-audio';
+import { getSound } from '../utils';
 
 import { RootStackParamList } from '../App';
 
@@ -20,10 +21,12 @@ export function HomeScreen() {
   const [groupedAssignments, setGroupedAssignments] = useState<AssignmentObject[]>([]);
   const [unassigned, setUnassigned] = useState<Unit[]>([]);
 
+  const player = useAudioPlayer(getSound('wow'));
 
 
   // --- Load data when component mounts ---
   useEffect(() => {
+
     const loadData = async () => {
       try {
         const assignments = await getAssignmentObjects();

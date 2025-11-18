@@ -1,10 +1,9 @@
 // hooks/useEditScreen.ts
 import { useState, useEffect } from 'react';
 import type { DropZoneData } from '../../types';
-import { useNewData } from '../../contexts';
+import { useNewData, useSound } from '../../contexts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
 import { RootStackParamList } from '../../App';
-import { playSound } from 'utils';
 
 export function useEditScreen() {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -17,6 +16,8 @@ export function useEditScreen() {
     sublabel: 'Unassigned',
     units: [],
   });
+
+  const { playSound } = useSound();
 
 
   useEffect(() => {
@@ -43,15 +44,15 @@ export function useEditScreen() {
 
   const handleSave = async (data: DropZoneData[]) => {
     if (await prepareSaveAssignment(data)) {
-      refetch();
-      await cleanupNotes();
       playSound('wow');
+      await refetch();
+      await cleanupNotes();
     } else {
       console.error('Assignments not saved');
     }
   };
 
-  const cancelEdit = () => {
+  const cancelEdit = async () => {
     navigation.goBack();
   }
 

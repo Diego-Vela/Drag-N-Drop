@@ -1,8 +1,9 @@
 import React, { useEffect, useState, useMemo } from 'react';
 import { View, Text, Button, FlatList, TextInput, Alert, TouchableOpacity } from 'react-native';
 import { Container, ScreenContent, SearchBar, ItemList, ActionBar } from '../components';
-import { useNewData, useTheme } from '../contexts';
+import { useNewData, useTheme, useSound } from '../contexts';
 import { useSearchFilter } from '../hooks';
+import { getSound } from '../utils';
 
 import type { ListGroup, ListElement } from '../components';
 
@@ -14,6 +15,8 @@ export function CustomersScreen() {
   const [locationName, setLocationName] = useState('');
 
   const [canEdit, setCanEdit] = useState(false);
+
+  const { playSound } = useSound(); 
   
   //#region Functions
 
@@ -39,6 +42,8 @@ export function CustomersScreen() {
       console.log('Success', `Added ${locationName} under ${customerName}`);
       setCustomerName('');
       setLocationName('');
+      refetch();
+      playSound('unitMove');
     } else {
       console.log('Error', 'Failed to add entry. Check logs for details.');
     }

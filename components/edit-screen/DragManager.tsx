@@ -7,7 +7,7 @@ import { DropZone, StaticUnit, DraggableOverlayUnit } from './drag-components';
 import { useDropManager, useSearchFilter } from '../../hooks';
 import type { DragManagerProps } from '../../types';
 
-import { SearchBar, ActionBar } from '../'; 
+import { SearchBar, ActionBar } from '../general'; 
 
 import { Ionicons } from '@expo/vector-icons';
 

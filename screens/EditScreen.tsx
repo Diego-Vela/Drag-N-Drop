@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useMemo } from 'react';
 import { Container, ScreenContent, DragManager } from '../components';
 import type { DropZoneData } from '../types';
-import { useTheme, useNewData, Assignment } from '../contexts';
+import { useTheme, useSound } from '../contexts';
 import { useEditScreen } from '../hooks';
 
 const GroupName = 'Edit Assignments';

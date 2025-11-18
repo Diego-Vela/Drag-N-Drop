@@ -212,7 +212,6 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     }
 
     const success = await saveAssignments(preparedData);
-    console.log(success);
     return success;
   }
 
