@@ -31,7 +31,7 @@ export function ItemList({isDark, elements}: Props) {
   );
 
   const renderItem = ({ item }: { item: ListElement }) => (
-    <View className={`p-4 border-b border-dark-border ${isDark ? 'bg-dark-warning/20' : 'bg-white'}`}>
+    <View className={`p-4 border border-dark-border ${isDark ? 'bg-dark-warning/20' : 'bg-white'}`}>
       <Text className={`text-md font-bold ${isDark ? 'text-dark-highlight-text' :'text-black'}`}>{item.label}</Text>
       {item.sublabel !== '' ? (
         <Text className={`text-md  ${isDark ? 'text-dark-highlight-text/50' :'text-gray-500'}`}>{item.sublabel}</Text>

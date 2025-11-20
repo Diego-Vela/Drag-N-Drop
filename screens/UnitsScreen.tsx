@@ -1,5 +1,5 @@
-import React, { useState, useMemo } from 'react';
-import { View, TextInput, TouchableOpacity, Text, Alert } from 'react-native';
+import React, { useState, useMemo, useEffect } from 'react';
+import { View, TextInput, TouchableOpacity, Text, Alert, useWindowDimensions } from 'react-native';
 import { Container, ScreenContent, SearchBar, ActionBar, ItemList } from '../components';
 import type { ListGroup, ListElement } from '../components';
 import { useNewData, useTheme, useSound } from '../contexts';
@@ -10,9 +10,15 @@ export function UnitsScreen() {
 
   const [unitName, setUnitName] = useState('');
   const [canEdit, setCanEdit] = useState(false);
-  const [refreshKey, setRefreshKey] = useState(0);
+  const [_, forceUpdate] = useState(0);
 
   const { playSound } = useSound();
+
+  const { height, width } = useWindowDimensions();
+
+  useEffect(() => {
+    forceUpdate(n => n+1);
+  }, [height, width]);
 
   //setRefreshKey((prev) => prev + 1);
 
@@ -37,7 +43,6 @@ export function UnitsScreen() {
 
     refetch();
     playSound('unitMove'); 
-    setRefreshKey((prev) => prev + 1);
     setCanEdit(false);
   }
 
@@ -60,7 +65,7 @@ export function UnitsScreen() {
       <ScreenContent title="Units" path="screens/UnitsScreen.tsx">
 
         {/* Search Bar Component */}
-        <View className='h-16 min-h-[5%] max-h-[7%] justify-center items-center mt-4 mx-4'>
+        <View className='h-16 justify-center items-center mt-4 mx-4'>
           <SearchBar isDark={isDark} onSearchChange={()=>{}}/>
         </View>
 

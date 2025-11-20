@@ -147,11 +147,13 @@ export const NewDataProvider = ({ children }: { children: ReactNode }) => {
     const dbLocations = await getLocations();
     const dbUnits = await getUnits();
     const dbAssignments = await getAssignments();
+    const dbCustomerLocations = await getCustomerLocations();
 
     setCustomers(dbCustomers as Customer[]);
     setLocations(dbLocations as Location[]);
     setUnits(dbUnits as Unit[]);
     setAssignments(dbAssignments as Assignment[]); 
+    setCustomerLocations(dbCustomerLocations as CustomerLocation[]);
   }
 
   const getUnassignedUnits = (): Unit[] => {

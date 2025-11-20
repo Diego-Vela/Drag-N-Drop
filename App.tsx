@@ -1,5 +1,6 @@
 // Base Imports
 import React from 'react';
+import { useWindowDimensions } from 'react-native';
 
 // Third-party Imports
 import { NavigationContainer } from '@react-navigation/native';
@@ -35,6 +36,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function TabNavigator() {
   const { isDark } = useTheme();
+  const { height, width } = useWindowDimensions();
 
   return (
     <Tab.Navigator
@@ -50,6 +52,7 @@ function TabNavigator() {
           elevation: 10,
           height: 70,
           paddingTop: 8,
+          display: height > width ? undefined : 'none', 
         },
         tabBarIcon: ({ color, size }) => {
           let iconName: keyof typeof Ionicons.glyphMap;

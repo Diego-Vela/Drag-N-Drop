@@ -1,5 +1,6 @@
 // hooks/useEditScreen.ts
 import { useState, useEffect } from 'react';
+import { useWindowDimensions } from 'react-native';
 import type { DropZoneData } from '../../types';
 import { useNewData, useSound } from '../../contexts';
 import { NavigationProp, useNavigation } from '@react-navigation/native';
@@ -18,6 +19,13 @@ export function useEditScreen() {
   });
 
   const { playSound } = useSound();
+  const { height, width } = useWindowDimensions();
+
+  const [_, forceUpdate] = useState(0);
+
+  useEffect(() => {
+    //forceUpdate(n => n+1);
+  }, [height, width]);
 
 
   useEffect(() => {
@@ -43,8 +51,8 @@ export function useEditScreen() {
   }, [getAssignmentObjects, getUnassignedUnits]);
 
   const handleSave = async (data: DropZoneData[]) => {
+    playSound('wow');
     if (await prepareSaveAssignment(data)) {
-      playSound('wow');
       await refetch();
       await cleanupNotes();
     } else {

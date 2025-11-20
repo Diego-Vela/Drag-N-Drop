@@ -2,7 +2,7 @@
   "expo": {
     "name": "UDrop",
     "slug": "Droppers",
-    "version": "1.0.0",
+    "version": "1.0.2",
     "web": {
       "favicon": "./assets/favicon.png"
     },
@@ -15,7 +15,7 @@
       "expo-font",
       "expo-asset"
     ],
-    "orientation": "portrait",
+    "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
     "splash": {

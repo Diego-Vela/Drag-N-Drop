@@ -12,7 +12,7 @@ export function ActionBar({
   isDark = false,
   buttons = [],
   actions = [],
-  color = 'bg-blue-500',
+  color = isDark ? 'bg-lime-800': 'bg-light-warning',
 }: ActionBarProps) {
   
   // Verify lengths

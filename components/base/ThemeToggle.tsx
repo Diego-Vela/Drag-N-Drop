@@ -45,15 +45,11 @@ export const ThemeToggle = () => {
       onPress={handlePress}
       activeOpacity={0.7}
       style={{
-        width: 70,
-        height: 70,
-        justifyContent: "center",
-        alignItems: "center",
       }}
     >
-      <View style={{ position: "relative", width: 32, height: 32, justifyContent: "center", alignItems: "center" }}>
+      <View className={``} style={{ width: 32, height: 32, justifyContent: "center", alignItems: "center" }}>
         <Animated.View style={[sunStyle, { justifyContent: "center", alignItems: "center", width: 32, height: 32 }]}>
-          <Ionicons name="sunny" size={32} color ='white'/>
+          <Ionicons name="sunny" size={32} color ='orange'/>
         </Animated.View>
         <Animated.View style={[moonStyle, { justifyContent: "center", alignItems: "center", width: 32, height: 32 }]}>
           <Ionicons name="moon" size={32} color ='white'/>

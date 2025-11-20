@@ -5,12 +5,13 @@ import { View, Text, Dimensions } from 'react-native';
 import { Canvas, Rect } from '@shopify/react-native-skia';
 // Component Imports
 import { ThemeToggle } from './ThemeToggle';
+import { Hamburger } from './Hamburger';
 // Context Imports
-import { useTheme } from '../../contexts/ThemeContext';
+import { useTheme } from '../../contexts';
 
 export const Header = ({ title = "Organization Name" }: { title?: string }) => {
   const { isDark } = useTheme();
-  const { width } = Dimensions.get('window');
+  const { height, width } = Dimensions.get('window');
 
   // Static colors (no animation)
   const backgroundColor = isDark ? '#1f2937' : '#1e3a8a'; // dark surface or navy
@@ -34,8 +35,10 @@ export const Header = ({ title = "Organization Name" }: { title?: string }) => {
         >
           {title}
         </Text>
+        
+        <Hamburger/>
 
-        <ThemeToggle />
+        
       </View>
     </View>
   );

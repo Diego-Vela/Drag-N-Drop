@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
-import { View, Text, Button, FlatList, TextInput, Alert, TouchableOpacity } from 'react-native';
+import { View, Text, Button, FlatList, TextInput, Alert, TouchableOpacity, useWindowDimensions } from 'react-native';
 import { Container, ScreenContent, SearchBar, ItemList, ActionBar } from '../components';
 import { useNewData, useTheme, useSound } from '../contexts';
 import { useSearchFilter } from '../hooks';
@@ -10,15 +10,21 @@ import type { ListGroup, ListElement } from '../components';
 export function CustomersScreen() {
   const { isDark } = useTheme();
   const { customers, locations, addCustomerLocationPair, dropAllTables, refetch } = useNewData();
+  const { playSound } = useSound(); 
+  const { height, width } = useWindowDimensions();
 
   const [customerName, setCustomerName] = useState('');
   const [locationName, setLocationName] = useState('');
 
   const [canEdit, setCanEdit] = useState(false);
 
-  const { playSound } = useSound(); 
+  const [_, forceUpdate] = useState(0);
   
   //#region Functions
+
+  useEffect(() => {
+    forceUpdate(n => n+1);
+  }, [height, width]);
 
   const handleResetButton = async () => {
     await dropAllTables();
@@ -42,13 +48,12 @@ export function CustomersScreen() {
       console.log('Success', `Added ${locationName} under ${customerName}`);
       setCustomerName('');
       setLocationName('');
-      refetch();
-      playSound('unitMove');
     } else {
       console.log('Error', 'Failed to add entry. Check logs for details.');
     }
 
     refetch();
+    playSound('unitMove');
     setCanEdit(false);
   };
 
@@ -95,7 +100,7 @@ export function CustomersScreen() {
       <ScreenContent title="Customers" path="screens/CustomersScreen.tsx">
       
         {/* Search Bar Component */}
-        <View className='h-16 min-h-[5%] max-h-[7%] justify-center items-center mt-4 mx-4'>
+        <View className='h-16 justify-center items-center mt-4 mx-4'>
           <SearchBar placeholder="Search for customer/locations..." query={clQuery} onSearchChange={setClQuery} isDark={isDark}/>
         </View>
 
