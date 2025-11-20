@@ -45,11 +45,11 @@ export function CustomersScreen() {
     const success = await addCustomerLocationPair(customerName, locationName);
 
     if (success) {
-      console.log('Success', `Added ${locationName} under ${customerName}`);
+      // console.log('Success', `Added ${locationName} under ${customerName}`);
       setCustomerName('');
       setLocationName('');
     } else {
-      console.log('Error', 'Failed to add entry. Check logs for details.');
+      console.error('Error', 'Failed to add entry. Check logs for details.');
     }
 
     refetch();
